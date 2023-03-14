@@ -40,6 +40,9 @@ export const PATH_DASHBOARD = {
   ventas: {
     root: path(PATH_ADMIN, '/ventas'),
     editar: path(PATH_ADMIN, '/ventas/editar'),
+  },
+  compradores:{
+    root: path(PATH_ADMIN, '/compradores'),
   }
 };
 

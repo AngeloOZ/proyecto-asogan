@@ -24,6 +24,12 @@ const navConfig = [
         icon: <HiTruck />,
         roles: ['admin','editor'],
       },
+      {
+        title: 'Compradores',
+        path: PATH_DASHBOARD.compradores.root,
+        icon: <HiTruck />,
+        roles: ['admin','editor'],
+      },
       // {
       //   title: 'categorias',
       //   path: PATH_DASHBOARD.categorias.root,
