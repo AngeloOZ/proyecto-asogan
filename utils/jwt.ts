@@ -2,7 +2,7 @@ import { usuario } from '@prisma/client';
 import jwt from 'jsonwebtoken';
 
 
-export const signToken = ({ correo, identificacion, id, rol, nombres }: usuario) => {
+export const signToken = ({ identificacion, usuarioid, rol, nombres }: usuario) => {
 
     if (!process.env.JWT_SECRET_SEED) {
         throw new Error('No hay semilla de JWT - Revisar variables de entorno');
@@ -10,7 +10,7 @@ export const signToken = ({ correo, identificacion, id, rol, nombres }: usuario)
 
     return jwt.sign(
         // payload
-        { id, identificacion, nombres, correo, rol },
+        { usuarioid, identificacion, nombres, rol },
         // Seed
         process.env.JWT_SECRET_SEED,
         // Opciones
@@ -31,9 +31,9 @@ export const isValidToken = (token: string): Promise<number> => {
             jwt.verify(token, process.env.JWT_SECRET_SEED || '', (err, payload) => {
                 if (err) return reject('JWT no es válido');
 
-                const { id } = payload as { id: number };
+                const { usuarioid } = payload as { usuarioid: number };
 
-                resolve(id);
+                resolve(usuarioid);
 
             })
         } catch (error) {

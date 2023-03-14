@@ -34,7 +34,7 @@ async function verifyJWT(req: NextApiRequest, res: NextApiResponse<Data>) {
 
         const id = await jwt.isValidToken(token);
 
-        const user = await prisma.usuario.findUnique({ where: { id } });
+        const user = await prisma.usuario.findUnique({ where: { usuarioid: id } });
 
         if (!user) {
             return res.status(404).json({ status: 404, message: "Usuario no encontrado" })
@@ -42,7 +42,7 @@ async function verifyJWT(req: NextApiRequest, res: NextApiResponse<Data>) {
 
         return res.status(200).json({
             user: {
-                usuarioid: user.id,
+                usuarioid: user.usuarioid,
                 nombres: user.nombres,
                 identificacion: user.identificacion,
                 rol: JSON.parse(user.rol)

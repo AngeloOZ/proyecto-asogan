@@ -21,6 +21,9 @@ export const PATH_DASHBOARD = {
   prueba: {
     root: path(PATH_ADMIN, '/prueba'),
   },
+  proveedores: {
+    root: path(PATH_ADMIN, '/proveedores'),
+  },
   productos: {
     root: path(PATH_ADMIN, '/productos'),
     agregar: path(PATH_ADMIN, '/productos/agregar'),

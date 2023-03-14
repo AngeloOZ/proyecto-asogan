@@ -40,5 +40,6 @@ yarn-error.log*
 
 _static
 
+# prisma
 /prisma/migrations
 prisma/migrations

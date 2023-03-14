@@ -1,5 +1,6 @@
 import { Inventory, Category } from '@mui/icons-material';
 import { MdLoyalty } from 'react-icons/md';
+import { HiTruck } from 'react-icons/hi';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 
@@ -15,6 +16,12 @@ const navConfig = [
         title: 'Lotes',
         path: PATH_DASHBOARD.prueba.root,
         icon: <Inventory />,
+        roles: ['admin','editor'],
+      },
+      {
+        title: 'Proveedores',
+        path: PATH_DASHBOARD.proveedores.root,
+        icon: <HiTruck />,
         roles: ['admin','editor'],
       },
       // {

@@ -7,16 +7,73 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model lote {
-  loteid      Int    @id @default(autoincrement())
-  descripcion String @db.Text
-  estado      Int    @default(0)
+model usuario {
+  usuarioid      Int           @id @default(autoincrement())
+  nombres        String        @db.VarChar(255)
+  identificacion String        @unique(map: "cedula") @db.VarChar(13)
+  clave          String        @db.VarChar(255)
+  rol            String        @db.VarChar(255)
+  compradores    compradores[]
 }
 
-model usuario {
-  usuarioid      Int    @id @default(autoincrement())
-  nombres        String @db.VarChar(255)
-  identificacion String @unique(map: "cedula") @db.VarChar(13)
-  clave          String @db.VarChar(255)
-  rol            String @db.VarChar(255)
+model compradores {
+  id_comprador          Int      @id @default(autoincrement())
+  codigo_paleta         String?  @db.VarChar(5)
+  antecedentes_penales  Boolean?
+  procesos_judiciales   Boolean?
+  calificacion_bancaria String?  @db.VarChar(50)
+  estado                Boolean?
+  usuarioid             Int
+  usuario               usuario  @relation(fields: [usuarioid], references: [usuarioid], onUpdate: Restrict, map: "fk_usuario_compradores")
+  lotes                 lotes[]
+
+  @@index([usuarioid], map: "fk_usuario_compradores")
+}
+
+model eventos {
+  id_evento Int       @id @default(autoincrement())
+  fecha     DateTime? @db.Date
+  lugar     String?   @db.VarChar(100)
+  tipo      String?   @db.VarChar(50)
+  abierto   Boolean?
+  lotes     lotes[]
+}
+
+model lotes {
+  id_lote           Int          @id @default(autoincrement())
+  id_evento         Int
+  id_proveedor      Int
+  id_comprador      Int?
+  paleta_comprador  String?      @db.VarChar(5)
+  fecha_pesaje      DateTime?    @db.DateTime(0)
+  codigo_lote       String?      @db.VarChar(50)
+  cantidad_animales Int?
+  tipo_animales     String?      @db.VarChar(50)
+  calidad_animales  String?      @db.VarChar(50)
+  peso_total        Decimal?     @db.Decimal(8, 2)
+  sexo              String?      @db.VarChar(50)
+  crias_hembras     Int?
+  crias_machos      Int?
+  procedencia       String?      @db.VarChar(50)
+  observaciones     String?      @db.VarChar(150)
+  puja_inicial      Decimal?     @db.Decimal(8, 2)
+  puja_final        Decimal?     @db.Decimal(8, 2)
+  subastado         Boolean?
+  compradores       compradores? @relation(fields: [id_comprador], references: [id_comprador], onDelete: Restrict, onUpdate: Restrict, map: "fk_lotes_compradores")
+  eventos           eventos      @relation(fields: [id_evento], references: [id_evento], onUpdate: Restrict, map: "fk_lotes_eventos")
+  proveedores       proveedores  @relation(fields: [id_proveedor], references: [id_proveedor], onUpdate: Restrict, map: "fk_lotes_proveedores")
+
+  @@index([id_comprador], map: "fk_lotes_compradores")
+  @@index([id_evento], map: "fk_lotes_eventos")
+  @@index([id_proveedor], map: "fk_lotes_proveedores")
+}
+
+model proveedores {
+  id_proveedor   Int  @id @default(autoincrement())
+  identificacion String? @db.VarChar(20)
+  nombres        String? @db.VarChar(300)
+  direccion      String? @db.VarChar(300)
+  telefono       String? @db.VarChar(15)
+  correo         String? @db.VarChar(50)
+  lotes          lotes[]
 }
