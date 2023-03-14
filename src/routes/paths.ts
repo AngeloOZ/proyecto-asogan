@@ -29,6 +29,8 @@ export const PATH_DASHBOARD = {
   },
   eventos: {
     root: path(PATH_ADMIN, '/eventos'),
+    agregar: path(PATH_ADMIN, '/eventos/agregar'),
+    editar: path(PATH_ADMIN, '/eventos/editar'),
   },
   productos: {
     root: path(PATH_ADMIN, '/productos'),
