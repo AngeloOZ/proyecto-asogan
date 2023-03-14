@@ -43,6 +43,8 @@ export const PATH_DASHBOARD = {
   },
   compradores:{
     root: path(PATH_ADMIN, '/compradores'),
+    agregar: path(PATH_ADMIN, '/compradores/agregar'),
+    editar: path(PATH_ADMIN, '/compradores/editar'),
   }
 };
 
