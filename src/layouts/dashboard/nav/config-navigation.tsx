@@ -1,6 +1,6 @@
 import { Inventory, Category } from '@mui/icons-material';
 import { MdLoyalty } from 'react-icons/md';
-import { HiTruck } from 'react-icons/hi';
+import { HiTruck, HiShoppingCart} from 'react-icons/hi';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 
