@@ -20,11 +20,11 @@ import FormProvider, {
 } from '../../../src/components/hook-form';
 
 import { useProveedores } from '.';
-import { IProducto } from '../../../interfaces';
 import { PATH_DASHBOARD } from 'src/routes/paths';
 import { LinearProgressBar } from '../LinearProgressBar';
 import { proveedores as IProveedor } from '@prisma/client';
 import { useObtenerCategories } from '../Categorias';
+import Link from 'next/link';
 
 
 type FormValuesProps = IProveedor;
@@ -34,10 +34,9 @@ type Props = {
     proveedoraEditar?: IProveedor;
 }
 
-export function FormAgregarEditarProducto({ esEditar = false, proveedoraEditar }: Props) {
+export function FormProveedores({ esEditar = false, proveedoraEditar }: Props) {
     const { push } = useRouter();
     const { enqueueSnackbar } = useSnackbar();
-    const { isLoading, categories } = useObtenerCategories();
     const { agregarProveedor, actualizarProveedor } = useProveedores();
 
     useEffect(() => {
@@ -82,143 +81,84 @@ export function FormAgregarEditarProducto({ esEditar = false, proveedoraEditar }
         handleSubmit,
         formState: { isSubmitting },
     } = methods;
-    const values = watch();
 
     // Funcion para enviar el formulario
     const onSubmit = async (data: FormValuesProps) => {
         try {
-            if (esEditar) {
+            if (!esEditar) {
+                await agregarProveedor(data);
+                enqueueSnackbar('Proveedor agregado correctamente', { variant: 'success' });
+                push(PATH_DASHBOARD.proveedores.root);
+            } else {
                 await actualizarProveedor(data);
-                enqueueSnackbar('Producto actualizado correctamente', { variant: 'success' });
-                push(PATH_DASHBOARD.productos.root);
-                return;
+                enqueueSnackbar('Proveedor actualizado correctamente', { variant: 'success' });
+                push(PATH_DASHBOARD.proveedores.root);
             }
-            await agregarProveedor(data);
-            enqueueSnackbar('Producto agregado correctamente', { variant: 'success' });
-            push(PATH_DASHBOARD.productos.root);
             reset();
         } catch (error) {
             console.error(error.message);
-            enqueueSnackbar("No se pudo ingresar el producto: " + error.message, { variant: 'error' });
+            enqueueSnackbar("Oops... hubo un error " + error.message, { variant: 'error' });
         }
     };
 
-    if (isLoading) return <LinearProgressBar />
-
-    const renderButtons = () => {
-        return <>
-            <Button
-                fullWidth
-                color="inherit"
-                variant="outlined"
-                size="large"
-                onClick={() => push(PATH_DASHBOARD.productos.root)}
-            >
-                Cancelar
-            </Button>
-
-            <LoadingButton
-                fullWidth
-                type="submit"
-                variant="contained"
-                size="large"
-                loading={isSubmitting}
-            >
-                Guardar
-            </LoadingButton>
-        </>
-    }
+    // if (isLoading) return <LinearProgressBar />
 
     return (
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-            {/* <Grid container spacing={3}>
-                <Grid item xs={12} md={6} lg={8}>
-                    <Card sx={{ p: 3 }}>
-                        <Stack spacing={2}>
-                            <Typography variant='subtitle1' component='h1'>{esEditar ? "Editar" : "Agregar"} producto</Typography>
+            <Card sx={{ p: 3, boxShadow: "0 0 2px rgba(0,0,0,0.2)" }}>
+                <Stack spacing={2}>
+                    <RHFTextField
+                        name="identificacion"
+                        label="Identificación"
+                        size='small'
+                    />
+                    <RHFTextField
+                        name="nombres"
+                        label="Nombres y Apellidos"
+                        size='small'
+                    />
+                    <RHFTextField
+                        name="direccion"
+                        label="Dirección"
+                        size='small'
+                    />
+                    <RHFTextField
+                        name="correo"
+                        type='email'
+                        label="Correo Electrónico"
+                        size='small'
+                    />
+                    <RHFTextField
+                        name="telefono"
+                        type='tel'
+                        label="WhatsApp"
+                        size='small'
+                    />
+                </Stack>
 
-                            <RHFSwitch
-                                name="status"
-                                label={values.status ? 'Producto disponible' : 'Producto no disponible'}
-                                labelPlacement="start"
-                                sx={{ mb: 1, mx: 0, width: 1, }}
-                            />
+                <Stack direction="row" spacing={1.5} maxWidth={400} margin="auto" mt={2}>
+                    <Link href={PATH_DASHBOARD.proveedores.root} passHref legacyBehavior>
+                        <Button
+                            fullWidth
+                            color="inherit"
+                            variant="outlined"
+                            size="medium"
+                        >
+                            Cancelar
+                        </Button>
+                    </Link>
 
-                            <RHFTextField name="name" label="Titulo" />
-
-                            <RHFSelect name='category' placeholder='Categoria' label='Categoria'>
-                                <MenuItem value="" disabled>Seleccione una categoria</MenuItem>
-                                {categories.map((category) => <MenuItem key={category.id} value={category.id}>{category.nombre}</MenuItem>)}
-                            </RHFSelect>
-
-                            <RHFTextField name="price" label="Precio" type='number' />
-
-                            <RHFTextField name="stock" label="Stock" type='number' />
-
-                            <RHFSelect name='rating' placeholder='Calificación' label='Calificación'>
-                                <MenuItem value="5">5 puntos</MenuItem>
-                                <MenuItem value="4">4 puntos</MenuItem>
-                                <MenuItem value="3">3 puntos</MenuItem>
-                                <MenuItem value="2">2 puntos</MenuItem>
-                                <MenuItem value="1">1 punto</MenuItem>
-                            </RHFSelect>
-
-                            <Stack spacing={1}>
-                                <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
-                                    Descripcion
-                                </Typography>
-                                <RHFEditor simple style={{ height: 400 }} placeholder='Detalle del producto' name="description" />
-                            </Stack>
-
-                        </Stack>
-
-                        <Stack direction="row" spacing={1.5} sx={{ mt: 2, display: { xs: "none", md: "flex" } }}>
-                            {renderButtons()}
-                        </Stack>
-                    </Card>
-                </Grid>
-                <Grid item xs={12} md={6} lg={4}>
-                    <Card sx={{ p: 3 }}>
-                        <Stack spacing={{ xs: 2, md: 1 }}>
-                            <Stack spacing={1}>
-                                <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
-                                    Imagen principal
-                                </Typography>
-                                <RHFUpload
-                                    name="cover"
-                                    maxSize={3145728}
-                                    onDrop={handleDrop}
-                                    onDelete={handleRemoveFile}
-                                    onRemove={handleRemoveFile}
-                                />
-                            </Stack>
-
-                            <Stack>
-                                <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
-                                    Imagenes
-                                </Typography>
-                                <RHFUpload
-                                    name="images"
-                                    thumbnail
-                                    multiple
-                                    maxSize={3145728}
-                                    onDrop={handleDrop2}
-                                    onRemove={handleRemoveSpecificFile}
-                                />
-                                {!!values.images.length && (
-                                    <Button variant="outlined" color="error" onClick={handleRemoveAllFiles}>
-                                        Remover todos los archivos
-                                    </Button>
-                                )}
-                            </Stack>
-
-                            <Stack direction="row" spacing={1.5} sx={{ mt: 2, display: { xs: "flex", md: "none" } }}>
-                                {renderButtons()}
-                            </Stack>
-                        </Stack>
-                    </Card>
-                </Grid>
-            </Grid> */}
+                    <LoadingButton
+                        fullWidth
+                        type="submit"
+                        variant="contained"
+                        size="medium"
+                        loading={isSubmitting}
+                    >
+                        Guardar
+                    </LoadingButton>
+                </Stack>
+            </Card>
         </FormProvider>
     );
 }

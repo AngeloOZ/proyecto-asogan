@@ -20,6 +20,15 @@ export default function (req: NextApiRequest, res: NextApiResponse) {
 
 async function obtenerProveedores(req: NextApiRequest, res: NextApiResponse) {
     try {
+        const { id } = req.query;
+        
+        if (id) {
+            const proveedor = await prisma.proveedores.findUnique({
+                where: { id_proveedor: Number(id) }
+            });
+            return res.status(200).json(proveedor);
+        }
+
         const proveedores = await prisma.proveedores.findMany();
         return res.status(200).json(proveedores);
     } catch (error) {
@@ -33,7 +42,7 @@ async function obtenerProveedores(req: NextApiRequest, res: NextApiResponse) {
 async function crearProveedor(req: NextApiRequest, res: NextApiResponse) {
     try {
         const { nombres, identificacion, telefono, correo, direccion } = req.body as proveedores;
-        
+
         const proveedor = await prisma.proveedores.create({
             data: {
                 nombres,
@@ -55,7 +64,7 @@ async function crearProveedor(req: NextApiRequest, res: NextApiResponse) {
 async function actualizarProveedor(req: NextApiRequest, res: NextApiResponse) {
     try {
         const { id_proveedor, nombres, identificacion, telefono, correo, direccion } = req.body as proveedores;
-        
+
         const proveedor = await prisma.proveedores.update({
             where: { id_proveedor },
             data: {
@@ -78,7 +87,7 @@ async function actualizarProveedor(req: NextApiRequest, res: NextApiResponse) {
 async function eliminarProveedor(req: NextApiRequest, res: NextApiResponse) {
     try {
         const { id_proveedor } = req.body;
-        
+
         const proveedor = await prisma.proveedores.delete({
             where: { id_proveedor: Number(id_proveedor) }
         });
