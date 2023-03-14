@@ -18,9 +18,10 @@ export const PATH_ADMIN = '/admin';
 
 export const PATH_DASHBOARD = {
   root: PATH_ADMIN,
-  prueba: {
-    root: path(PATH_ADMIN, '/prueba'),
-
+  lotes: {
+    root: path(PATH_ADMIN, '/lotes'),
+    agregar: path(PATH_ADMIN, '/lotes/agregar'),
+    editar: path(PATH_ADMIN, '/lotes/editar'),
   },
   proveedores: {
     root: path(PATH_ADMIN, '/proveedores'),

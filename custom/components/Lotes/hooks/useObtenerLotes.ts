@@ -1,11 +1,11 @@
-import { lote } from "@prisma/client";
+import { lotes } from "@prisma/client";
 import { subastaAPI } from "custom/api";
 import useSWR from "swr";
 
 const fetcher = (url: string) => subastaAPI.get(url).then(r => r.data)
 
 type Data = {
-    lotes: lote[];
+    lotes: lotes[];
     isLoading: boolean;
     error: any;
     mutateLotes: () => void;
