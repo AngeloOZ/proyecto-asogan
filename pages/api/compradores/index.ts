@@ -1,4 +1,3 @@
-import { Trykker } from "@next/font/google";
 import { compradores } from "@prisma/client";
 import prisma from 'database/prismaClient';
 import type { NextApiRequest, NextApiResponse } from 'next'
