@@ -27,6 +27,11 @@ export const PATH_DASHBOARD = {
     agregar: path(PATH_ADMIN, '/proveedores/agregar'),
     editar: path(PATH_ADMIN, '/proveedores/editar'),
   },
+  eventos: {
+    root: path(PATH_ADMIN, '/eventos'),
+    agregar: path(PATH_ADMIN, '/eventos/agregar'),
+    editar: path(PATH_ADMIN, '/eventos/editar'),
+  },
   productos: {
     root: path(PATH_ADMIN, '/productos'),
     agregar: path(PATH_ADMIN, '/productos/agregar'),
@@ -41,7 +46,7 @@ export const PATH_DASHBOARD = {
     root: path(PATH_ADMIN, '/ventas'),
     editar: path(PATH_ADMIN, '/ventas/editar'),
   },
-  compradores:{
+  compradores: {
     root: path(PATH_ADMIN, '/compradores'),
     agregar: path(PATH_ADMIN, '/compradores/agregar'),
     editar: path(PATH_ADMIN, '/compradores/editar'),

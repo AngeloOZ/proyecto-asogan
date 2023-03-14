@@ -1,6 +1,6 @@
 import { Inventory, Category } from '@mui/icons-material';
 import { MdLoyalty } from 'react-icons/md';
-import { HiTruck,HiShoppingCart } from 'react-icons/hi';
+import { HiTruck } from 'react-icons/hi';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 
@@ -16,18 +16,18 @@ const navConfig = [
         title: 'Lotes',
         path: PATH_DASHBOARD.prueba.root,
         icon: <Inventory />,
-        roles: ['admin','editor'],
+        roles: ['admin', 'editor'],
       },
       {
         title: 'Proveedores',
         path: PATH_DASHBOARD.proveedores.root,
         icon: <HiTruck />,
-        roles: ['admin','editor'],
+        roles: ['admin', 'editor'],
       },
       {
         title: 'Compradores',
         path: PATH_DASHBOARD.compradores.root,
-        icon: <HiShoppingCart />,
+        icon: <HiTruck />,
         roles: ['admin','editor'],
       },
       // {
@@ -46,7 +46,7 @@ const navConfig = [
     subheader: 'Ventas',
     items: [
       {
-        roles: ['admin','vendedor'],
+        roles: ['admin', 'vendedor'],
         title: 'Ventas',
         path: PATH_DASHBOARD.ventas.root,
         icon: <MdLoyalty />,
