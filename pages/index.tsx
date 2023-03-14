@@ -14,5 +14,5 @@ export default function Index() {
     }
   });
 
-  return <Head><title>Tienda Perseo</title></Head>;
+  return <Head><title>Subastas Asogan</title></Head>;
 }
