@@ -26,7 +26,7 @@ import { NextPage } from 'next';
 import Head from 'next/head';
 import { AppProps } from 'next/app';
 import { SWRConfig } from 'swr';
-import { tiendaApi } from 'custom/api';
+import { subastaAPI } from 'custom/api';
 
 // utils
 import createEmotionCache from '../src/utils/createEmotionCache';
@@ -60,7 +60,7 @@ export default function MyApp(props: MyAppProps) {
   const getLayout = Component.getLayout ?? ((page) => page);
 
   return (
-    <SWRConfig value={{ fetcher: (url: string) => tiendaApi.get(url).then(r => r.data), }}>
+    <SWRConfig value={{ fetcher: (url: string) => subastaAPI.get(url).then(r => r.data), }}>
       <CacheProvider value={emotionCache}>
         <Head>
           <meta name="viewport" content="initial-scale=1, width=device-width" />
