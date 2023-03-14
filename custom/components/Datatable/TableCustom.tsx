@@ -30,7 +30,7 @@ interface Props {
 
 }
 
-export function TableCustom({ headers, dataBody, pagination = true, maxHeight, exportOptions = false, isActions, listButton = true, isLoading, handleDelete = () => { }, handeEdit = () => { } }: Props) {
+export function TableCustom({ headers, dataBody = [], pagination = true, maxHeight, exportOptions = false, isActions, listButton = true, isLoading, handleDelete = () => { }, handeEdit = () => { } }: Props) {
     // Filtros
     const [buscador, setBuscador] = useState('');
 
