@@ -11,6 +11,7 @@ export const LinearProgressBar = ({ isActive = true, ...other }: Props) => {
     <Box
       component="div"
       display="grid"
+      minHeight={200}
       height={{ xs: 'calc(100vh - 144px)', lg: '100%' }}
       margin="auto"
       width={{ xs: '90%', md: '50%' }}
