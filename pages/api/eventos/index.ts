@@ -29,7 +29,7 @@ async function obtenerEventos(req: NextApiRequest, res: NextApiResponse) {
                 where: { id_evento: Number(id) }
             });
             if (evento) {
-                const fechaString = moment(evento.fecha).format('YYYY-MM-DD') as unknown as Date;
+                const fechaString = moment(evento.fecha).format('YYYY-MM-DD HH:mm') as unknown as Date;
                 evento.fecha = fechaString;
             }
             return res.status(200).json(evento);
@@ -38,7 +38,7 @@ async function obtenerEventos(req: NextApiRequest, res: NextApiResponse) {
         const eventos = await prisma.eventos.findMany();
 
         const eventosFormateados = eventos.map(evento => {
-            const fechaFormateada = moment(evento.fecha).format('DD-MM-YYYY');
+            const fechaFormateada = moment(evento.fecha).format('DD-MM-YYYY HH:mm');
             return {
                 ...evento,
                 fecha: fechaFormateada
@@ -55,11 +55,12 @@ async function obtenerEventos(req: NextApiRequest, res: NextApiResponse) {
 
 async function crearEvento(req: NextApiRequest, res: NextApiResponse) {
     try {
-        const { fecha, lugar, tipo, abierto } = req.body as eventos;
-        const formattedDate = moment(fecha, 'YYYY/MM/DD').toDate();
+        const { descripcion, fecha, lugar, tipo, abierto } = req.body as eventos;
+        const formattedDate = moment(fecha, 'YYYY/MM/DD HH:mm').toDate();
 
         const evento = await prisma.eventos.create({
             data: {
+                descripcion,
                 fecha: formattedDate,
                 lugar,
                 tipo,
@@ -77,12 +78,13 @@ async function crearEvento(req: NextApiRequest, res: NextApiResponse) {
 
 async function actualizarEvento(req: NextApiRequest, res: NextApiResponse) {
     try {
-        const { id_evento, fecha, lugar, tipo, abierto } = req.body as eventos;
-        const formattedDate = moment(fecha, 'YYYY/MM/DD').toDate();
+        const { id_evento, descripcion, fecha, lugar, tipo, abierto } = req.body as eventos;
+        const formattedDate = moment(fecha, 'YYYY/MM/DD HH:mm').toDate();
 
         const evento = await prisma.eventos.update({
             where: { id_evento },
             data: {
+                descripcion,
                 fecha: formattedDate,
                 lugar,
                 tipo,

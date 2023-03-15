@@ -11,36 +11,38 @@ import { useForm } from 'react-hook-form';
 
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Card, Stack, Button } from '@mui/material';
+import { Card, Stack, Button,MenuItem } from '@mui/material';
 
 // components
 import { useSnackbar } from '../../../src/components/snackbar';
 import FormProvider, {
-    RHFSwitch,
+    RHFSelect,
     RHFTextField,
 } from '../../../src/components/hook-form';
 
-import { compradores as IComprador } from '@prisma/client';
-import { useCompradores } from './Hooks';
+import { usuario as IUsuario } from '@prisma/client';
+import { useUsuario } from './Hooks';
 import Link from 'next/link';
 
 import { PATH_DASHBOARD } from 'src/routes/paths';
 
-type FormValuesProps = IComprador;
+
+import prisma from 'database/prismaClient';
+
+type FormValuesProps = IUsuario;
 type Props = {
     esEditar?: boolean;
-    compradorEditar?: IComprador;
+    usuariosEditar?: IUsuario;
 }
 
-export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
-    
+export function FormUsuarios({ esEditar = false, usuariosEditar }: Props) {
+
     const { push } = useRouter();
     const { enqueueSnackbar } = useSnackbar();
-    const { agregarComprador, actualizarComprador } = useCompradores();
-
+    const { agregarUsuario, actualizarUsuario } = useUsuario();
 
     useEffect(() => {
-        if (esEditar && compradorEditar) {
+        if (esEditar && usuariosEditar) {
             reset(defaultValues);
         }
 
@@ -48,41 +50,37 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
             reset(defaultValues);
         }
 
-    }, [esEditar, compradorEditar]);
+    }, [esEditar, usuariosEditar]);
+
 
     // Validaciones de los campos
-    const CompradorEsquema = Yup.object().shape({
+    const UsuariosEsquema = Yup.object().shape({
         identificacion: Yup.string().required('La identificacion es requerido'),
         nombres: Yup.string().required('El nombre es requerido').max(300, 'El nombre no puede tener mas de 300 caracteres'),
-        codigo_paleta: Yup.string().required('El numero de paleta es requerido').max(5, 'El numero de paleta no puede tener mas de 5 caracteres'),
-        calificacion_bancaria: Yup.string().required('La calificacion bancaria es requerida').max(5, 'La calificacion bancaria no puede tener mas de 5 caracteres'),
+        clave: Yup.string().required('La clave es requerida').max(10, 'La clave no puede tener mas de 10 digitos'),
+        rol: Yup.string().required('El rol es requerido'),
     });
 
 
 
 
     // Se carga los valores en caso de que sea editar
-    const defaultValues = useMemo<IComprador>(() => ({
+    const defaultValues = useMemo<IUsuario>(() => ({
 
 
-        id_comprador: compradorEditar?.id_comprador || 0,
-        codigo_paleta: compradorEditar?.codigo_paleta || '',
-        calificacion_bancaria: compradorEditar?.calificacion_bancaria || '',
-        antecedentes_penales: compradorEditar?.antecedentes_penales || false,
-        procesos_judiciales: compradorEditar?.procesos_judiciales || false,
-        estado: compradorEditar?.estado || false,
-        usuarioid: compradorEditar?.usuarioid || 0,
-        nombres: compradorEditar?.usuario.nombres || '',
-        identificacion: compradorEditar?.usuario.identificacion || '' ,
+        usuarioid: usuariosEditar?.usuarioid || 0,
+        nombres: usuariosEditar?.nombres || '',
+        identificacion: usuariosEditar?.identificacion || '',
+        clave: usuariosEditar?.clave || '',
+        
+        rol  : JSON.parse(usuariosEditar?.rol||`[""]`)[0] 
 
-
-    }), [compradorEditar]);
-
+    }), [usuariosEditar]);
 
 
     // funciones para el hook useForm
     const methods = useForm<FormValuesProps>({
-        resolver: yupResolver(CompradorEsquema),
+        resolver: yupResolver(UsuariosEsquema),
         defaultValues,
     });
 
@@ -92,22 +90,21 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
         handleSubmit,
         formState: { isSubmitting },
     } = methods;
-
     const onSubmit = async (data: FormValuesProps) => {
 
         try {
             if (!esEditar) {
-                await agregarComprador(data);
-                enqueueSnackbar('Proveedor agregado correctamente', { variant: 'success' });
-                push(PATH_DASHBOARD.compradores.root);
+                await agregarUsuario(data);
+                enqueueSnackbar('Usuario agregado correctamente', { variant: 'success' });
+                push(PATH_DASHBOARD.usuarios.root);
             } else {
-                await actualizarComprador(data);
-                enqueueSnackbar('Proveedor actualizado correctamente', { variant: 'success' });
-                push(PATH_DASHBOARD.compradores.root);
+                await actualizarUsuario(data);
+                enqueueSnackbar('Usuario actualizado correctamente', { variant: 'success' });
+                push(PATH_DASHBOARD.usuarios.root);
             }
             reset();
         } catch (error) {
-            console.error(error.message);
+            
             enqueueSnackbar("Oops... hubo un error " + error.message, { variant: 'error' });
         }
     }
@@ -128,40 +125,29 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
                 />
 
                 <RHFTextField
-                    name="codigo_paleta"
-                    label="Número de paleta"
+                    name="clave"
+                    label="Clave"
                     size='small'
+                    type='password'
                 />
 
                 <RHFTextField
-                    name="calificacion_bancaria"
-                    label="Calificación Bancaria"
+                    name="verificacion_clave"
+                    label="Verificación de clave"
                     size='small'
+                    type='password'
                 />
+                <RHFSelect name='rol' label='Rol' size='small'>
+                    
+                    <MenuItem value="admin">Administrador</MenuItem>
+                    <MenuItem value="martillador">Martillador</MenuItem>
+                    <MenuItem value="contabilidad">Contabilidad</MenuItem>
+                </RHFSelect>
             </Stack>
-            <Stack direction="row" spacing={2} mt={3}>
-                <RHFSwitch
-                    name="antecedentes_penales"
-                    label="Antecedentes penales"
-                    labelPlacement="end"
-
-                />
-                <RHFSwitch
-                    name="procesos_judiciales"
-                    label="Procesos Judiciales"
-                    labelPlacement="end"
-
-                />
-                <RHFSwitch
-                    name="estado"
-                    label="Estado"
-                    labelPlacement="end"
-
-                />
-            </Stack>
+            
             <Stack direction="row" spacing={1.5} maxWidth={400} margin="auto" mt={5}>
 
-                <Link href={PATH_DASHBOARD.compradores.root} passHref legacyBehavior>
+                <Link href={PATH_DASHBOARD.usuarios.root} passHref legacyBehavior>
                     <Button
                         fullWidth
                         color="inherit"

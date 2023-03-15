@@ -15,6 +15,12 @@ const navConfig = [
     // subheader: 'Productos',
     items: [
       {
+        title: 'Subastas',
+        path: PATH_DASHBOARD.eventos.listado,
+        icon: <MdPointOfSale />,
+        roles: ['admin', 'editor'],
+      },
+      {
         title: 'Proveedores',
         path: PATH_DASHBOARD.proveedores.root,
         icon: <HiTruck />,
