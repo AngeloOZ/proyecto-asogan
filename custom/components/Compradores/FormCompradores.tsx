@@ -23,7 +23,7 @@ import FormProvider, {
 import { compradores as IComprador } from '@prisma/client';
 import { useCompradores } from './Hooks';
 import Link from 'next/link';
-import prisma from 'database/prismaClient';
+
 import { PATH_DASHBOARD } from 'src/routes/paths';
 
 type FormValuesProps = IComprador;
@@ -33,7 +33,7 @@ type Props = {
 }
 
 export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
-
+ 
     const { push } = useRouter();
     const { enqueueSnackbar } = useSnackbar();
     const { agregarComprador, actualizarComprador } = useCompradores();
@@ -72,6 +72,9 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
         procesos_judiciales: compradorEditar?.procesos_judiciales || false,
         estado: compradorEditar?.estado || false,
         usuarioid: compradorEditar?.usuarioid || 0,
+        nombres: compradorEditar?.usuario.nombres,  
+        identificacion: compradorEditar?.usuario.identificacion,
+
 
     }), [compradorEditar]);
 
@@ -155,7 +158,7 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
 
                     />
                 </Stack>
-                <Stack direction="row" spacing={1.5} maxWidth={400} margin="auto" mt={5} >
+                <Stack direction="row" spacing={1.5} maxWidth={400} margin="auto" mt={5}>
 
                     <Link href={PATH_DASHBOARD.compradores.root} passHref legacyBehavior>
                         <Button

@@ -6,18 +6,19 @@ export const useCompradores = () => {
 
     const { mutate } = useSWRConfig();
 
-    const agregarComprador = async (proveedor: any) => {
-        const { data } = await subastaAPI.post('/compradores', proveedor);
+    const agregarComprador = async (comprador: any) => {
+        const { data } = await subastaAPI.post('/compradores', comprador);
         mutate('/compradores');
     }
 
-    const actualizarComprador= async (proveedor: any) => {
-        const { data } = await subastaAPI.put('/compradores', proveedor);
+    const actualizarComprador= async (comprador: any) => {
+        const { data } = await subastaAPI.put('/compradores', comprador);
         mutate('/compradores');
     }
 
-    const eliminarComprador = async (proveedor: any) => {
-        const { data } = await subastaAPI.delete('/compradores', proveedor);
+    const eliminarComprador = async (comprador: any) => {
+        
+        const { data } = await subastaAPI.delete(`/compradores?id= ${comprador}`);
         mutate('/compradores');
     }
 
