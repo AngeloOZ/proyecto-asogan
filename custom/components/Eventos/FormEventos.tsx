@@ -1,25 +1,14 @@
+import { useEffect, useMemo } from 'react';
+import { useForm } from 'react-hook-form';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-
-import { useEffect, useMemo, useState } from 'react';
-import * as Yup from 'yup';
-// next
-// form
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Controller, useForm } from 'react-hook-form';
-// @mui
-import { DatePicker, LoadingButton } from '@mui/lab';
-import { Grid, Card, Stack, Button, Typography, MenuItem, TextField } from '@mui/material';
-
-// components
-import { useSnackbar } from '../../../src/components/snackbar';
-import FormProvider, {
-    RHFSwitch,
-    RHFTextField,
-} from '../../../src/components/hook-form';
-
 import { useEventos } from '.';
-
+import { LoadingButton } from '@mui/lab';
+import { Card, Stack, Button } from '@mui/material';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as Yup from 'yup';
+import FormProvider, { RHFSwitch, RHFTextField } from '../../../src/components/hook-form';
+import { useSnackbar } from '../../../src/components/snackbar';
 import { PATH_DASHBOARD } from 'src/routes/paths';
 import { eventos } from '@prisma/client';
 import moment from 'moment';
@@ -32,13 +21,6 @@ type Props = {
     eventoEditar?: eventos;
 }
 
-// type eventos = {
-//     id_evento: number
-//     fecha: string | null
-//     lugar: string | null
-//     tipo: string | null
-//     abierto: boolean | null
-// }
 
 export function FormEventos({ esEditar = false, eventoEditar }: Props) {
     const { push } = useRouter();
@@ -67,7 +49,8 @@ export function FormEventos({ esEditar = false, eventoEditar }: Props) {
     // Se carga los valores en caso de que sea editar
     const defaultValues = useMemo<eventos>(() => ({
         id_evento: eventoEditar?.id_evento || 0,
-        fecha: eventoEditar?.fecha || new Date().toISOString().slice(0, 10) as unknown as Date,
+        descripcion: eventoEditar?.descripcion || '',
+        fecha: eventoEditar?.fecha || moment().format('YYYY-MM-DD HH:mm') as unknown as Date,
         lugar: eventoEditar?.lugar || '',
         tipo: eventoEditar?.tipo || '',
         abierto: eventoEditar?.abierto || true,
@@ -113,22 +96,29 @@ export function FormEventos({ esEditar = false, eventoEditar }: Props) {
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
             <Card sx={{ p: 3, boxShadow: "0 0 2px rgba(0,0,0,0.2)" }}>
                 <Stack spacing={2}>
-
+                    <RHFTextField
+                        name="descripcion"
+                        label="Descripcion"
+                        size='small'
+                        autoComplete='off'
+                    />
                     <RHFTextField
                         name="fecha"
                         label="Fecha"
                         size='small'
-                        type={'date'}
+                        type={'datetime-local'}
                     />
                     <RHFTextField
                         name="lugar"
                         label="Lugar"
                         size='small'
+                        autoComplete='off'
                     />
                     <RHFTextField
                         name="tipo"
                         label="Tipo"
                         size='small'
+                        autoComplete='off'
                     />
 
                     <RHFSwitch
