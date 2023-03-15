@@ -34,7 +34,7 @@ const navConfig = [
       },
       {
         title: 'Lotes',
-        path: PATH_DASHBOARD.lotes.agregar,
+        path: PATH_DASHBOARD.lotes.root,
         icon: <FaCubes />,
         roles: ['admin', 'editor'],
       },

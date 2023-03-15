@@ -36,10 +36,10 @@ type FormValuesProps = LoteForm;
 
 type Props = {
     esEditar?: boolean;
-    proveedoraEditar?: lotes;
+    loteEditar?: lotes;
 }
 
-export function FormLotes({ esEditar = false, proveedoraEditar }: Props) {
+export function FormLotes({ esEditar = false, loteEditar }: Props) {
     const { push } = useRouter();
     const { enqueueSnackbar } = useSnackbar();
     const { eventos, isLoading: isLoadingEventos } = useObtenerEventos();
@@ -47,7 +47,7 @@ export function FormLotes({ esEditar = false, proveedoraEditar }: Props) {
     const { agregarLote, actualizarLote } = useLotes();
 
     useEffect(() => {
-        if (esEditar && proveedoraEditar) {
+        if (esEditar && loteEditar) {
             reset(defaultValues);
         }
 
@@ -56,7 +56,7 @@ export function FormLotes({ esEditar = false, proveedoraEditar }: Props) {
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [esEditar, proveedoraEditar]);
+    }, [esEditar, loteEditar]);
 
     // Validaciones de los campos
     const ProveedorEsquema = Yup.object().shape({
@@ -78,23 +78,23 @@ export function FormLotes({ esEditar = false, proveedoraEditar }: Props) {
 
     // Se carga los valores en caso de que sea editar
     const defaultValues = useMemo<LoteForm>(() => ({
-        id_lote: proveedoraEditar?.id_lote || 0,
-        fecha_pesaje: proveedoraEditar?.fecha_pesaje?.toString() || '',
-        codigo_lote: proveedoraEditar?.codigo_lote || '',
-        cantidad_animales: proveedoraEditar?.cantidad_animales || 0,
-        tipo_animales: proveedoraEditar?.tipo_animales || '',
-        calidad_animales: proveedoraEditar?.calidad_animales || '',
-        sexo: proveedoraEditar?.sexo || '',
-        procedencia: proveedoraEditar?.procedencia || '',
-        crias_hembras: proveedoraEditar?.crias_hembras || 0,
-        crias_machos: proveedoraEditar?.crias_machos || 0,
-        peso_total: Number(proveedoraEditar?.peso_total) || 0,
-        observaciones: proveedoraEditar?.observaciones || '',
-        id_evento: proveedoraEditar?.id_evento || '',
-        id_proveedor: proveedoraEditar?.id_proveedor || '',
-        puja_inicial: Number(proveedoraEditar?.puja_inicial) || 0,
-        incremento: Number(proveedoraEditar?.incremento) || 0,
-    }), [proveedoraEditar]);
+        id_lote: loteEditar?.id_lote || 0,
+        fecha_pesaje: new Date(loteEditar?.fecha_pesaje || new Date()).toISOString().slice(0, 10),
+        codigo_lote: loteEditar?.codigo_lote || '',
+        cantidad_animales: loteEditar?.cantidad_animales || 0,
+        tipo_animales: loteEditar?.tipo_animales || '',
+        calidad_animales: loteEditar?.calidad_animales || '',
+        sexo: loteEditar?.sexo || '',
+        procedencia: loteEditar?.procedencia || '',
+        crias_hembras: loteEditar?.crias_hembras || 0,
+        crias_machos: loteEditar?.crias_machos || 0,
+        peso_total: Number(loteEditar?.peso_total) || 0,
+        observaciones: loteEditar?.observaciones || '',
+        id_evento: loteEditar?.id_evento || '',
+        id_proveedor: loteEditar?.id_proveedor || '',
+        puja_inicial: Number(loteEditar?.puja_inicial) || 0,
+        incremento: Number(loteEditar?.incremento) || 0,
+    }), [loteEditar]);
 
     // funciones para el hook useForm
     const methods = useForm<FormValuesProps>({
@@ -111,17 +111,15 @@ export function FormLotes({ esEditar = false, proveedoraEditar }: Props) {
 
     // Funcion para enviar el formulario
     const onSubmit = async (data: FormValuesProps) => {
-        // return console.log(data);
         try {
             if (!esEditar) {
                 await agregarLote(data);
                 enqueueSnackbar('Lote agregado correctamente', { variant: 'success' });
-                // push(PATH_DASHBOARD.proveedores.root);
             } else {
                 await actualizarLote(data);
                 enqueueSnackbar('Lote actualizado correctamente', { variant: 'success' });
-                // push(PATH_DASHBOARD.proveedores.root);
             }
+            push(PATH_DASHBOARD.lotes.root);
             // reset();
         } catch (error) {
             console.error(error);
@@ -253,7 +251,7 @@ export function FormLotes({ esEditar = false, proveedoraEditar }: Props) {
                         </Stack>
 
                         <Stack direction="row" spacing={1.5} maxWidth={400} margin="auto" mt={2}>
-                            <Link href={PATH_DASHBOARD.proveedores.root} passHref legacyBehavior>
+                            <Link href={PATH_DASHBOARD.lotes.root} passHref legacyBehavior>
                                 <Button
                                     fullWidth
                                     color="inherit"
