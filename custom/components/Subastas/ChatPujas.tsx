@@ -25,7 +25,7 @@ export const ChatPujas = ({ lote }: ChatPujasProps) => {
                             pujas?.map(puja => (
                                 <Box component="div" padding={1} key={puja.id_puja} style={{ backgroundColor: 'royalblue', borderRadius: 5, color: "#fff" }}>
                                     <Typography component="p" m={0}>Paleta Comprador: <strong>#{puja.codigo_paleta}</strong></Typography>
-                                    <Typography component="p" >Oferta: <strong>#{Number(puja.puja).toFixed(2)}</strong></Typography>
+                                    <Typography component="p" >Oferta: <strong>${Number(puja.puja).toFixed(2)}</strong></Typography>
                                 </Box>))
                         }
                     </Stack>

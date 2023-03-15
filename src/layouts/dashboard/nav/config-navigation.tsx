@@ -1,5 +1,5 @@
 import { Inventory, Category } from '@mui/icons-material';
-import { MdLoyalty } from 'react-icons/md';
+import { MdLoyalty, MdPointOfSale } from 'react-icons/md';
 import { HiTruck, HiCalendar } from 'react-icons/hi';
 import { FaCubes, FaHammer } from 'react-icons/fa';
 // import { HiTruck, HiShoppingCart} from 'react-icons/hi';
