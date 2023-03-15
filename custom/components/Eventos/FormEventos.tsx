@@ -67,7 +67,7 @@ export function FormEventos({ esEditar = false, eventoEditar }: Props) {
     // Se carga los valores en caso de que sea editar
     const defaultValues = useMemo<eventos>(() => ({
         id_evento: eventoEditar?.id_evento || 0,
-        fecha: eventoEditar?.fecha || new Date().toISOString().slice(0, 10),
+        fecha: eventoEditar?.fecha || new Date().toISOString().slice(0, 10) as unknown as Date,
         lugar: eventoEditar?.lugar || '',
         tipo: eventoEditar?.tipo || '',
         abierto: eventoEditar?.abierto || true,

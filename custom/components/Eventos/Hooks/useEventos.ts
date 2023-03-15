@@ -17,7 +17,7 @@ export const useEventos = () => {
     }
 
     const eliminarEvento = async (evento: any) => {
-        const { data } = await subastaAPI.delete('/eventos', evento);
+        const { data } = await subastaAPI.delete(`/eventos?id=${evento.id_evento}`);
         mutate('/eventos');
     }
 

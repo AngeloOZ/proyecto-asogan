@@ -29,7 +29,8 @@ async function obtenerEventos(req: NextApiRequest, res: NextApiResponse) {
                 where: { id_evento: Number(id) }
             });
             if (evento) {
-                evento.fecha = moment(evento.fecha).format('YYYY-MM-DD');
+                const fechaString = moment(evento.fecha).format('YYYY-MM-DD') as unknown as Date;
+                evento.fecha = fechaString;
             }
             return res.status(200).json(evento);
         }
@@ -99,10 +100,10 @@ async function actualizarEvento(req: NextApiRequest, res: NextApiResponse) {
 
 async function eliminarEvento(req: NextApiRequest, res: NextApiResponse) {
     try {
-        const { id_evento } = req.body;
+        const { id } = req.query;
 
         const evento = await prisma.eventos.delete({
-            where: { id_evento: Number(id_evento) }
+            where: { id_evento: Number(id) }
         });
 
         return res.status(204).json(evento);
