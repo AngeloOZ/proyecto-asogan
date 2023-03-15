@@ -18,4 +18,5 @@ export interface LoteForm {
     puja_inicial: number;
     puja_final?: number;
     subastado?: number;
+    incremento: number;
 }

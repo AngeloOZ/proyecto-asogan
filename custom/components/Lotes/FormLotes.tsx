@@ -21,13 +21,14 @@ import FormProvider, {
     RHFAutocomplete,
 } from '../../../src/components/hook-form';
 
-import { useProveedores } from '../Proveedores';
+import { useObtenerProveedores, useProveedores } from '../Proveedores';
 import { PATH_DASHBOARD } from 'src/routes/paths';
 import { LinearProgressBar } from '../LinearProgressBar';
 import { useObtenerCategories } from '../Categorias';
 import Link from 'next/link';
 import { LoteForm } from '@types';
 import { lotes } from '@prisma/client';
+import { useObtenerEventos } from '../Eventos';
 
 
 type FormValuesProps = LoteForm;
@@ -40,6 +41,8 @@ type Props = {
 export function FormLotes({ esEditar = false, proveedoraEditar }: Props) {
     const { push } = useRouter();
     const { enqueueSnackbar } = useSnackbar();
+    const { eventos, isLoading: isLoadingEventos } = useObtenerEventos();
+    const { proveedores, isLoading: isLoadingProve } = useObtenerProveedores();
     const { agregarProveedor, actualizarProveedor } = useProveedores();
 
     useEffect(() => {
@@ -69,6 +72,7 @@ export function FormLotes({ esEditar = false, proveedoraEditar }: Props) {
         id_evento: Yup.string().required('El evento es requerido'),
         id_proveedor: Yup.string().required('El proveedor es requerido'),
         puja_inicial: Yup.number().required('La puja inicial es requerida').min(0.0001, 'La puja inicial debe ser mayor a 0').typeError('La puja debe ser un valor numérico'),
+        incremento: Yup.number().required('La puja inicial es requerida').min(0.0001, 'La puja inicial debe ser mayor a 0').typeError('La puja debe ser un valor numérico'),
     });
 
     // Se carga los valores en caso de que sea editar
@@ -88,6 +92,7 @@ export function FormLotes({ esEditar = false, proveedoraEditar }: Props) {
         id_evento: proveedoraEditar?.id_evento || '',
         id_proveedor: proveedoraEditar?.id_proveedor || '',
         puja_inicial: Number(proveedoraEditar?.puja_inicial) || 0,
+        incremento: Number(proveedoraEditar?.incremento) || 0,
     }), [proveedoraEditar]);
 
     // funciones para el hook useForm
@@ -124,19 +129,7 @@ export function FormLotes({ esEditar = false, proveedoraEditar }: Props) {
         // }
     };
 
-    // if (isLoading) return <LinearProgressBar />
-
-    const opcionesEventos = [
-        { value: 1, label: 'Evento 1' },
-        { value: 2, label: 'Evento 2' },
-        { value: 3, label: 'Evento 3' },
-    ];
-
-    const opcionesProveedores = [
-        { value: 1, label: 'Proveedor 1' },
-        { value: 2, label: 'Proveedor 2' },
-        { value: 3, label: 'Proveedor 3' },
-    ];
+    if (isLoadingEventos || isLoadingProve) return <LinearProgressBar />
 
     return (
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -225,11 +218,11 @@ export function FormLotes({ esEditar = false, proveedoraEditar }: Props) {
                         <Stack spacing={2}>
 
                             <RHFSelect name='id_evento' label='Eventos' size='small'>
-                                {opcionesEventos.map((opcion) => <MenuItem value={opcion.value}>{opcion.label}</MenuItem>)}
+                                {eventos.map((evento) => <MenuItem key={evento.id_evento} value={evento.id_evento}>{evento.tipo}</MenuItem>)}
                             </RHFSelect>
 
                             <RHFSelect name='id_proveedor' label='Proveedores' size='small'>
-                                {opcionesProveedores.map((opcion) => <MenuItem value={opcion.value}>{opcion.label}</MenuItem>)}
+                                {proveedores.map((provedor) => <MenuItem key={provedor.id_proveedor} value={provedor.id_proveedor}>{provedor.nombres}</MenuItem>)}
                             </RHFSelect>
 
                             <RHFTextField
@@ -245,16 +238,18 @@ export function FormLotes({ esEditar = false, proveedoraEditar }: Props) {
                                 }}
                             />
 
-                            {/* <RHFTextField
+                            <RHFTextField
                                 name="incremento"
                                 label="Incremento"
                                 size='small'
                                 type='number'
-
                                 InputProps={{
                                     startAdornment: <InputAdornment position="start">$</InputAdornment>,
                                 }}
-                            /> */}
+                                inputProps={{
+                                    step: "any",
+                                }}
+                            />
                         </Stack>
 
                         <Stack direction="row" spacing={1.5} maxWidth={400} margin="auto" mt={2}>
