@@ -1,6 +1,7 @@
 import { lotes } from '@prisma/client';
 import { LoteForm } from '@types';
 import prisma from 'database/prismaClient'
+import moment from 'moment-timezone';
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 
@@ -22,30 +23,33 @@ const listado = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(200).json(lotes);
 }
 
-async function crearLote(req: NextApiRequest, res: NextApiResponse){
+async function crearLote(req: NextApiRequest, res: NextApiResponse) {
     try {
-        const { id_evento, id_proveedor, fecha_pesaje, codigo_lote, cantidad_animales, tipo_animales, calidad_animales, peso_total, sexo, crias_hembras, crias_machos, procedencia, observaciones, puja_inicial, incremento, subastado  } = req.body as LoteForm;
+        const { id_evento, id_proveedor, fecha_pesaje, codigo_lote, cantidad_animales, tipo_animales, calidad_animales, peso_total, sexo, crias_hembras, crias_machos, procedencia, observaciones, puja_inicial, incremento } = req.body as LoteForm;
+
+        // return res.status(200).json(req.body);
+
+        const formattedDate = moment(fecha_pesaje, 'YYYY/MM/DD').toDate();
 
         const lote = await prisma.lotes.create({
             data: {
                 id_evento: Number(id_evento),
                 id_proveedor: Number(id_proveedor),
-                fecha_pesaje: fecha_pesaje,
+                fecha_pesaje: formattedDate,
                 codigo_lote,
-                cantidad_animales: Number(cantidad_animales),
+                cantidad_animales: cantidad_animales,
                 tipo_animales,
                 calidad_animales,
-                peso_total: Number(peso_total),
+                peso_total: peso_total,
                 sexo,
-                crias_hembras: Number(crias_hembras),
-                crias_machos: Number(crias_machos),
+                crias_hembras: crias_hembras,
+                crias_machos: crias_machos,
                 procedencia,
                 observaciones,
-                puja_inicial: Number(puja_inicial),
-                puja_final: Number(puja_inicial),
-                
-                incremento: Number(incremento),
-                subastado: Number(subastado)
+                puja_inicial: puja_inicial,
+                puja_final: puja_inicial,
+                incremento: incremento,
+                subastado: 0,
             }
         });
         return res.status(200).json(lote);

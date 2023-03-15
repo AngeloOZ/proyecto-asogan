@@ -29,6 +29,7 @@ import Link from 'next/link';
 import { LoteForm } from '@types';
 import { lotes } from '@prisma/client';
 import { useObtenerEventos } from '../Eventos';
+import { useLotes } from './Hooks';
 
 
 type FormValuesProps = LoteForm;
@@ -43,7 +44,7 @@ export function FormLotes({ esEditar = false, proveedoraEditar }: Props) {
     const { enqueueSnackbar } = useSnackbar();
     const { eventos, isLoading: isLoadingEventos } = useObtenerEventos();
     const { proveedores, isLoading: isLoadingProve } = useObtenerProveedores();
-    const { agregarProveedor, actualizarProveedor } = useProveedores();
+    const { agregarLote, actualizarLote } = useLotes();
 
     useEffect(() => {
         if (esEditar && proveedoraEditar) {
@@ -110,23 +111,22 @@ export function FormLotes({ esEditar = false, proveedoraEditar }: Props) {
 
     // Funcion para enviar el formulario
     const onSubmit = async (data: FormValuesProps) => {
-        console.log(data);
-
-        // try {
-        //     if (!esEditar) {
-        //         await agregarProveedor(data);
-        //         enqueueSnackbar('Proveedor agregado correctamente', { variant: 'success' });
-        //         push(PATH_DASHBOARD.proveedores.root);
-        //     } else {
-        //         await actualizarProveedor(data);
-        //         enqueueSnackbar('Proveedor actualizado correctamente', { variant: 'success' });
-        //         push(PATH_DASHBOARD.proveedores.root);
-        //     }
-        //     reset();
-        // } catch (error) {
-        //     console.error(error.message);
-        //     enqueueSnackbar("Oops... hubo un error " + error.message, { variant: 'error' });
-        // }
+        // return console.log(data);
+        try {
+            if (!esEditar) {
+                await agregarLote(data);
+                enqueueSnackbar('Lote agregado correctamente', { variant: 'success' });
+                // push(PATH_DASHBOARD.proveedores.root);
+            } else {
+                await actualizarLote(data);
+                enqueueSnackbar('Lote actualizado correctamente', { variant: 'success' });
+                // push(PATH_DASHBOARD.proveedores.root);
+            }
+            // reset();
+        } catch (error) {
+            console.error(error);
+            enqueueSnackbar("Oops... hubo un error " + error.message, { variant: 'error' });
+        }
     };
 
     if (isLoadingEventos || isLoadingProve) return <LinearProgressBar />
@@ -218,7 +218,7 @@ export function FormLotes({ esEditar = false, proveedoraEditar }: Props) {
                         <Stack spacing={2}>
 
                             <RHFSelect name='id_evento' label='Eventos' size='small'>
-                                {eventos.map((evento) => <MenuItem key={evento.id_evento} value={evento.id_evento}>{evento.tipo}</MenuItem>)}
+                                {eventos.map((evento) => <MenuItem key={evento.id_evento} value={evento.id_evento}>{evento.descripcion}</MenuItem>)}
                             </RHFSelect>
 
                             <RHFSelect name='id_proveedor' label='Proveedores' size='small'>
