@@ -1,7 +1,7 @@
 import { Inventory, Category } from '@mui/icons-material';
 import { MdLoyalty } from 'react-icons/md';
 import { HiTruck, HiCalendar } from 'react-icons/hi';
-import { FaCubes } from 'react-icons/fa';
+import { FaCubes, FaHammer } from 'react-icons/fa';
 // import { HiTruck, HiShoppingCart} from 'react-icons/hi';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
@@ -12,7 +12,7 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 
 const navConfig = [
   {
-    subheader: 'Productos',
+    // subheader: 'Productos',
     items: [
       {
         title: 'Proveedores',
@@ -24,7 +24,7 @@ const navConfig = [
         title: 'Compradores',
         path: PATH_DASHBOARD.compradores.root,
         icon: <HiTruck />,
-        roles: ['admin','editor'],
+        roles: ['admin', 'editor'],
       },
       {
         title: 'Lotes',
@@ -42,19 +42,25 @@ const navConfig = [
       //     { title: 'Agregar', path: PATH_DASHBOARD.categorias.agregar },
       //   ]
       // },
-    ],
-  },
-  {
-    subheader: 'Ventas',
-    items: [
       {
-        roles: ['admin', 'vendedor'],
-        title: 'Ventas',
-        path: PATH_DASHBOARD.ventas.root,
-        icon: <MdLoyalty />,
+        title: 'Martillador',
+        path: PATH_DASHBOARD.martillador.root,
+        icon: <FaHammer />,
+        roles: ['martillador'],
       },
     ],
   },
+  // {
+  //   subheader: 'Ventas',
+  //   items: [
+  //     {
+  //       roles: ['martillador'],
+  //       title: 'Ventas',
+  //       path: PATH_DASHBOARD.ventas.root,
+  //       icon: <MdLoyalty />,
+  //     },
+  //   ],
+  // },
 
 ];
 
