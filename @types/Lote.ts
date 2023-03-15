@@ -4,7 +4,7 @@ export interface LoteForm {
     id_proveedor: number | string | null | undefined;
     id_comprador?: number | null | undefined;
     paleta_comprador?: string | null;
-    fecha_pesaje: string;
+    fecha_pesaje: string | Date | null | undefined;
     codigo_lote: string;
     cantidad_animales: number;
     tipo_animales: string;

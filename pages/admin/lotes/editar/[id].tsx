@@ -7,16 +7,16 @@ import DashboardLayout from 'src/layouts/dashboard/DashboardLayout'
 import { Container } from '@mui/material'
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs/CustomBreadcrumbs'
 import { PATH_DASHBOARD } from 'src/routes/paths'
-import { FormProveedores, LinearProgressBar } from 'custom/components'
+import { FormLotes, FormProveedores, LinearProgressBar } from 'custom/components'
 import { subastaAPI } from 'custom/api'
-import { proveedores } from '@prisma/client'
+import { lotes } from '@prisma/client'
 
 
 PageAdmin.getLayout = (page: React.ReactElement) => <DashboardLayout>{page}</DashboardLayout>
 
 export default function PageAdmin() {
     const { query } = useRouter();
-    const [proveedorActual, setProveedorActual] = useState<proveedores>();
+    const [loteActual, setLoteActual] = useState<lotes>();
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
@@ -28,8 +28,8 @@ export default function PageAdmin() {
 
     const obtenerProducto = async () => {
         try {
-            const { data } = await subastaAPI.get(`/proveedores?id=${query.id}`);
-            setProveedorActual(data);
+            const { data } = await subastaAPI.get(`/lotes?id=${query.id}`);
+            setLoteActual(data);
             setIsLoading(false);
         } catch (error) {
             console.log(error);
@@ -43,18 +43,18 @@ export default function PageAdmin() {
 
         <>
             <Head>
-                <title>Editar de proveedor</title>
+                <title>Editar de lote</title>
             </Head>
             <Container maxWidth={false}>
                 <CustomBreadcrumbs
-                    heading="Proveedores"
+                    heading="Lotes"
                     links={[
-                        { name: 'Lista de proveedores', href: PATH_DASHBOARD.proveedores.root },
-                        { name: 'Editar proveedor' },
+                        { name: 'Lista de lotes', href: PATH_DASHBOARD.lotes.root },
+                        { name: 'Editar lote' },
                     ]}
                 />
 
-                <FormProveedores esEditar proveedoraEditar={proveedorActual} />
+                <FormLotes esEditar loteEditar={loteActual} />
 
             </Container>
         </>
