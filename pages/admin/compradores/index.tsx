@@ -28,10 +28,10 @@ export default function PageAdminCompradores() {
         router.push(`${PATH_DASHBOARD.compradores.editar}/${item.id_comprador}`);
     }
 
-    const handleClickDeleteRow = (item: IComprador) => {
+    const handleClickDeleteRow = async (item: IComprador) => {
         try {
           
-            eliminarComprador(item.id_comprador)
+            await eliminarComprador(item.id_comprador)
             enqueueSnackbar('Comprador eliminado correctamente', { variant: 'success' });
             router.push(PATH_DASHBOARD.compradores.root);
 
@@ -61,7 +61,7 @@ export default function PageAdminCompradores() {
             <TableCustom
                 headers={[
                     { label: "ID", name: "id_comprador", type: 'number', serchable: false },
-                    { label: 'Identificacion', name: 'identificacion' },
+                    { label: 'Identificacion', name: 'identificacion'},
                     { label: 'Nombres', name: 'nombres' },
                     { label: '#Paleta', name: 'codigo_paleta' },
                     { label: 'Antecedentes Penales', name: 'antecedentes_penales', align: 'center' },
