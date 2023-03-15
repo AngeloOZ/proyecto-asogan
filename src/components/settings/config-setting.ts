@@ -7,7 +7,7 @@ import { SettingsValueProps } from './types';
 export const defaultSettings: SettingsValueProps = {
   themeMode: 'light',
   themeDirection: 'ltr',
-  themeContrast: 'default',
+  themeContrast: 'bold',
   themeLayout: 'vertical',
   themeColorPresets: 'default',
   themeStretch: false,

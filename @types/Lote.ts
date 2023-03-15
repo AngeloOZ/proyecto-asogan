@@ -16,7 +16,6 @@ export interface LoteForm {
     procedencia: string;
     observaciones: string;
     puja_inicial: number;
-    puja_final?: number;
     subastado?: number;
     incremento: number;
 }

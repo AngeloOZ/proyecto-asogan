@@ -59,7 +59,7 @@ model lotes {
   puja_inicial      Decimal?     @db.Decimal(8, 2)
   puja_final        Decimal?     @db.Decimal(8, 2)
   incremento        Decimal?     @default(0) @db.Decimal(10, 0)
-  subastado         Boolean?
+  subastado         Int?         @default(0) @db.TinyInt
   compradores       compradores? @relation(fields: [id_comprador], references: [id_comprador], onDelete: Restrict, onUpdate: Restrict, map: "fk_lotes_compradores")
   eventos           eventos      @relation(fields: [id_evento], references: [id_evento], onUpdate: Restrict, map: "fk_lotes_eventos")
   proveedores       proveedores  @relation(fields: [id_proveedor], references: [id_proveedor], onUpdate: Restrict, map: "fk_lotes_proveedores")
@@ -71,7 +71,7 @@ model lotes {
 
 model proveedores {
   id_proveedor   Int     @id @default(autoincrement())
-  identificacion String  @db.VarChar(20)
+  identificacion String  @unique(map: "unique_prove_iden") @db.VarChar(20)
   nombres        String  @db.VarChar(300)
   direccion      String  @db.VarChar(300)
   telefono       String  @db.VarChar(15)

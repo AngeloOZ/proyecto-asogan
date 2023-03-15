@@ -45,12 +45,13 @@ export default function PageAdminProveedores() {
                         { label: 'Identificacion', name: 'identificacion' },
                         { label: 'Nombres', name: 'nombres', },
                         { label: 'WhatsApp', name: 'telefono' },
+                        { label: 'Correo', name: 'correo' },
+                        { label: 'Dirección', name: 'direccion', },
                     ]}
                     isLoading={isLoading}
                     dataBody={proveedores}
                     isActions={true}
                     handeEdit={handleClickEditRow}
-
                 />
             </Container>
         </>

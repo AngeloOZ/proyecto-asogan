@@ -68,6 +68,7 @@ export function FormProveedores({ esEditar = false, proveedoraEditar }: Props) {
         direccion: proveedoraEditar?.direccion || '',
         correo: proveedoraEditar?.correo || '',
         telefono: proveedoraEditar?.telefono || '',
+        estado: proveedoraEditar?.estado || 1,
     }), [proveedoraEditar]);
 
     // funciones para el hook useForm
@@ -96,7 +97,7 @@ export function FormProveedores({ esEditar = false, proveedoraEditar }: Props) {
             }
             reset();
         } catch (error) {
-            console.error(error.message);
+            console.error(error);
             enqueueSnackbar("Oops... hubo un error " + error.message, { variant: 'error' });
         }
     };
