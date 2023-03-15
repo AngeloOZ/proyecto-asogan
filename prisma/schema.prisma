@@ -31,12 +31,13 @@ model compradores {
 }
 
 model eventos {
-  id_evento Int       @id @default(autoincrement())
-  fecha     DateTime? @db.Date
-  lugar     String?   @db.VarChar(100)
-  tipo      String?   @db.VarChar(50)
-  abierto   Boolean?
-  lotes     lotes[]
+  id_evento   Int       @id @default(autoincrement())
+  descripcion String?   @db.VarChar(300)
+  fecha       DateTime? @db.Date
+  lugar       String?   @db.VarChar(100)
+  tipo        String?   @db.VarChar(50)
+  abierto     Boolean?
+  lotes       lotes[]
 }
 
 model lotes {
