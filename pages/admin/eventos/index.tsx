@@ -1,14 +1,14 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import DashboardLayout from 'src/layouts/dashboard/DashboardLayout'
-import { TableCustom, useEventos, useObtenerEventos } from 'custom/components'
+import { TableCustom } from 'custom/components'
 import { Button, Container } from '@mui/material'
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs/CustomBreadcrumbs'
 import { PATH_DASHBOARD } from 'src/routes/paths'
 import { useRouter } from 'next/router'
 import { eventos } from '@prisma/client'
-import { subastaAPI } from "custom/api";
 import { useSnackbar } from 'notistack'
+import { useEventos, useObtenerEventos } from 'custom/components/Eventos/Hooks';
 
 PageAdminEventos.getLayout = (page: React.ReactElement) => <DashboardLayout>{page}</DashboardLayout>
 
@@ -45,7 +45,7 @@ export default function PageAdminEventos() {
                     ]}
                 />
 
-                <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "-25px" }}>
+                <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "-25px", marginBottom: "10px" }}>
                     <Link href={PATH_DASHBOARD.eventos.agregar} passHref legacyBehavior>
                         <Button variant='contained'>Agregar evento</Button>
                     </Link>
@@ -54,6 +54,7 @@ export default function PageAdminEventos() {
                 <TableCustom
                     headers={[
                         { label: "ID", name: "id_evento", type: 'number', serchable: false },
+                        { label: 'Descripcion', name: 'descripcion' },
                         { label: 'Fecha', name: 'fecha' },
                         { label: 'Lugar', name: 'lugar', },
                         { label: 'Tipo', name: 'tipo' },

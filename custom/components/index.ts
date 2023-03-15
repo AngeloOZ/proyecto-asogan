@@ -8,4 +8,3 @@ export * from './Ventas';
 export * from './Lotes';
 export * from './Proveedores';
 export * from './Compradores';
-export * from './Usuarios';
