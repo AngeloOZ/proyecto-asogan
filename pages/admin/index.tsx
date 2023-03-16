@@ -14,7 +14,7 @@ export default function Index() {
     if (router.pathname === PATH_ADMIN) {
       switch (rol[0]) {
         case 'admin':
-          router.push(PATH_DASHBOARD.productos.root);
+          router.push(PATH_DASHBOARD.eventos.root);
           break;
         case 'martillador':
           router.push(PATH_DASHBOARD.martillador.root);
@@ -23,7 +23,7 @@ export default function Index() {
         //   router.push(PATH_DASHBOARD.ventas.root);
         //   break;
         default:
-          router.push(PATH_DASHBOARD.productos.root);
+          router.push(PATH_DASHBOARD.eventos.root);
       }
     }
   });
