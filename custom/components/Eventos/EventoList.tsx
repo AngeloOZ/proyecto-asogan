@@ -1,8 +1,9 @@
-import { Box, BoxProps } from "@mui/material"
+import { Box, BoxProps, Skeleton } from "@mui/material"
 import { EventoItem } from "."
 
 interface Props extends BoxProps {
-    eventos: LotesEventos[]
+    eventos: LotesEventos[],
+    isLoading: boolean
 }
 
 export interface LotesEventos {
@@ -38,7 +39,7 @@ export interface Lote {
     subastado: number;
 }
 
-export const EventoList = ({ eventos }: Props) => {
+export const EventoList = ({ eventos, isLoading }: Props) => {
     return (
         <Box
             gap={2}
@@ -48,7 +49,13 @@ export const EventoList = ({ eventos }: Props) => {
                 sm: 'repeat(3, 1fr)',
             }}
         >
-            {eventos.map((evento) => <EventoItem key={evento.id_evento} eventos={evento} />)}
+            {isLoading ?
+                // Mostrar el skeleton si isLoading es verdadero
+                <Skeleton variant="rectangular" width="100%" height={118} animation="wave" />
+                :
+                // Mostrar la lista de eventos si isLoading es falso
+                eventos.map((evento) => <EventoItem key={evento.id_evento} eventos={evento} />)
+            }
         </Box>
     )
 }

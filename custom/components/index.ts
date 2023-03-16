@@ -23,7 +23,7 @@ export * from './Subastas';
 
 
 // Jhusep
-
+export * from './Eventos';
 
 
 
