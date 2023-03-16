@@ -7,8 +7,7 @@ import prisma from 'database/prismaClient';
 export default async function (req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'GET') {
         const { lote } = req.query;
-        console.log(lote);
-
+    
         if (lote) {
             const pujas = await prisma.pujas.findMany({
                 where: {

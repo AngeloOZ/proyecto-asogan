@@ -3,6 +3,7 @@ import { lotes, pujas } from "@prisma/client";
 import { subastaAPI } from "custom/api";
 
 import useSWR from "swr";
+import { ChatItem } from "./ChatItem";
 
 const fetcher = (url: string) => subastaAPI.get(url).then(r => r.data)
 
@@ -17,20 +18,16 @@ export const ChatPujas = ({ lote }: ChatPujasProps) => {
     console.log(pujas);
 
     return (
-        <Card sx={{ p: 2.5 }} >
+        <Card >
             <Grid container>
-                <Grid item xs={6}>
-                    <Stack spacing={2}>
+                <Grid item xs={7} borderRight="1px #ccc dashed">
+                    <Stack spacing={1} p={1}>
                         {
-                            pujas?.map(puja => (
-                                <Box component="div" padding={1} key={puja.id_puja} style={{ backgroundColor: 'royalblue', borderRadius: 5, color: "#fff" }}>
-                                    <Typography component="p" m={0}>Paleta Comprador: <strong>#{puja.codigo_paleta}</strong></Typography>
-                                    <Typography component="p" >Oferta: <strong>${Number(puja.puja).toFixed(2)}</strong></Typography>
-                                </Box>))
+                            pujas?.map(puja => <ChatItem key={puja.id_puja} puja={puja} />)
                         }
                     </Stack>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={5}>
 
                 </Grid>
             </Grid>

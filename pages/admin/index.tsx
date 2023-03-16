@@ -11,22 +11,21 @@ export default function Index() {
   const router = useRouter();
 
   useEffect(() => {
-    router.push(PATH_DASHBOARD.proveedores.root);
-    // if (router.pathname === PATH_ADMIN) {
-    //   switch (rol[0]) {
-    //     case 'admin':
-    //       router.push(PATH_DASHBOARD.productos.root);
-    //       break;
-    //     case 'editor':
-    //       router.push(PATH_DASHBOARD.productos.root);
-    //       break;
-    //     case 'vendedor':
-    //       router.push(PATH_DASHBOARD.ventas.root);
-    //       break;
-    //     default:
-    //       router.push(PATH_DASHBOARD.productos.root);
-    //   }
-    // }
+    if (router.pathname === PATH_ADMIN) {
+      switch (rol[0]) {
+        case 'admin':
+          router.push(PATH_DASHBOARD.productos.root);
+          break;
+        case 'martillador':
+          router.push(PATH_DASHBOARD.martillador.root);
+          break;
+        // case 'vendedor':
+        //   router.push(PATH_DASHBOARD.ventas.root);
+        //   break;
+        default:
+          router.push(PATH_DASHBOARD.productos.root);
+      }
+    }
   });
 
   return <LoadingScreen />;

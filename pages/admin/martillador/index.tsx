@@ -19,15 +19,13 @@ PageAdminProveedores.getLayout = (page: React.ReactElement) => <DashboardLayout>
 export default function PageAdminProveedores() {
     const [loteActual, setLoteActual] = useState<ILote>()
 
-
-
     return (
         <>
             <Head>
-                <title>Subasta FFFFFFF</title>
+                <title>Subasta #123</title>
             </Head>
             <Container maxWidth={false}>
-                <Grid container spacing={1}>
+                <Grid container spacing={2}>
                     <Grid item xs={12}>
                         <LoteMartillador setLoteActualRoot={setLoteActual} />
                     </Grid>
