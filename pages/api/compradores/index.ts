@@ -57,7 +57,8 @@ async function crearComprador(req: NextApiRequest, res: NextApiResponse) {
                     identificacion,
                     nombres,
                     clave: identificacion,
-                    rol: `["comprador"]`
+                    rol: `["comprador"]`,
+                    tipo: 2
                 }
             });
             const { codigo_paleta, antecedentes_penales, procesos_judiciales, calificacion_bancaria, estado }: compradores = req.body;

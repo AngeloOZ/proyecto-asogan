@@ -18,12 +18,12 @@ export * from './Subastas';
 
 // Leidy
 
-
+export * from './Usuarios';
 
 
 
 // Jhusep
-
+export * from './Eventos';
 
 
 

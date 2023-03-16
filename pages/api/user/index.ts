@@ -29,7 +29,7 @@ export default function (req: NextApiRequest, res: NextApiResponse) {
                 return res.status(200).json(usuario);
             }
 
-            const usuarios = await prisma.usuario.findMany();
+            const usuarios = await prisma.usuario.findMany({where:{tipo:1}});
             const usuariosRol = usuarios.map((usuario) => ({ ...usuario, rol: (JSON.parse(usuario.rol)[0]).charAt(0).toUpperCase() + (JSON.parse(usuario.rol)[0]).slice(1)}));
            
             return res.status(200).json(usuariosRol);
@@ -58,7 +58,8 @@ export default function (req: NextApiRequest, res: NextApiResponse) {
                     identificacion,
                     nombres,
                     clave,
-                    rol: `["${rol}"]`
+                    rol: `["${rol}"]`,
+                    tipo:1
                 }
             });
 

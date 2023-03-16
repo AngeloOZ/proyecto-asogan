@@ -25,11 +25,12 @@ import { useCompradores } from './Hooks';
 import Link from 'next/link';
 
 import { PATH_DASHBOARD } from 'src/routes/paths';
+import { ICompradores } from '../../../interfaces';
 
 type FormValuesProps = IComprador;
 type Props = {
     esEditar?: boolean;
-    compradorEditar?: IComprador;
+    compradorEditar?: ICompradores;
 }
 
 export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
@@ -64,7 +65,6 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
     // Se carga los valores en caso de que sea editar
     const defaultValues = useMemo<IComprador>(() => ({
 
-
         id_comprador: compradorEditar?.id_comprador || 0,
         codigo_paleta: compradorEditar?.codigo_paleta || '',
         calificacion_bancaria: compradorEditar?.calificacion_bancaria || '',
@@ -72,8 +72,8 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
         procesos_judiciales: compradorEditar?.procesos_judiciales || false,
         estado: compradorEditar?.estado || false,
         usuarioid: compradorEditar?.usuarioid || 0,
-        nombres: compradorEditar?.usuario.nombres || '',
-        identificacion: compradorEditar?.usuario.identificacion || '' ,
+        nombres: compradorEditar?.usuario?.nombres || '',
+        identificacion: compradorEditar?.usuario?.identificacion || '' ,
 
 
     }), [compradorEditar]);
