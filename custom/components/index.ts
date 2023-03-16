@@ -9,3 +9,23 @@ export * from './Lotes';
 export * from './Proveedores';
 export * from './Compradores';
 export * from './Subastas';
+
+// Angello
+
+
+
+
+
+// Leidy
+
+
+
+
+
+// Jhusep
+
+
+
+
+
+

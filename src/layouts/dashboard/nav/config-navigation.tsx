@@ -14,6 +14,18 @@ const navConfig = [
   {
     // subheader: 'Productos',
     items: [
+      // Angello
+
+
+
+
+
+
+
+
+
+
+
       {
         title: 'Subastas',
         path: PATH_DASHBOARD.eventos.listado,
@@ -38,35 +50,37 @@ const navConfig = [
         icon: <FaCubes />,
         roles: ['admin', 'editor'],
       },
-      // {
-      //   title: 'categorias',
-      //   path: PATH_DASHBOARD.categorias.root,
-      //   icon: <Category />,
-      //   roles: ['admin','editor'],
-      //   children: [
-      //     { title: 'Listar', path: PATH_DASHBOARD.categorias.root, },
-      //     { title: 'Agregar', path: PATH_DASHBOARD.categorias.agregar },
-      //   ]
-      // },
       {
         title: 'Martillador',
         path: PATH_DASHBOARD.martillador.root,
         icon: <FaHammer />,
         roles: ['martillador'],
       },
+      // Leidy
+
+
+
+
+
+
+
+
+
+
+      // Jhusep
+
+
+
+
+
+
+
+
+
+
+
     ],
   },
-  // {
-  //   subheader: 'Ventas',
-  //   items: [
-  //     {
-  //       roles: ['martillador'],
-  //       title: 'Ventas',
-  //       path: PATH_DASHBOARD.ventas.root,
-  //       icon: <MdLoyalty />,
-  //     },
-  //   ],
-  // },
 
 ];
 
