@@ -20,20 +20,20 @@ export default function PageAdminUsuarios() {
     const { eliminarUsuario } = useUsuario();
     const { enqueueSnackbar } = useSnackbar();
 
-    
+
     const handleClickEditRow = (item: IUsuario) => {
         router.push(`${PATH_DASHBOARD.usuarios.editar}/${item.usuarioid}`);
     }
 
     const handleClickDeleteRow = async (item: IUsuario) => {
         try {
-          
+
             await eliminarUsuario(item.usuarioid)
             enqueueSnackbar('Usuario eliminado correctamente', { variant: 'success' });
             router.push(PATH_DASHBOARD.usuarios.root);
 
         } catch (error) {
-             enqueueSnackbar("Oops... hubo un error " + error.message, { variant: 'error' });
+            enqueueSnackbar("Oops... hubo un error " + error.message, { variant: 'error' });
         }
     }
 
@@ -60,7 +60,7 @@ export default function PageAdminUsuarios() {
             <TableCustom
                 headers={[
                     { label: "ID", name: "usuarioid", type: 'number', serchable: false },
-                    { label: 'Identificacion', name: 'identificacion'},
+                    { label: 'Identificacion', name: 'identificacion' },
                     { label: 'Nombres', name: 'nombres' },
                     { label: 'Rol', name: 'rol', align: 'center' },
                 ]}

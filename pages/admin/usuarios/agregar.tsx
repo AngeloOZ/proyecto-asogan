@@ -27,7 +27,7 @@ export default function PageAdminUsuarios() {
                     ]}
                 />
 
-              <FormUsuarios/> 
+                <FormUsuarios />
 
             </Container>
         </>

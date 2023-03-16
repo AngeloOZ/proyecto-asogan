@@ -11,7 +11,7 @@ import { useForm } from 'react-hook-form';
 
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Card, Stack, Button,MenuItem } from '@mui/material';
+import { Card, Stack, Button, MenuItem } from '@mui/material';
 
 // components
 import { useSnackbar } from '../../../src/components/snackbar';
@@ -55,7 +55,7 @@ export function FormUsuarios({ esEditar = false, usuariosEditar }: Props) {
 
     // Validaciones de los campos
     const UsuariosEsquema = Yup.object().shape({
-        identificacion: Yup.string().required('La identificacion es requerido'),
+        identificacion: Yup.string().required('La identificacion es requerido').min(10, 'La identificacion no puede tener menos de 10 caracteres').max(13, 'La identificacion no puede tener mas de 13 caracteres'),
         nombres: Yup.string().required('El nombre es requerido').max(300, 'El nombre no puede tener mas de 300 caracteres'),
         clave: Yup.string().required('La clave es requerida').max(10, 'La clave no puede tener mas de 10 digitos'),
         rol: Yup.string().required('El rol es requerido'),
@@ -72,9 +72,8 @@ export function FormUsuarios({ esEditar = false, usuariosEditar }: Props) {
         nombres: usuariosEditar?.nombres || '',
         identificacion: usuariosEditar?.identificacion || '',
         clave: usuariosEditar?.clave || '',
+        rol: JSON.parse(usuariosEditar?.rol || `[""]`)[0],
         tipo: usuariosEditar?.tipo || 1,
-        rol  : JSON.parse(usuariosEditar?.rol||`[""]`)[0] 
-
     }), [usuariosEditar]);
 
 
@@ -104,8 +103,8 @@ export function FormUsuarios({ esEditar = false, usuariosEditar }: Props) {
             }
             reset();
         } catch (error) {
-            
-            enqueueSnackbar("Oops... hubo un error " + error.message, { variant: 'error' });
+
+            enqueueSnackbar("Oops... hubo un error " + error.response.data.message, { variant: 'error' });
         }
     }
 
@@ -117,6 +116,7 @@ export function FormUsuarios({ esEditar = false, usuariosEditar }: Props) {
                     name="identificacion"
                     label="Identificación"
                     size='small'
+                    disabled={esEditar}
                 />
                 <RHFTextField
                     name="nombres"
@@ -129,6 +129,7 @@ export function FormUsuarios({ esEditar = false, usuariosEditar }: Props) {
                     label="Clave"
                     size='small'
                     type='password'
+                    inputProps={{ autoComplete: "new-password" }}
                 />
 
                 <RHFTextField
@@ -138,13 +139,13 @@ export function FormUsuarios({ esEditar = false, usuariosEditar }: Props) {
                     type='password'
                 />
                 <RHFSelect name='rol' label='Rol' size='small'>
-                    
+
                     <MenuItem value="admin">Administrador</MenuItem>
                     <MenuItem value="martillador">Martillador</MenuItem>
                     <MenuItem value="contabilidad">Contabilidad</MenuItem>
                 </RHFSelect>
             </Stack>
-            
+
             <Stack direction="row" spacing={1.5} maxWidth={400} margin="auto" mt={5}>
 
                 <Link href={PATH_DASHBOARD.usuarios.root} passHref legacyBehavior>

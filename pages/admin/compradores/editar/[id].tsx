@@ -11,6 +11,7 @@ import { FormCompradores, LinearProgressBar } from 'custom/components'
 import { subastaAPI } from 'custom/api'
 import { compradores } from '@prisma/client'
 
+
 PageAdmin.getLayout = (page: React.ReactElement) => <DashboardLayout>{page}</DashboardLayout>
 
 export default function PageAdmin() {
