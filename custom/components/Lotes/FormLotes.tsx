@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 // next
 import { useRouter } from 'next/router';
 // form
@@ -43,6 +43,14 @@ export function FormLotes({ esEditar = false, loteEditar }: Props) {
     const { eventos, isLoading: isLoadingEventos } = useObtenerEventos();
     const { proveedores, isLoading: isLoadingProve } = useObtenerProveedores();
     const { agregarLote, actualizarLote } = useLotes();
+    const [codigoLote, setCodigoLote] = useState(generateUniqueNumber());
+
+    function generateUniqueNumber(): string {
+        const min = 10000;
+        const max = 99999;
+        const uniqueNumber = Math.floor(Math.random() * (max - min + 1) + min);
+        return uniqueNumber.toString().slice(-6);
+      }
 
     useEffect(() => {
         if (esEditar && loteEditar) {
@@ -78,7 +86,7 @@ export function FormLotes({ esEditar = false, loteEditar }: Props) {
     const defaultValues = useMemo<LoteForm>(() => ({
         id_lote: loteEditar?.id_lote || 0,
         fecha_pesaje: new Date(loteEditar?.fecha_pesaje || new Date()).toISOString().slice(0, 10),
-        codigo_lote: loteEditar?.codigo_lote || '',
+        codigo_lote: loteEditar?.codigo_lote || codigoLote,
         cantidad_animales: loteEditar?.cantidad_animales || 0,
         tipo_animales: loteEditar?.tipo_animales || '',
         calidad_animales: loteEditar?.calidad_animales || '',
@@ -104,13 +112,16 @@ export function FormLotes({ esEditar = false, loteEditar }: Props) {
         reset,
         watch,
         handleSubmit,
+        setValue,
         formState: { isSubmitting },
     } = methods;
+    const values = watch();
 
     // Funcion para enviar el formulario
     const onSubmit = async (data: FormValuesProps) => {
         try {
             if (!esEditar) {
+                data.codigo_lote = data.id_evento +'-'+ data.codigo_lote;
                 await agregarLote(data);
                 enqueueSnackbar('Lote agregado correctamente', { variant: 'success' });
             } else {
@@ -118,7 +129,7 @@ export function FormLotes({ esEditar = false, loteEditar }: Props) {
                 enqueueSnackbar('Lote actualizado correctamente', { variant: 'success' });
             }
             push(PATH_DASHBOARD.lotes.root);
-            // reset();
+            reset();
         } catch (error) {
             console.error(error);
             enqueueSnackbar("Oops... hubo un error " + error.message, { variant: 'error' });
@@ -134,15 +145,17 @@ export function FormLotes({ esEditar = false, loteEditar }: Props) {
                     <Card sx={{ p: 2, boxShadow: "0 0 2px rgba(0,0,0,0.2)" }}>
                         <Stack spacing={2}>
                             <RHFTextField
-                                name="fecha_pesaje"
-                                // label="Fecha de pesaje"
-                                // value={watch('fecha_pesaje')}
-                                type='date'
-                                size='small'
-                            />
-                            <RHFTextField
                                 name="codigo_lote"
                                 label="Código de lote"
+                                size='small'
+                                inputProps={{
+                                    readOnly: true,
+                                }}
+                            />
+                            <RHFTextField
+                                name="fecha_pesaje"
+                                label="Fecha de pesaje"
+                                type='date'
                                 size='small'
                             />
                             <RHFTextField
