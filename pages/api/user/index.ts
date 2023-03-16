@@ -46,7 +46,7 @@ export default function (req: NextApiRequest, res: NextApiResponse) {
         try {
             const { identificacion, nombres, rol, clave }: usuario = req.body
             const { verificacion_clave } = req.body
-            if (clave != verificacion_clave) {
+            if (clave !== verificacion_clave) {
                 
                 return res.status(500).json({ message: 'la clave no coincide' });
             }
@@ -80,8 +80,8 @@ export default function (req: NextApiRequest, res: NextApiResponse) {
             const { id,verificacion_clave } = req.query;
             const { identificacion, nombres, rol, clave}: usuario = req.body
 
-            if (verificacion_clave != "")  {
-                if (clave != verificacion_clave) {
+            if (verificacion_clave !== "")  {
+                if (clave !== verificacion_clave) {
                     return res.status(500).json({ message: 'la clave no coincide' });
                 }
             }

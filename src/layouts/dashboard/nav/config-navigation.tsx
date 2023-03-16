@@ -12,85 +12,58 @@ import { PATH_DASHBOARD, PATH_DASHBOARD_CLEINTE } from '../../../routes/paths';
 
 const navConfig = [
   {
-    // subheader: 'Productos',
+    subheader: 'Productos',
     items: [
-      // Angello
       {
         title: 'Subastas cliente',
         path: PATH_DASHBOARD_CLEINTE.root,
         icon: <MdPointOfSale />,
         roles: ['comprador'],
       },
-
-
-
-
       {
         title: 'Subastas',
         path: PATH_DASHBOARD.eventos.listado,
         icon: <MdPointOfSale />,
-        roles: ['admin', 'editor'],
+        roles: ['admin',],
       },
       {
         title: 'Proveedores',
         path: PATH_DASHBOARD.proveedores.root,
         icon: <HiTruck />,
-        roles: ['admin', 'editor'],
+        roles: ['admin',],
       },
       {
         title: 'Compradores',
         path: PATH_DASHBOARD.compradores.root,
         icon: <HiTruck />,
-        roles: ['admin', 'editor'],
+        roles: ['admin',],
       },
       {
         title: 'Lotes',
         path: PATH_DASHBOARD.lotes.root,
         icon: <FaCubes />,
-        roles: ['admin', 'editor'],
+        roles: ['admin',],
       },
       {
         title: 'Martillador',
         path: PATH_DASHBOARD.martillador.root,
         icon: <FaHammer />,
-        roles: ['admin','martillador'],
+        roles: ['admin', 'martillador'],
       },
-      // Leidy
-
-
-      { 
-        title:'Usuarios',
+      {
+        title: 'Usuarios',
         path: PATH_DASHBOARD.usuarios.root,
         icon: <Inventory />,
-        roles: ['admin', 'editor'],
+        roles: ['admin',],
       },
-
-
-
-
-
-
-
-      // Jhusep
-
       {
         title: 'Eventos',
         path: PATH_DASHBOARD.eventos.root,
         icon: <HiCalendar />,
-        roles: ['admin', 'editor'],
+        roles: ['admin',],
       },
-
-
-
-
-
-
-
-
-
     ],
   },
-
 ];
 
 export default navConfig;

@@ -10,6 +10,7 @@ import { PATH_DASHBOARD } from 'src/routes/paths'
 import { FormCompradores, LinearProgressBar } from 'custom/components'
 import { subastaAPI } from 'custom/api'
 import { compradores } from '@prisma/client'
+import { ICompradores } from 'interfaces'
 
 
 PageAdmin.getLayout = (page: React.ReactElement) => <DashboardLayout>{page}</DashboardLayout>
@@ -55,7 +56,7 @@ export default function PageAdmin() {
                     ]}
                 />
 
-                <FormCompradores esEditar compradorEditar={compradorActual} />
+                <FormCompradores esEditar compradorEditar={compradorActual as unknown as ICompradores} />
 
             </Container>
         </>

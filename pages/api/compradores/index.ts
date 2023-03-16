@@ -72,7 +72,7 @@ async function crearComprador(req: NextApiRequest, res: NextApiResponse) {
             });
             const { codigo_paleta, antecedentes_penales, procesos_judiciales, calificacion_bancaria, estado }: compradores = req.body;
 
-            const verificaCompradorPaleta = await prisma.compradores.findUnique({ where: { codigo_paleta: codigo_paleta } });
+            const verificaCompradorPaleta = await prisma.compradores.findUnique({ where: { codigo_paleta: codigo_paleta! } });
 
             if (verificaCompradorPaleta) {
                 return res.status(500).json({ message: 'el codigo de la paleta ya existe' });

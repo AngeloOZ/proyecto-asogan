@@ -5,8 +5,6 @@ import { Box, Divider, Drawer } from '@mui/material';
 //
 // import Footer from './Footer';
 import { useContext, useState } from 'react';
-import { CartContext } from 'context';
-import { Cart } from 'custom/components/cart';
 import Header from './Header';
 
 
@@ -27,8 +25,6 @@ export default function MainLayout({ showCart = true, children }: Props) {
     setStateViewCart(!stateViewCart);
   };
 
-  const ctx = useContext(CartContext);
-  const { totalItems } = ctx;
 
   return (
     <Box
@@ -39,7 +35,7 @@ export default function MainLayout({ showCart = true, children }: Props) {
         fillOpacity: 10
       }}
     >
-      <Header showButtonsCart={showCart} totalItems={totalItems} onShowCart={handleShowCart} />
+      <Header showButtonsCart={showCart} totalItems={0} onShowCart={handleShowCart} />
       <Box
         component="main"
         sx={{
@@ -66,9 +62,7 @@ export default function MainLayout({ showCart = true, children }: Props) {
                 },
               },
             }}
-          >
-            <Cart onShowCart={handleShowCart} />
-          </Drawer>)
+          />)
         }
 
         {children}

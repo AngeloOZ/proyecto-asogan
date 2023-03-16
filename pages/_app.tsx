@@ -40,7 +40,6 @@ import SnackbarProvider from '../src/components/snackbar';
 import { MotionLazyContainer } from '../src/components/animate';
 import { ThemeSettings, SettingsProvider } from '../src/components/settings';
 import '../custom/styles/globals.css';
-import axios from "axios";
 
 
 const clientSideEmotionCache = createEmotionCache();

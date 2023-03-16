@@ -41,6 +41,7 @@ export default function NavMini() {
       >
         <Logo sx={{ mx: 'auto', my: 2 }} />
 
+        {/* eslint-disable-next-line */}
         <NavSectionMini data={navConfig} />
       </Stack>
     </Box>
