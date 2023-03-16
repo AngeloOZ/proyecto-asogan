@@ -8,9 +8,7 @@ type Data = {
   error: any;
 }
 
-export const useObtenerLotes = (): Data => {
-
-
+export const useObtenerLotes = () => {
   const { data, isLoading, error } = useSWR('/lotes');
   return {
     lotes: data || [],
@@ -18,3 +16,4 @@ export const useObtenerLotes = (): Data => {
     error
   }
 }
+

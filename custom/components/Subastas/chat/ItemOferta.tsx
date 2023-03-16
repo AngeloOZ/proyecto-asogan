@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import { useContext } from 'react'
 import { Box, Stack, Typography, useTheme } from '@mui/material'
 
 import { pujas } from '@prisma/client'
@@ -7,15 +7,11 @@ import { AuthContext } from 'src/auth'
 type Props = {
     puja: pujas
 }
-export const ChatItem = ({ puja }: Props) => {
+export const ItemOferta = ({ puja }: Props) => {
     const theme = useTheme();
 
-    const { user } = useContext(AuthContext)
-
-    const isMe = user?.usuarioid === puja.id_comprador;
-
     return (
-        <Stack direction="row" justifyContent={isMe ? "flex-end" : "flex-start"}>
+        <Stack direction="row" mb={2}>
             <Box
                 component="div"
                 padding={0.5}
@@ -24,7 +20,7 @@ export const ChatItem = ({ puja }: Props) => {
                 width="90%"
                 maxWidth="200px"
                 style={{
-                    backgroundColor: isMe ? theme.palette.primary.main : theme.palette.grey[300],
+                    backgroundColor: theme.palette.success.main,
                     borderRadius: 5,
                 }}
             >

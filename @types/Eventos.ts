@@ -5,6 +5,7 @@ export interface LotesEventos {
     lugar: string;
     tipo: string;
     abierto: boolean;
+    uuid?: string;
     lotes: Lote[];
 }
 

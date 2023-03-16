@@ -18,9 +18,10 @@ export const VideoPlayer = ({ ...other }: VideoPlayerProps) => {
   return (
     <Box {...other} component="div" width="100%" height="100%">
       <ReactPlayer
-        url="https://www.youtube.com/live/jfKfPfyJRdk?feature=share"
+        url="https://youtu.be/P_SYwtp1BJs"
         playing={play}
         width="100%"
+        muted
         onReady={() => setPlay(true)}
         style={{
           aspectRatio: "16/9",

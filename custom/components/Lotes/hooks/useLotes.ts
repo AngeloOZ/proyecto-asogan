@@ -23,4 +23,5 @@ export const useLotes = () => {
     }
 
     return { agregarLote, actualizarLote, eliminarLote }
+
 }

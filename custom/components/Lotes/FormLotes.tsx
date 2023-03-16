@@ -27,7 +27,7 @@ import Link from 'next/link';
 import { LoteForm } from '@types';
 import { lotes } from '@prisma/client';
 import { useObtenerEventos } from '../Eventos';
-import { useLotes } from './Hooks';
+import { useLotes } from './hooks';
 
 
 type FormValuesProps = LoteForm;

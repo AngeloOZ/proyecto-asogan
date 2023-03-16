@@ -19,7 +19,11 @@ export const EventoList = ({ eventos, isLoading }: Props) => {
         >
             {isLoading ?
                 // Mostrar el skeleton si isLoading es verdadero
-                <Skeleton variant="rectangular" width="100%" height={118} animation="wave" />
+                <>
+                    <Skeleton variant="rectangular" width="100%" height={350} animation="wave" />
+                    <Skeleton variant="rectangular" width="100%" height={350} animation="wave" />
+                    <Skeleton variant="rectangular" width="100%" height={350} animation="wave" />
+                </>
                 :
                 // Mostrar la lista de eventos si isLoading es falso
                 eventos.map((evento) => <EventoItem key={evento.id_evento} eventos={evento} />)

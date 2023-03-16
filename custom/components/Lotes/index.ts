@@ -1,2 +1,2 @@
-export * from './Hooks';
+export * from './hooks';
 export * from './FormLotes';
