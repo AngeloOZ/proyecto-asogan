@@ -69,7 +69,12 @@ const navConfig = [
 
       // Jhusep
 
-
+      {
+        title: 'Eventos',
+        path: PATH_DASHBOARD.martillador.root,
+        icon: <HiCalendar />,
+        roles: ['admin', 'editor'],
+      },
 
 
 
