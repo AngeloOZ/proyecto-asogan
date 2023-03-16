@@ -59,7 +59,12 @@ const navConfig = [
       // Leidy
 
 
-
+      { 
+        title:'Usuarios',
+        path: PATH_DASHBOARD.usuarios.root,
+        icon: <Inventory />,
+        roles: ['admin', 'editor'],
+      },
 
 
 
