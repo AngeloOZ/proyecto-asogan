@@ -23,6 +23,9 @@ export const PATH_DASHBOARD_CLEINTE = {
 
 export const PATH_DASHBOARD = {
   root: PATH_ADMIN,
+  subastas: {
+    root: path(PATH_ADMIN, '/subastas'),
+  },
   martillador: {
     root: path(PATH_ADMIN, '/martillador'),
     agregar: path(PATH_ADMIN, '/martillador/agregar'),

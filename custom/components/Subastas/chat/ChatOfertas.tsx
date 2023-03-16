@@ -5,11 +5,10 @@ import { Box, Drawer, IconButton, IconButtonProps } from '@mui/material';
 // hooks
 import useResponsive from 'src/hooks/useResponsive';
 // @types
+// import { IChatConversation, IChatParticipant } from '../../../../@types/chat';
 // components
 import Iconify from 'src/components/iconify';
 
-
-// ----------------------------------------------------------------------
 
 const StyledToggleButton = styled((props) => (
     <IconButton disableRipple {...props} />
@@ -33,16 +32,12 @@ const StyledToggleButton = styled((props) => (
 
 // ----------------------------------------------------------------------
 
-const NAV_WIDTH = 240;
+const NAV_WIDTH = 200;
 
-
-export default function ChatRoom({ }) {
+export function ChatOfertas() {
     const theme = useTheme();
-
     const isDesktop = useResponsive('up', 'lg');
-
     const [openNav, setOpenNav] = useState(true);
-
 
     const onOpenNav = () => {
         setOpenNav(true);
@@ -61,7 +56,6 @@ export default function ChatRoom({ }) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isDesktop]);
 
-
     return (
         <Box sx={{ position: 'relative' }}>
             <StyledToggleButton
@@ -79,43 +73,27 @@ export default function ChatRoom({ }) {
                 />
             </StyledToggleButton>
 
-            {isDesktop ? (
-                <Drawer
-                    open={openNav}
-                    anchor="right"
-                    variant="persistent"
-                    PaperProps={{
-                        sx: {
-                            width: 1,
-                            position: 'static',
-                        },
-                    }}
-                    sx={{
-                        height: 1,
-                        width: NAV_WIDTH,
-                        transition: theme.transitions.create('width'),
-                        ...(!openNav && {
-                            width: 0,
-                        }),
-                    }}
-                >
-                </Drawer>
-            ) : (
-                <Drawer
-                    anchor="right"
-                    open={openNav}
-                    onClose={onCloseNav}
-                    ModalProps={{ keepMounted: true }}
-                    PaperProps={{
-                        sx: {
-                            width: NAV_WIDTH,
-                        },
-                    }}
-                >  
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nemo quod, magni natus dolore ratione veniam delectus, fugiat recusandae, blanditiis libero nulla reprehenderit quos eveniet temporibus eum. Autem voluptatum aspernatur harum.
-
-                </Drawer>
-            )}
+            <Drawer
+                open={openNav}
+                anchor="right"
+                variant="persistent"
+                PaperProps={{
+                    sx: {
+                        width: 1,
+                        position: 'static',
+                    },
+                }}
+                sx={{
+                    height: 1,
+                    width: NAV_WIDTH,
+                    transition: theme.transitions.create('width'),
+                    ...(!openNav && {
+                        width: 0,
+                    }),
+                }}
+            >
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Distinctio ipsum, autem voluptas culpa, inventore eius est maxime accusantium tenetur nemo officiis magni. Repellat magnam quis velit? Recusandae quaerat consequuntur unde.
+            </Drawer>
         </Box>
     );
 }

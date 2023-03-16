@@ -21,9 +21,7 @@ import FormProvider, {
 
 import { useProveedores } from '.';
 import { PATH_DASHBOARD } from 'src/routes/paths';
-import { LinearProgressBar } from '../LinearProgressBar';
 import { proveedores as IProveedor } from '@prisma/client';
-import { useObtenerCategories } from '../Categorias';
 import Link from 'next/link';
 
 

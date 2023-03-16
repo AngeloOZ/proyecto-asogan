@@ -72,7 +72,7 @@ export function FormUsuarios({ esEditar = false, usuariosEditar }: Props) {
         nombres: usuariosEditar?.nombres || '',
         identificacion: usuariosEditar?.identificacion || '',
         clave: usuariosEditar?.clave || '',
-        
+        tipo: usuariosEditar?.tipo || 1,
         rol  : JSON.parse(usuariosEditar?.rol||`[""]`)[0] 
 
     }), [usuariosEditar]);

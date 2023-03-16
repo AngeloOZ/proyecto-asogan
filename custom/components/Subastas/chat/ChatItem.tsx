@@ -12,10 +12,10 @@ export const ChatItem = ({ puja }: Props) => {
 
     const { user } = useContext(AuthContext)
 
-    const isMe = user?.usuarioid === puja.id_comprador;
+    const isMe = user?.usuarioid === puja.id_usuario;
 
     return (
-        <Stack direction="row" justifyContent={isMe ? "flex-end" : "flex-start"}>
+        <Stack direction="row" justifyContent={isMe ? "flex-end" : "flex-start"} mb={2}>
             <Box
                 component="div"
                 padding={0.5}

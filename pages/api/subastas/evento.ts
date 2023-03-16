@@ -6,17 +6,15 @@ import prisma from 'database/prismaClient';
 
 export default async function (req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'GET') {
-        const { lote } = req.query;
-
-        if (isNaN(Number(lote))) return res.status(202).json([]);
-
-        if (lote) {
-            const pujas = await prisma.pujas.findMany({
+        const { evento } = req.query as { evento: string };
+    
+        if (evento) {
+            const reqEvento = await prisma.eventos.findFirst({
                 where: {
-                    id_lote: Number(lote)
+                    uuid: evento
                 },
             });
-            return res.status(200).json(pujas);
+            return res.status(200).json(reqEvento);
         }
 
         return res.status(404).json({ message: 'Not found' })

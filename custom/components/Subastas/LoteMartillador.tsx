@@ -1,5 +1,3 @@
-import { useRouter } from "next/router";
-
 import { Box, BoxProps, Card, Grid, InputAdornment, MenuItem, Stack, TextField } from "@mui/material"
 import { lotes } from "@prisma/client";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
@@ -16,11 +14,14 @@ import FormProvider, {
 import { useForm } from "react-hook-form";
 import moment from "moment-timezone";
 import { LoadingButton } from "@mui/lab";
+import { subastaAPI } from "custom/api";
 
 
 interface LoteMartillador extends BoxProps {
     // other?: BoxProps
-    setLoteActualRoot: Dispatch<SetStateAction<lotes | undefined>>
+    setLoteActual: Dispatch<SetStateAction<lotes | undefined>>;
+    listadoLotes: lotes[];
+    loteActual: lotes | undefined;
 }
 
 type FormProps = {
@@ -29,15 +30,7 @@ type FormProps = {
     incremento: number;
 
 }
-export const LoteMartillador = ({ setLoteActualRoot }: LoteMartillador) => {
-    const { query } = useRouter();
-    const [idEventoActual, setIdEventoActual] = useState(3)
-    const [loteActual, setLoteActual] = useState<lotes>()
-    const [listadoLotes, setListadoLotes] = useState<lotes[]>([])
-
-    const { data: lotes } = useSWR(`/lotes/${idEventoActual}`) as { data: lotes[] };
-
-    // TODO: activar lote para compradores
+export const LoteMartillador = ({ loteActual, setLoteActual, listadoLotes }: LoteMartillador) => {
 
     const defaultValues = {
         id_lote: loteActual?.id_lote || '',
@@ -62,26 +55,24 @@ export const LoteMartillador = ({ setLoteActualRoot }: LoteMartillador) => {
     }
 
     useEffect(() => {
-        if (query.id) {
-
-        }
-    }, [query])
-
-    useEffect(() => {
-        if (lotes) {
-            setListadoLotes(lotes)
-        }
-    }, [lotes])
-
-    useEffect(() => {
         if (values.id_lote) {
-            setLoteActual(lotes.find(lote => lote.id_lote == values.id_lote))
+            setLoteActual(listadoLotes.find(lote => lote.id_lote == values.id_lote))
         }
     }, [values.id_lote]);
 
     useEffect(() => {
         reset(defaultValues)
-        setLoteActualRoot(loteActual)
+        setLoteActual(loteActual)
+
+        if(loteActual && loteActual.id_lote && loteActual.id_evento){
+            console.log(loteActual);
+            
+            subastaAPI.post('subastas/lotes', {
+                id_lote: loteActual?.id_lote,
+                id_evento: loteActual?.id_evento,
+            });
+        }
+
     }, [loteActual])
 
     return (

@@ -21,9 +21,9 @@ export const EventoItem = ({ eventos }: Props) => {
     };
   return (
     <>
-      <Card /*onClick={() => router.push(`${PATH_DASHBOARD.subastas.visualizar}/${eventos.id_evento}`)}*/>
-        {/* <CardActionArea> */}
+      <Card>
         <CardContent>
+        {/* <CardActionArea> */}
           {/* Tabla de Eventos */}
           <TableContainer>
             <Table size="small">
@@ -70,9 +70,11 @@ export const EventoItem = ({ eventos }: Props) => {
               </TableBody>
             </Table>
           </TableContainer>
+        {/* </CardActionArea> */}
+
           <Divider sx={{ marginTop: 1 }} />
 
-          <Typography align="center" variant="h5" >Lotes</Typography>
+          <Typography align="center" variant="h5" mt={1} >Lotes</Typography>
 
 
           {eventos.lotes.map(lote => (
@@ -193,7 +195,7 @@ export const EventoItem = ({ eventos }: Props) => {
             </Accordion>
           ))}
 
-          <Link href={PATH_DASHBOARD.eventos.root} passHref legacyBehavior>
+          <Link href={`${PATH_DASHBOARD.subastas.root}/${eventos.uuid}`} passHref legacyBehavior>
             <Button
               fullWidth
               color="primary"
@@ -204,7 +206,6 @@ export const EventoItem = ({ eventos }: Props) => {
             </Button>
           </Link>
         </CardContent>
-        {/* </CardActionArea> */}
       </Card>
     </>
   );
