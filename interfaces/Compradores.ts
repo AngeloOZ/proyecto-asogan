@@ -10,5 +10,5 @@ export interface ICompradores {
     usuarioid               : number
 
     usuario                 ?: usuario ;
-
+ 
 }
