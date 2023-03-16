@@ -1,14 +1,13 @@
 import * as Yup from 'yup';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 // next
 import { useRouter } from 'next/router';
 // form
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 // @mui
-import { DatePicker } from '@mui/x-date-pickers';
 import { LoadingButton } from '@mui/lab';
-import { Grid, Card, Stack, Button, Typography, MenuItem, TextField, InputAdornment } from '@mui/material';
+import { Grid, Card, Stack, Button, MenuItem, InputAdornment } from '@mui/material';
 
 // components
 import { useSnackbar } from '../../../src/components/snackbar';
@@ -21,10 +20,9 @@ import FormProvider, {
     RHFAutocomplete,
 } from '../../../src/components/hook-form';
 
-import { useObtenerProveedores, useProveedores } from '../Proveedores';
+import { useObtenerProveedores } from '../Proveedores';
 import { PATH_DASHBOARD } from 'src/routes/paths';
 import { LinearProgressBar } from '../LinearProgressBar';
-import { useObtenerCategories } from '../Categorias';
 import Link from 'next/link';
 import { LoteForm } from '@types';
 import { lotes } from '@prisma/client';

@@ -18,6 +18,11 @@ export const PATH_ADMIN = '/admin';
 
 export const PATH_DASHBOARD = {
   root: PATH_ADMIN,
+  martillador: {
+    root: path(PATH_ADMIN, '/martillador'),
+    agregar: path(PATH_ADMIN, '/martillador/agregar'),
+    editar: path(PATH_ADMIN, '/martillador/editar'),
+  },
   lotes: {
     root: path(PATH_ADMIN, '/lotes'),
     agregar: path(PATH_ADMIN, '/lotes/agregar'),
@@ -52,6 +57,11 @@ export const PATH_DASHBOARD = {
     root: path(PATH_ADMIN, '/compradores'),
     agregar: path(PATH_ADMIN, '/compradores/agregar'),
     editar: path(PATH_ADMIN, '/compradores/editar'),
+  },
+  usuarios:{
+    root: path(PATH_ADMIN, '/usuarios'),
+    agregar: path(PATH_ADMIN, '/usuarios/agregar'),
+    editar: path(PATH_ADMIN, '/usuarios/editar'),
   }
 };
 

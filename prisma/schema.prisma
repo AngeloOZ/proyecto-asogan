@@ -13,7 +13,9 @@ model usuario {
   identificacion String        @unique(map: "cedula") @db.VarChar(13)
   clave          String        @db.VarChar(255)
   rol            String        @db.VarChar(255)
+  tipo           Int?          @default(1)
   compradores    compradores[]
+  pujas          pujas[]
 }
 
 model compradores {
@@ -22,7 +24,7 @@ model compradores {
   antecedentes_penales  Boolean?
   procesos_judiciales   Boolean?
   calificacion_bancaria String?  @db.VarChar(50)
-  estado1               Boolean?
+  estado                Boolean?
   usuarioid             Int
   usuario               usuario  @relation(fields: [usuarioid], references: [usuarioid], onUpdate: Restrict, map: "fk_usuario_compradores")
   lotes                 lotes[]
@@ -33,10 +35,12 @@ model compradores {
 model eventos {
   id_evento   Int       @id @default(autoincrement())
   descripcion String?   @db.VarChar(300)
+  url_video   String?   @db.VarChar(300)
   fecha       DateTime? @db.DateTime(0)
   lugar       String?   @db.VarChar(100)
   tipo        String?   @db.VarChar(50)
   abierto     Boolean?
+  uuid        String?   @default(uuid()) @db.VarChar(300)
   lotes       lotes[]
 }
 
@@ -64,6 +68,7 @@ model lotes {
   compradores       compradores? @relation(fields: [id_comprador], references: [id_comprador], onDelete: Restrict, onUpdate: Restrict, map: "fk_lotes_compradores")
   eventos           eventos      @relation(fields: [id_evento], references: [id_evento], onUpdate: Restrict, map: "fk_lotes_eventos")
   proveedores       proveedores  @relation(fields: [id_proveedor], references: [id_proveedor], onUpdate: Restrict, map: "fk_lotes_proveedores")
+  pujas             pujas[]
 
   @@index([id_comprador], map: "fk_lotes_compradores")
   @@index([id_evento], map: "fk_lotes_eventos")
@@ -79,4 +84,18 @@ model proveedores {
   correo         String  @db.VarChar(50)
   estado         Int     @default(1) @db.TinyInt
   lotes          lotes[]
+}
+
+model pujas {
+  id_puja       Int       @id @default(autoincrement())
+  id_lote       Int
+  id_usuario    Int
+  puja          Decimal   @db.Decimal(10, 3)
+  codigo_paleta String    @db.VarChar(5)
+  fecha_creado  DateTime? @default(now()) @db.DateTime(0)
+  lotes         lotes     @relation(fields: [id_lote], references: [id_lote], onUpdate: Restrict, map: "fk_puja_lote")
+  usuario       usuario   @relation(fields: [id_usuario], references: [usuarioid], onUpdate: Restrict, map: "fk_puja_usuario")
+
+  @@index([id_usuario], map: "fk_puja_comprador")
+  @@index([id_lote], map: "fk_puja_lote")
 }

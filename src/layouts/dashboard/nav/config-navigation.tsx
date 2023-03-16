@@ -1,7 +1,7 @@
 import { Inventory, Category } from '@mui/icons-material';
 import { MdLoyalty, MdPointOfSale } from 'react-icons/md';
 import { HiTruck, HiCalendar } from 'react-icons/hi';
-import { FaCubes } from 'react-icons/fa';
+import { FaCubes, FaHammer } from 'react-icons/fa';
 // import { HiTruck, HiShoppingCart} from 'react-icons/hi';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
@@ -12,8 +12,20 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 
 const navConfig = [
   {
-    subheader: 'Productos',
+    // subheader: 'Productos',
     items: [
+      // Angello
+
+
+
+
+
+
+
+
+
+
+
       {
         title: 'Subastas',
         path: PATH_DASHBOARD.eventos.listado,
@@ -39,33 +51,34 @@ const navConfig = [
         roles: ['admin', 'editor'],
       },
       {
-        title: 'Eventos',
-        path: PATH_DASHBOARD.eventos.root,
-        icon: <HiCalendar />,
-        roles: ['admin', 'editor'],
+        title: 'Martillador',
+        path: PATH_DASHBOARD.martillador.root,
+        icon: <FaHammer />,
+        roles: ['martillador'],
       },
+      // Leidy
 
-      // {
-      //   title: 'categorias',
-      //   path: PATH_DASHBOARD.categorias.root,
-      //   icon: <Category />,
-      //   roles: ['admin','editor'],
-      //   children: [
-      //     { title: 'Listar', path: PATH_DASHBOARD.categorias.root, },
-      //     { title: 'Agregar', path: PATH_DASHBOARD.categorias.agregar },
-      //   ]
-      // },
-    ],
-  },
-  {
-    subheader: 'Ventas',
-    items: [
-      {
-        roles: ['admin', 'vendedor'],
-        title: 'Ventas',
-        path: PATH_DASHBOARD.ventas.root,
-        icon: <MdLoyalty />,
-      },
+
+
+
+
+
+
+
+
+
+      // Jhusep
+
+
+
+
+
+
+
+
+
+
+
     ],
   },
 
