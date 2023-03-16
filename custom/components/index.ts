@@ -18,7 +18,7 @@ export * from './Subastas';
 
 // Leidy
 
-
+export * from './Usuarios';
 
 
 
