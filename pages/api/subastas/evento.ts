@@ -14,10 +14,12 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
                     uuid: evento
                 },
             });
+            await prisma.$disconnect();
             return res.status(200).json(reqEvento);
         }
-
+        await prisma.$disconnect();
         return res.status(404).json({ message: 'Not found' })
     }
+    await prisma.$disconnect();
     return res.status(405).json({ message: 'Method not allowed' })
 }

@@ -21,7 +21,7 @@ const fetcher = (url: string) => subastaAPI.get(url).then(r => r.data)
 PageAdminProveedores.getLayout = (page: React.ReactElement) => <DashboardLayout>{page}</DashboardLayout>
 
 export default function PageAdminProveedores() {
-    const { rol: [rolLogged] } = useContext(AuthContext);
+
     const router = useRouter()
     const [uuidEvento, setUuidEvento] = useState('');
     const [loteActual, setLoteActual] = useState<lotes>()
@@ -51,7 +51,7 @@ export default function PageAdminProveedores() {
                     </Grid>
                     <Grid item xs={12} md={6}>
                         {
-                            loteActual && <ChatPujas lote={loteActual} />
+                            loteActual && <ChatPujas evento={evento} lote={loteActual} />
                         }
                     </Grid>
                 </Grid>

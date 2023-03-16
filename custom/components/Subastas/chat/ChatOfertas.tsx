@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
 // @mui
 import { useTheme, styled } from '@mui/material/styles';
-import { Box, Drawer, IconButton, IconButtonProps } from '@mui/material';
+import { Box, Drawer, IconButton, IconButtonProps, Stack } from '@mui/material';
 // hooks
 import useResponsive from 'src/hooks/useResponsive';
-// @types
-// import { IChatConversation, IChatParticipant } from '../../../../@types/chat';
-// components
+
 import Iconify from 'src/components/iconify';
+import { Puja } from '@types';
+import { ItemOferta } from '.';
+import { pujas } from '@prisma/client';
 
 
 const StyledToggleButton = styled((props) => (
@@ -32,9 +33,12 @@ const StyledToggleButton = styled((props) => (
 
 // ----------------------------------------------------------------------
 
-const NAV_WIDTH = 200;
+const NAV_WIDTH = 240;
 
-export function ChatOfertas() {
+type Props = {
+    ofetas: Puja[];
+}
+export function ChatOfertas({ ofetas = [] }: Props) {
     const theme = useTheme();
     const isDesktop = useResponsive('up', 'lg');
     const [openNav, setOpenNav] = useState(true);
@@ -92,7 +96,11 @@ export function ChatOfertas() {
                     }),
                 }}
             >
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Distinctio ipsum, autem voluptas culpa, inventore eius est maxime accusantium tenetur nemo officiis magni. Repellat magnam quis velit? Recusandae quaerat consequuntur unde.
+                <Stack spacing={1.5}>
+                    {
+                        ofetas.map((puja, index) => <ItemOferta puja={puja as unknown as pujas} key={puja.id_puja} />)
+                    }
+                </Stack>
             </Drawer>
         </Box>
     );

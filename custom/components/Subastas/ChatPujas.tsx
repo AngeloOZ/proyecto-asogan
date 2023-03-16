@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 
 import { Card, Stack } from "@mui/material"
-import { lotes, pujas } from "@prisma/client";
+import { eventos, lotes, pujas } from "@prisma/client";
 
 import { subastaAPI } from "custom/api";
 
 import useSWR from "swr";
 import { ChatInput, ChatList, ChatOfertas } from "./chat";
+import { Puja, PujasRequest } from "@types";
 
 
 
@@ -14,24 +15,34 @@ const fetcher = (url: string) => subastaAPI.get(url).then(r => r.data)
 
 
 interface ChatPujasProps {
-    // other?: BoxProps
-    lote: lotes | undefined
+    lote: lotes,
+    evento: eventos | undefined
 }
-export const ChatPujas = ({ lote }: ChatPujasProps) => {
-
-    const { data: pujas } = useSWR(`/subastas/pujas?lote=${lote?.id_lote}`, fetcher, { refreshInterval: 1500 }) as { data: pujas[] };
 
 
-    const scrollRef = useRef<HTMLDivElement>(null);
+export const ChatPujas = ({ lote, evento }: ChatPujasProps) => {
+    const [pujas, setPujas] = useState<Puja[]>([])
+    const [mejoresPujas, setMejoresPujas] = useState<Puja[]>([])
 
+    const { data } = useSWR(`/subastas/pujas?lote=${lote.id_lote}`, fetcher, { refreshInterval: 1500 }) as { data: PujasRequest };
 
     useEffect(() => {
+        if (data) {
+            setPujas(data.pujas)
+            setMejoresPujas(data.mejoresPujas);
+        }
+    }, [data])
+
+    const scrollRef = useRef<HTMLDivElement>(null);
+    useEffect(() => {
+
         const scrollMessagesToBottom = () => {
             if (scrollRef.current) {
                 scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
             }
         };
         scrollMessagesToBottom();
+
     }, [pujas]);
 
     return (
@@ -47,11 +58,11 @@ export const ChatPujas = ({ lote }: ChatPujasProps) => {
                     }}
                 >
                     <Stack flexGrow={1}>
-                        <ChatList pujas={pujas || []} />
-                        <ChatInput />
+                        <ChatList pujas={pujas as unknown as pujas[]} />
+                        <ChatInput lote={lote} />
                     </Stack>
 
-                    <ChatOfertas />
+                    <ChatOfertas ofetas={mejoresPujas} />
                 </Stack>
             </Stack>
         </Card>

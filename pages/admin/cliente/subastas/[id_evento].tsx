@@ -52,7 +52,7 @@ export default function PageAdminProveedores() {
                     </Grid>
                     <Grid item xs={12} md={6}>
                         {
-                            loteActual && <ChatPujas lote={loteActual} />
+                            loteActual && <ChatPujas evento={evento} lote={loteActual} />
                         }
                     </Grid>
                 </Grid>
