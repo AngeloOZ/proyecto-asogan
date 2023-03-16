@@ -16,6 +16,11 @@ export const DEFAULT_VENDEDOR = 1;
 
 export const PATH_ADMIN = '/admin';
 
+export const PATH_DASHBOARD_CLEINTE = {
+  root: path(PATH_ADMIN, '/cliente'),
+  subastas: path(PATH_ADMIN, '/cliente/subastas'),
+}
+
 export const PATH_DASHBOARD = {
   root: PATH_ADMIN,
   martillador: {
@@ -58,7 +63,7 @@ export const PATH_DASHBOARD = {
     agregar: path(PATH_ADMIN, '/compradores/agregar'),
     editar: path(PATH_ADMIN, '/compradores/editar'),
   },
-  usuarios:{
+  usuarios: {
     root: path(PATH_ADMIN, '/usuarios'),
     agregar: path(PATH_ADMIN, '/usuarios/agregar'),
     editar: path(PATH_ADMIN, '/usuarios/editar'),

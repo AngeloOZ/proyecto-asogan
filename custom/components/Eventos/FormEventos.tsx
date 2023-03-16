@@ -54,6 +54,8 @@ export function FormEventos({ esEditar = false, eventoEditar }: Props) {
         lugar: eventoEditar?.lugar || '',
         tipo: eventoEditar?.tipo || '',
         abierto: eventoEditar?.abierto || true,
+        url_video: eventoEditar?.url_video || '',
+        uuid: eventoEditar?.uuid || '',
     }), [eventoEditar]);
 
     // funciones para el hook useForm
@@ -111,6 +113,12 @@ export function FormEventos({ esEditar = false, eventoEditar }: Props) {
                     <RHFTextField
                         name="lugar"
                         label="Lugar"
+                        size='small'
+                        autoComplete='off'
+                    />
+                    <RHFTextField
+                        name="url_video"
+                        label="URL Video"
                         size='small'
                         autoComplete='off'
                     />

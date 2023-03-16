@@ -55,7 +55,7 @@ async function obtenerEventos(req: NextApiRequest, res: NextApiResponse) {
 
 async function crearEvento(req: NextApiRequest, res: NextApiResponse) {
     try {
-        const { descripcion, fecha, lugar, tipo, abierto } = req.body as eventos;
+        const { descripcion, fecha, lugar, tipo, abierto, url_video } = req.body as eventos;
         const formattedDate = moment(fecha, 'YYYY/MM/DD HH:mm').toDate();
 
         const evento = await prisma.eventos.create({
@@ -64,7 +64,8 @@ async function crearEvento(req: NextApiRequest, res: NextApiResponse) {
                 fecha: formattedDate,
                 lugar,
                 tipo,
-                abierto
+                abierto,
+                url_video
             }
         });
         return res.status(200).json(evento);
@@ -78,7 +79,7 @@ async function crearEvento(req: NextApiRequest, res: NextApiResponse) {
 
 async function actualizarEvento(req: NextApiRequest, res: NextApiResponse) {
     try {
-        const { id_evento, descripcion, fecha, lugar, tipo, abierto } = req.body as eventos;
+        const { id_evento, descripcion, fecha, lugar, tipo, abierto, url_video } = req.body as eventos;
         const formattedDate = moment(fecha, 'YYYY/MM/DD HH:mm').toDate();
 
         const evento = await prisma.eventos.update({
@@ -88,7 +89,8 @@ async function actualizarEvento(req: NextApiRequest, res: NextApiResponse) {
                 fecha: formattedDate,
                 lugar,
                 tipo,
-                abierto
+                abierto,
+                url_video
             }
         });
         return res.status(200).json(evento);

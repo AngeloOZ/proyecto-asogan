@@ -16,14 +16,14 @@ export default function PageAdminProveedores() {
     return (
         <>
             <Head>
-                <title>Agregar de proveedores</title>
+                <title>Agregar de lotes</title>
             </Head>
             <Container maxWidth={false}>
                 <CustomBreadcrumbs
-                    heading="Proveedores"
+                    heading="Lotes"
                     links={[
-                        { name: 'Lista de proveedores', href: PATH_DASHBOARD.proveedores.root },
-                        { name: 'Agregar proveedor' },
+                        { name: 'Lista de lotes', href: PATH_DASHBOARD.lotes.root },
+                        { name: 'Agregar lote' },
                     ]}
                 />
 

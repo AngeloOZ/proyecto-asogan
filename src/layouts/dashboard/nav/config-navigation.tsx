@@ -4,7 +4,7 @@ import { HiTruck, HiCalendar } from 'react-icons/hi';
 import { FaCubes, FaHammer } from 'react-icons/fa';
 // import { HiTruck, HiShoppingCart} from 'react-icons/hi';
 // routes
-import { PATH_DASHBOARD } from '../../../routes/paths';
+import { PATH_DASHBOARD, PATH_DASHBOARD_CLEINTE } from '../../../routes/paths';
 
 
 // https://react-icons.github.io/react-icons
@@ -15,13 +15,12 @@ const navConfig = [
     // subheader: 'Productos',
     items: [
       // Angello
-
-
-
-
-
-
-
+      {
+        title: 'Subastas cliente',
+        path: PATH_DASHBOARD_CLEINTE.root,
+        icon: <MdPointOfSale />,
+        roles: ['comprador'],
+      },
 
 
 
@@ -54,7 +53,7 @@ const navConfig = [
         title: 'Martillador',
         path: PATH_DASHBOARD.martillador.root,
         icon: <FaHammer />,
-        roles: ['martillador'],
+        roles: ['admin','martillador'],
       },
       // Leidy
 

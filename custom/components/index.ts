@@ -23,7 +23,7 @@ export * from './Usuarios';
 
 
 // Jhusep
-
+export * from './Eventos';
 
 
 
