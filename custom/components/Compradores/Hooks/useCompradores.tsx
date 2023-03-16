@@ -22,5 +22,6 @@ export const useCompradores = () => {
         mutate('/compradores');
     }
 
+
     return { agregarComprador, actualizarComprador, eliminarComprador }
 }

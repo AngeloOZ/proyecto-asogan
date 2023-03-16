@@ -34,7 +34,8 @@ type Props = {
 }
 
 export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
-    
+
+
     const { push } = useRouter();
     const { enqueueSnackbar } = useSnackbar();
     const { agregarComprador, actualizarComprador } = useCompradores();
@@ -53,28 +54,25 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
 
     // Validaciones de los campos
     const CompradorEsquema = Yup.object().shape({
-        identificacion: Yup.string().required('La identificacion es requerido'),
+        identificacion: Yup.string().required('La identificacion es requerido').min(10, 'La identificacion no puede tener menos de 10 caracteres').max(13, 'La identificacion no puede tener mas de 13 caracteres'),
         nombres: Yup.string().required('El nombre es requerido').max(300, 'El nombre no puede tener mas de 300 caracteres'),
         codigo_paleta: Yup.string().required('El numero de paleta es requerido').max(5, 'El numero de paleta no puede tener mas de 5 caracteres'),
         calificacion_bancaria: Yup.string().required('La calificacion bancaria es requerida').max(5, 'La calificacion bancaria no puede tener mas de 5 caracteres'),
     });
 
 
-
-
     // Se carga los valores en caso de que sea editar
     const defaultValues = useMemo<IComprador>(() => ({
 
         id_comprador: compradorEditar?.id_comprador || 0,
-        codigo_paleta: compradorEditar?.codigo_paleta || '',
+        codigo_paleta: compradorEditar?.codigo_paleta || (Math.floor(Math.random() * (99999 - 10000 + 1) + 10000)).toString(),
         calificacion_bancaria: compradorEditar?.calificacion_bancaria || '',
         antecedentes_penales: compradorEditar?.antecedentes_penales || false,
         procesos_judiciales: compradorEditar?.procesos_judiciales || false,
         estado: compradorEditar?.estado || false,
         usuarioid: compradorEditar?.usuarioid || 0,
         nombres: compradorEditar?.usuario?.nombres || '',
-        identificacion: compradorEditar?.usuario?.identificacion || '' ,
-
+        identificacion: compradorEditar?.usuario?.identificacion || '',
 
     }), [compradorEditar]);
 
@@ -107,8 +105,8 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
             }
             reset();
         } catch (error) {
-            console.error(error.message);
-            enqueueSnackbar("Oops... hubo un error " + error.message, { variant: 'error' });
+
+            enqueueSnackbar("Oops... hubo un error " + error.response.data.message, { variant: 'error' });
         }
     }
 
@@ -120,6 +118,8 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
                     name="identificacion"
                     label="Identificación"
                     size='small'
+                    disabled={esEditar}
+                
                 />
                 <RHFTextField
                     name="nombres"
@@ -131,6 +131,7 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
                     name="codigo_paleta"
                     label="Número de paleta"
                     size='small'
+
                 />
 
                 <RHFTextField
