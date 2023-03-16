@@ -26,46 +26,23 @@ async function obtenerEventosHoy(req: NextApiRequest, res: NextApiResponse) {
                     lt: new Date(fechaActual.getTime() + 24 * 60 * 60 * 1000),
                 },
             },
-            select: {
-                id_evento: true,
-                descripcion: true,
-                fecha: true,
-                lugar: true,
-                tipo: true,
-                abierto: true,
-                lotes: {
-                    select: {
-                        id_lote: true,
-                        fecha_pesaje: true,
-                        codigo_lote: true,
-                        cantidad_animales: true,
-                        tipo_animales: true,
-                        calidad_animales: true,
-                        peso_total: true,
-                        crias_hembras: true,
-                        crias_machos: true,
-                        procedencia: true,
-                        observaciones: true,
-                        puja_inicial: true,
-                        puja_final: true,
-                        incremento: true,
-                    }
-                }
-            }
+            include: {
+                lotes: true,
+            },
         });
 
-        const eventosFormateados = eventos.map(evento => {
+        const eventosFormateados = eventos.map((evento) => {
             const lotes = evento.lotes.map(lote => {
                 return {
                     ...lote,
                     fecha_pesaje: moment(lote.fecha_pesaje).format('DD-MM-YYYY')
-                }
-
+                };
             });
 
             return {
                 ...evento,
-                fecha: moment(evento.fecha).format('DD-MM-YYYY HH:mm')
+                fecha: moment(evento.fecha).format('DD-MM-YYYY HH:mm'),
+                lotes,
             };
         });
 
