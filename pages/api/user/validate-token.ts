@@ -45,9 +45,11 @@ async function verifyJWT(req: NextApiRequest, res: NextApiResponse<Data>) {
                 usuarioid: user.usuarioid,
                 nombres: user.nombres,
                 identificacion: user.identificacion,
-                rol: JSON.parse(user.rol)
+                rol: JSON.parse(user.rol),
+                tipo: user.tipo || 1,
+                comprador: await prisma.compradores.findFirst({ where: { usuarioid: user.usuarioid } })
             },
-            token: await jwt.signToken(user)
+            token
         });
 
     } catch (error) {
