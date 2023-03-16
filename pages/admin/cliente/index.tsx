@@ -8,6 +8,7 @@ import { useObtenerEventosHoy } from 'custom/components/Eventos/Hooks';
 
 PageAdminEventos.getLayout = (page: React.ReactElement) => <DashboardLayout>{page}</DashboardLayout>
 
+
 export default function PageAdminEventos() {
     const { eventos, isLoading } = useObtenerEventosHoy();
     return (
@@ -22,7 +23,7 @@ export default function PageAdminEventos() {
                         { name: 'Subastas', href: PATH_DASHBOARD.eventos.listado },
                     ]}
                 />
-                <EventoList eventos={eventos} />
+                <EventoList eventos={eventos} isLoading={isLoading} />
             </Container>
         </>
     )
