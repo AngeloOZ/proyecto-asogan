@@ -71,7 +71,7 @@ const navConfig = [
 
       {
         title: 'Eventos',
-        path: PATH_DASHBOARD.martillador.root,
+        path: PATH_DASHBOARD.eventos.root,
         icon: <HiCalendar />,
         roles: ['admin', 'editor'],
       },
