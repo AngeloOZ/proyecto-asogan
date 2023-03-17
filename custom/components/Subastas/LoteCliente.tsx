@@ -10,10 +10,15 @@ interface LoteCliente {
 
 export const LoteCliente = ({ loteActual }: LoteCliente) => {
 
+    const valorBase = Number(loteActual?.puja_inicial) || 0;
+    const valorPuja = Number(loteActual?.incremento) || 0;
+    const valorFinal = Number(loteActual?.puja_final) || 0;
+    const valorFinal2 = valorFinal + valorPuja;
+    const valorFinalTotal = valorFinal2 * Number(loteActual?.peso_total || 0);
+
     return (
         <Card sx={{ p: 2.5 }}>
             <Grid container spacing={2}>
-
                 <Grid item xs={12} md={4} lg={3}>
                     <TextField
                         label="Número de lote"
@@ -21,8 +26,8 @@ export const LoteCliente = ({ loteActual }: LoteCliente) => {
                         size="small"
                         variant="outlined"
                         fullWidth
-                        disabled
                         InputProps={{ inputProps: { readOnly: true } }}
+                        InputLabelProps={{ style: { fontSize: 18, color: 'black', fontWeight: "500" }, shrink: true }}
                     />
                 </Grid>
 
@@ -33,8 +38,8 @@ export const LoteCliente = ({ loteActual }: LoteCliente) => {
                         size="small"
                         variant="outlined"
                         fullWidth
-                        disabled
                         InputProps={{ inputProps: { readOnly: true } }}
+                        InputLabelProps={{ style: { fontSize: 18, color: 'black', fontWeight: "500" }, shrink: true }}
                     />
                 </Grid>
 
@@ -45,8 +50,8 @@ export const LoteCliente = ({ loteActual }: LoteCliente) => {
                         size="small"
                         variant="outlined"
                         fullWidth
-                        disabled
                         InputProps={{ inputProps: { readOnly: true } }}
+                        InputLabelProps={{ style: { fontSize: 18, color: 'black', fontWeight: "500" }, shrink: true }}
                     />
                 </Grid>
 
@@ -57,34 +62,34 @@ export const LoteCliente = ({ loteActual }: LoteCliente) => {
                         size="small"
                         variant="outlined"
                         fullWidth
-                        disabled
                         InputProps={{ inputProps: { readOnly: true } }}
+                        InputLabelProps={{ style: { fontSize: 18, color: 'black', fontWeight: "500" }, shrink: true }}
                     />
                 </Grid>
 
-                <Grid item xs={12} md={4} lg={3}>
+                {/* <Grid item xs={12} md={4} lg={3}>
                     <TextField
                         label="Calidad de animales"
                         value={loteActual?.calidad_animales || ''}
                         size="small"
                         variant="outlined"
                         fullWidth
-                        disabled
                         InputProps={{ inputProps: { readOnly: true } }}
+                        InputLabelProps={{ style: { fontSize: 18, color: 'black', fontWeight: "500" }, shrink: true }}
                     />
-                </Grid>
+                </Grid> */}
 
-                <Grid item xs={12} md={4} lg={3}>
+                {/* <Grid item xs={12} md={4} lg={3}>
                     <TextField
                         label="Sexo"
                         value={loteActual ? loteActual.sexo == '1' ? 'Macho' : 'Hembra' : ''}
                         size="small"
                         variant="outlined"
                         fullWidth
-                        disabled
                         InputProps={{ inputProps: { readOnly: true } }}
+                        InputLabelProps={{ style: { fontSize: 18, color: 'black', fontWeight: "500" }, shrink: true }}
                     />
-                </Grid>
+                </Grid> */}
 
                 <Grid item xs={12} md={4} lg={3}>
                     <TextField
@@ -93,8 +98,8 @@ export const LoteCliente = ({ loteActual }: LoteCliente) => {
                         size="small"
                         variant="outlined"
                         fullWidth
-                        disabled
                         InputProps={{ inputProps: { readOnly: true } }}
+                        InputLabelProps={{ style: { fontSize: 18, color: 'black', fontWeight: "500" }, shrink: true }}
                     />
                 </Grid>
 
@@ -105,8 +110,8 @@ export const LoteCliente = ({ loteActual }: LoteCliente) => {
                         size="small"
                         variant="outlined"
                         fullWidth
-                        disabled
                         InputProps={{ inputProps: { readOnly: true } }}
+                        InputLabelProps={{ style: { fontSize: 18, color: 'black', fontWeight: "500" }, shrink: true }}
                     />
                 </Grid>
 
@@ -117,8 +122,8 @@ export const LoteCliente = ({ loteActual }: LoteCliente) => {
                         size="small"
                         variant="outlined"
                         fullWidth
-                        disabled
                         InputProps={{ inputProps: { readOnly: true } }}
+                        InputLabelProps={{ style: { fontSize: 18, color: 'black', fontWeight: "500" }, shrink: true }}
                     />
                 </Grid>
 
@@ -129,43 +134,76 @@ export const LoteCliente = ({ loteActual }: LoteCliente) => {
                         size="small"
                         variant="outlined"
                         fullWidth
-                        disabled
                         InputProps={{
                             inputProps: { readOnly: true },
-                            startAdornment: <InputAdornment position="start">Lb</InputAdornment>,
+                            startAdornment: <InputAdornment position="start">Kg</InputAdornment>,
                         }}
+                        InputLabelProps={{ style: { fontSize: 18, color: 'black', fontWeight: "500" }, shrink: true }}
                     />
                 </Grid>
-
+            </Grid>
+            <Grid container spacing={2} mt={0.5}>
                 <Grid item xs={12} md={4} lg={3}>
                     <TextField
                         name="puja_inicial"
-                        label="Puja inicial"
+                        label="Valor base"
                         size='small'
                         type='number'
-                        value={loteActual?.puja_final || 0}
+                        value={valorBase.toFixed(2)}
                         InputProps={{
                             startAdornment: <InputAdornment position="start">$</InputAdornment>,
                             readOnly: true,
+                            style: { fontSize: 20 }
                         }}
+                        InputLabelProps={{ style: { fontSize: 18, color: 'black', fontWeight: "500" }, shrink: true }}
                     />
-
-
                 </Grid>
 
                 <Grid item xs={12} md={4} lg={3}>
                     <TextField
-                        name="incremento"
-                        label="Incremento"
+                        label="Puja"
                         size='small'
                         type='number'
-                        value={loteActual?.incremento || 0}
+                        value={valorPuja.toFixed(2)}
                         InputProps={{
                             startAdornment: <InputAdornment position="start">$</InputAdornment>,
                             readOnly: true,
+                            style: { fontSize: 20 }
                         }}
+                        InputLabelProps={{ style: { fontSize: 18, color: 'black', fontWeight: "500" }, shrink: true }}
                     />
                 </Grid>
+
+                <Grid item xs={12} md={4} lg={3}>
+                    <TextField
+                        label="Valor Final"
+                        size='small'
+                        type='number'
+                        value={valorFinal2.toFixed(2) || 0}
+                        InputProps={{
+                            startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                            readOnly: true,
+                            style: { fontSize: 20 }
+                        }}
+                        InputLabelProps={{ style: { fontSize: 18, color: 'black', fontWeight: "500" }, shrink: true }}
+                    />
+                </Grid>
+
+                <Grid item xs={12} md={4} lg={3}>
+                    <TextField
+                        label="Valor Total"
+                        size='small'
+                        type='number'
+                        value={valorFinalTotal.toFixed(2) || 0}
+                        InputProps={{
+                            startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                            readOnly: true,
+                            style: { fontSize: 20 }
+                        }}
+                        InputLabelProps={{ style: { fontSize: 18, color: 'black', fontWeight: "500" }, shrink: true }}
+                    />
+                </Grid>
+
             </Grid>
         </Card >
     )

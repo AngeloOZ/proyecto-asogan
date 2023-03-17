@@ -26,9 +26,9 @@ export function ChatInput({ lote }: Props) {
 
     const [paleta, setPaleta] = useState("");
 
-    const incremento = Number(lote.puja_final) + Number(lote.incremento);
-    const incrementox2 = Number(lote.puja_final) + (Number(lote.incremento) * 2);
-    const incrementox3 = Number(lote.puja_final) + (Number(lote.incremento) * 3);
+    const incremento = Number(lote.puja_final) + Number(lote.incremento) || 0;
+    const incrementox2 = Number(lote.puja_final) + (Number(lote.incremento) * 2) || 0;
+    const incrementox3 = Number(lote.puja_final) + (Number(lote.incremento) * 3) || 0;
 
 
     const handleClickButton = (incremento: number) => {
@@ -53,7 +53,7 @@ export function ChatInput({ lote }: Props) {
             mutate(`/subastas/pujas?lote=${lote.id_lote}`)
             mutate(`/subastas/lotes?id=${lote.id_evento}`)
         } catch (error) {
-            enqueueSnackbar(`No se pudo registrar la oferta: ${error.message}`, { variant: 'error' });
+            enqueueSnackbar(`Oops... ${handleErrorsAxios(error)}`, { variant: 'error' });
         }
     }
 
@@ -70,7 +70,7 @@ export function ChatInput({ lote }: Props) {
             mutate(`/subastas/pujas?lote=${lote.id_lote}`)
             mutate(`/subastas/lotes?id=${lote.id_evento}`)
         } catch (error) {
-            enqueueSnackbar(`Error: ${handleErrorsAxios(error)}`, { variant: 'error' });
+            enqueueSnackbar(`Oops... ${handleErrorsAxios(error)}`, { variant: 'error' });
         } finally {
             setPaleta("");
         }

@@ -7,22 +7,19 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Grid, Card, Stack, Button, Typography, MenuItem } from '@mui/material';
+import { Card, Stack, Button } from '@mui/material';
 
 // components
 import { useSnackbar } from '../../../src/components/snackbar';
 import FormProvider, {
-    RHFSwitch,
-    RHFEditor,
-    RHFUpload,
     RHFTextField,
-    RHFSelect,
 } from '../../../src/components/hook-form';
 
 import { useProveedores } from '.';
 import { PATH_DASHBOARD } from 'src/routes/paths';
 import { proveedores as IProveedor } from '@prisma/client';
 import Link from 'next/link';
+import { handleErrorsAxios } from 'utils';
 
 
 type FormValuesProps = IProveedor;
@@ -96,7 +93,7 @@ export function FormProveedores({ esEditar = false, proveedoraEditar }: Props) {
             reset();
         } catch (error) {
             console.error(error);
-            enqueueSnackbar("Oops... hubo un error " + error.message, { variant: 'error' });
+            enqueueSnackbar(`Oops... ${handleErrorsAxios(error)}`, { variant: 'error' });
         }
     };
 

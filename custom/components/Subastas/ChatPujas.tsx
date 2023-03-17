@@ -10,7 +10,6 @@ import { ChatInput, ChatList, ChatOfertas } from "./chat";
 import { Puja, PujasRequest } from "@types";
 
 
-
 const fetcher = (url: string) => subastaAPI.get(url).then(r => r.data)
 
 

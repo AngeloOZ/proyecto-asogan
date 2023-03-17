@@ -12,12 +12,8 @@ import { Grid, Card, Stack, Button, MenuItem, InputAdornment } from '@mui/materi
 // components
 import { useSnackbar } from '../../../src/components/snackbar';
 import FormProvider, {
-    RHFSwitch,
-    RHFEditor,
-    RHFUpload,
     RHFTextField,
     RHFSelect,
-    RHFAutocomplete,
 } from '../../../src/components/hook-form';
 
 import { useObtenerProveedores } from '../Proveedores';
@@ -28,6 +24,7 @@ import { LoteForm } from '@types';
 import { lotes } from '@prisma/client';
 import { useObtenerEventos } from '../Eventos';
 import { useLotes } from './hooks';
+import { handleErrorsAxios } from 'utils';
 
 
 type FormValuesProps = LoteForm;
@@ -113,10 +110,8 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false }: Pro
         reset,
         watch,
         handleSubmit,
-        setValue,
         formState: { isSubmitting },
     } = methods;
-    const values = watch();
 
     // Funcion para enviar el formulario
     const onSubmit = async (data: FormValuesProps) => {
@@ -133,7 +128,7 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false }: Pro
             reset();
         } catch (error) {
             console.error(error);
-            enqueueSnackbar("Oops... hubo un error " + error.message, { variant: 'error' });
+            enqueueSnackbar(`Oops... ${handleErrorsAxios(error)}`, { variant: 'error' });
         }
     };
 
