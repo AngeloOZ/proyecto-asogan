@@ -35,9 +35,10 @@ type FormValuesProps = LoteForm;
 type Props = {
     esEditar?: boolean;
     loteEditar?: lotes;
+    soloVer?: boolean;
 }
 
-export function FormLotes({ esEditar = false, loteEditar }: Props) {
+export function FormLotes({ esEditar = false, loteEditar, soloVer = false }: Props) {
     const { push } = useRouter();
     const { enqueueSnackbar } = useSnackbar();
     const { eventos, isLoading: isLoadingEventos } = useObtenerEventos();
@@ -50,7 +51,7 @@ export function FormLotes({ esEditar = false, loteEditar }: Props) {
         const max = 99999;
         const uniqueNumber = Math.floor(Math.random() * (max - min + 1) + min);
         return uniqueNumber.toString().slice(-6);
-      }
+    }
 
     useEffect(() => {
         if (esEditar && loteEditar) {
@@ -121,7 +122,7 @@ export function FormLotes({ esEditar = false, loteEditar }: Props) {
     const onSubmit = async (data: FormValuesProps) => {
         try {
             if (!esEditar) {
-                data.codigo_lote = data.id_evento +'-'+ data.codigo_lote;
+                data.codigo_lote = data.id_evento + '-' + data.codigo_lote;
                 await agregarLote(data);
                 enqueueSnackbar('Lote agregado correctamente', { variant: 'success' });
             } else {
@@ -157,25 +158,40 @@ export function FormLotes({ esEditar = false, loteEditar }: Props) {
                                 label="Fecha de pesaje"
                                 type='date'
                                 size='small'
+                                inputProps={{
+                                    readOnly: soloVer,
+                                }}
                             />
                             <RHFTextField
                                 name="cantidad_animales"
                                 label="Cantidad de animales"
                                 type='number'
                                 size='small'
+                                inputProps={{
+                                    readOnly: soloVer,
+                                }}
                             />
                             <RHFTextField
                                 name="tipo_animales"
                                 label="Tipo de animales"
                                 size='small'
+                                inputProps={{
+                                    readOnly: soloVer,
+                                }}
                             />
                             <RHFTextField
                                 name="calidad_animales"
                                 label="Calidad de animales"
                                 size='small'
+                                inputProps={{
+                                    readOnly: soloVer,
+                                }}
                             />
 
-                            <RHFSelect name='sexo' label='Sexo' size='small'>
+                            <RHFSelect name='sexo' label='Sexo' size='small'
+                                inputProps={{
+                                    readOnly: soloVer,
+                                }}>
                                 <MenuItem value="1">Macho</MenuItem>
                                 <MenuItem value="0">Hembra</MenuItem>
                             </RHFSelect>
@@ -184,18 +200,27 @@ export function FormLotes({ esEditar = false, loteEditar }: Props) {
                                 name="procedencia"
                                 label="Procedencia"
                                 size='small'
+                                inputProps={{
+                                    readOnly: soloVer,
+                                }}
                             />
                             <RHFTextField
                                 name="crias_hembras"
                                 label="Número de crías hembras"
                                 size='small'
                                 type='number'
+                                inputProps={{
+                                    readOnly: soloVer,
+                                }}
                             />
                             <RHFTextField
                                 name="crias_machos"
                                 label="Número de crías machos"
                                 size='small'
                                 type='number'
+                                inputProps={{
+                                    readOnly: soloVer,
+                                }}
                             />
                             <RHFTextField
                                 name="peso_total"
@@ -203,10 +228,11 @@ export function FormLotes({ esEditar = false, loteEditar }: Props) {
                                 size='small'
                                 type='number'
                                 InputProps={{
-                                    startAdornment: <InputAdornment position="start">Lb</InputAdornment>,
+                                    startAdornment: <InputAdornment position="start">Kg</InputAdornment>,
                                 }}
                                 inputProps={{
                                     step: "any",
+                                    readOnly: soloVer,
                                 }}
                             />
 
@@ -216,6 +242,9 @@ export function FormLotes({ esEditar = false, loteEditar }: Props) {
                                 size='small'
                                 multiline
                                 maxRows={3}
+                                inputProps={{
+                                    readOnly: soloVer,
+                                }}
                             />
 
                         </Stack>
@@ -226,11 +255,17 @@ export function FormLotes({ esEditar = false, loteEditar }: Props) {
                     <Card sx={{ p: 2, boxShadow: "0 0 2px rgba(0,0,0,0.2)" }}>
                         <Stack spacing={2}>
 
-                            <RHFSelect name='id_evento' label='Eventos' size='small'>
+                            <RHFSelect name='id_evento' label='Eventos' size='small'
+                                inputProps={{
+                                    readOnly: soloVer,
+                                }}>
                                 {eventos.map((evento) => <MenuItem key={evento.id_evento} value={evento.id_evento}>{evento.descripcion}</MenuItem>)}
                             </RHFSelect>
 
-                            <RHFSelect name='id_proveedor' label='Proveedores' size='small'>
+                            <RHFSelect name='id_proveedor' label='Proveedores' size='small'
+                                inputProps={{
+                                    readOnly: soloVer,
+                                }}>
                                 {proveedores.map((provedor) => <MenuItem key={provedor.id_proveedor} value={provedor.id_proveedor}>{provedor.nombres}</MenuItem>)}
                             </RHFSelect>
 
@@ -244,6 +279,7 @@ export function FormLotes({ esEditar = false, loteEditar }: Props) {
                                 }}
                                 inputProps={{
                                     step: "any",
+                                    readOnly: soloVer,
                                 }}
                             />
 
@@ -257,32 +293,35 @@ export function FormLotes({ esEditar = false, loteEditar }: Props) {
                                 }}
                                 inputProps={{
                                     step: "any",
+                                    readOnly: soloVer,
                                 }}
                             />
                         </Stack>
 
-                        <Stack direction="row" spacing={1.5} maxWidth={400} margin="auto" mt={2}>
-                            <Link href={PATH_DASHBOARD.lotes.root} passHref legacyBehavior>
-                                <Button
-                                    fullWidth
-                                    color="inherit"
-                                    variant="outlined"
-                                    size="medium"
-                                >
-                                    Cancelar
-                                </Button>
-                            </Link>
+                        {!soloVer && (
+                            <Stack direction="row" spacing={1.5} maxWidth={400} margin="auto" mt={2}>
+                                <Link href={PATH_DASHBOARD.lotes.root} passHref legacyBehavior>
+                                    <Button
+                                        fullWidth
+                                        color="inherit"
+                                        variant="outlined"
+                                        size="medium"
+                                    >
+                                        Cancelar
+                                    </Button>
+                                </Link>
 
-                            <LoadingButton
-                                fullWidth
-                                type="submit"
-                                variant="contained"
-                                size="medium"
-                                loading={isSubmitting}
-                            >
-                                Guardar
-                            </LoadingButton>
-                        </Stack>
+                                <LoadingButton
+                                    fullWidth
+                                    type="submit"
+                                    variant="contained"
+                                    size="medium"
+                                    loading={isSubmitting}
+                                >
+                                    Guardar
+                                </LoadingButton>
+                            </Stack>
+                        )}
                     </Card>
                 </Grid>
 

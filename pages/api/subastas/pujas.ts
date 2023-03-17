@@ -30,7 +30,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
             orderBy: {
                 puja: 'desc',
             },
-            take: 4,
+            take: 3,
             include: {
                 usuario: { select: { nombres: true, identificacion: true } },
             },

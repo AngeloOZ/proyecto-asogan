@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 // @mui
 import { useTheme, styled } from '@mui/material/styles';
-import { Box, Drawer, IconButton, IconButtonProps, Stack } from '@mui/material';
+import { Box, Drawer, IconButton, IconButtonProps, Stack, Typography } from '@mui/material';
 // hooks
 import useResponsive from 'src/hooks/useResponsive';
 
@@ -96,9 +96,14 @@ export function ChatOfertas({ ofetas = [] }: Props) {
                     }),
                 }}
             >
-                <Stack spacing={1.5}>
+                <Stack spacing={1.5} p={1} justifyContent="center" width="100%">
+                    
+                    <Typography component="h3" variant='subtitle1' textAlign="center" sx={{ fontWeight: 700 }}>
+                        Mejores Pujas
+                    </Typography>
+
                     {
-                        ofetas.map((puja, index) => <ItemOferta puja={puja as unknown as pujas} key={puja.id_puja} />)
+                        ofetas.map(puja => <ItemOferta puja={puja} key={puja.id_puja} />)
                     }
                 </Stack>
             </Drawer>

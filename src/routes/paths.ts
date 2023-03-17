@@ -33,6 +33,8 @@ export const PATH_DASHBOARD = {
   },
   lotes: {
     root: path(PATH_ADMIN, '/lotes'),
+    comprados: path(PATH_ADMIN, '/lotes/comprados'),
+    ver: path(PATH_ADMIN, '/lotes/comprados/ver'),
     agregar: path(PATH_ADMIN, '/lotes/agregar'),
     editar: path(PATH_ADMIN, '/lotes/editar'),
   },
