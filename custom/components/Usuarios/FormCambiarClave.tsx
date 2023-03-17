@@ -11,12 +11,11 @@ import { useForm } from 'react-hook-form';
 
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Card, Stack, Button, MenuItem } from '@mui/material';
+import { Card, Stack, Button } from '@mui/material';
 
 // components
 import { useSnackbar } from '../../../src/components/snackbar';
 import FormProvider, {
-    RHFSelect,
     RHFTextField,
 } from '../../../src/components/hook-form';
 
@@ -27,43 +26,28 @@ import Link from 'next/link';
 import { PATH_DASHBOARD } from 'src/routes/paths';
 
 
-import prisma from 'database/prismaClient';
 
 type FormValuesProps = IUsuario;
+
 type Props = {
-    esEditar?: boolean;
+
     usuariosEditar?: IUsuario;
 }
 
-export function FormUsuarios({ esEditar = false, usuariosEditar }: Props) {
-
+export function FormCambiarClave({ usuariosEditar }: Props) {
+   
+    const { actualizarUsuario } = useUsuario();
     const { push } = useRouter();
     const { enqueueSnackbar } = useSnackbar();
-    const { agregarUsuario, actualizarUsuario } = useUsuario();
-
-    useEffect(() => {
-        if (esEditar && usuariosEditar) {
-            reset(defaultValues);
-        }
-
-        if (!esEditar) {
-            reset(defaultValues);
-        }
-
-    }, [esEditar, usuariosEditar]);
-
-
+    
     // Validaciones de los campos
     const UsuariosEsquema = Yup.object().shape({
-        identificacion: Yup.string().required('La identificacion es requerido').min(10, 'La identificacion no puede tener menos de 10 caracteres').max(13, 'La identificacion no puede tener mas de 13 caracteres'),
-        nombres: Yup.string().required('El nombre es requerido').max(300, 'El nombre no puede tener mas de 300 caracteres'),
+
         clave: Yup.string().required('La clave es requerida').max(10, 'La clave no puede tener mas de 10 digitos'),
-        rol: Yup.string().required('El rol es requerido'),
         verificacion_clave: Yup.string().required('La verificación de clave es requerida').max(10, 'La verificación de clave no puede tener mas de 10 digitos').oneOf([Yup.ref('clave'), null], 'Las claves no coinciden'),
     });
 
-
-
+    
 
     // Se carga los valores en caso de que sea editar
     const defaultValues = useMemo<IUsuario>(() => ({
@@ -72,7 +56,7 @@ export function FormUsuarios({ esEditar = false, usuariosEditar }: Props) {
         usuarioid: usuariosEditar?.usuarioid || 0,
         nombres: usuariosEditar?.nombres || '',
         identificacion: usuariosEditar?.identificacion || '',
-        clave: usuariosEditar?.clave || '',
+        clave:  '',
         rol: JSON.parse(usuariosEditar?.rol || `[""]`)[0],
         tipo: usuariosEditar?.tipo || 1,
     }), [usuariosEditar]);
@@ -85,45 +69,23 @@ export function FormUsuarios({ esEditar = false, usuariosEditar }: Props) {
     });
 
     const {
-        reset,
-        watch,
         handleSubmit,
         formState: { isSubmitting },
     } = methods;
+
+
     const onSubmit = async (data: FormValuesProps) => {
 
-        try {
-            if (!esEditar) {
-                await agregarUsuario(data);
-                enqueueSnackbar('Usuario agregado correctamente', { variant: 'success' });
-                push(PATH_DASHBOARD.usuarios.root);
-            } else {
-                await actualizarUsuario(data);
-                enqueueSnackbar('Usuario actualizado correctamente', { variant: 'success' });
-                push(PATH_DASHBOARD.usuarios.root);
-            }
-            reset();
-        } catch (error) {
+        await actualizarUsuario(data);
+        enqueueSnackbar('Usuario actualizado correctamente', { variant: 'success' });
+        push(PATH_DASHBOARD.usuarios.root);
 
-            enqueueSnackbar("Oops... hubo un error " + error.response.data.message, { variant: 'error' });
-        }
     }
 
     return (<FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} >
         <Card sx={{ p: 3, boxShadow: "0 0 2px rgba(0,0,0,0.2)" }}>
             <Stack spacing={2} >
 
-                <RHFTextField
-                    name="identificacion"
-                    label="Identificación"
-                    size='small'
-                    disabled={esEditar}
-                />
-                <RHFTextField
-                    name="nombres"
-                    label="Nombres"
-                    size='small'
-                />
 
                 <RHFTextField
                     name="clave"
@@ -139,12 +101,7 @@ export function FormUsuarios({ esEditar = false, usuariosEditar }: Props) {
                     size='small'
                     type='password'
                 />
-                <RHFSelect name='rol' label='Rol' size='small'>
 
-                    <MenuItem value="admin">Administrador</MenuItem>
-                    <MenuItem value="martillador">Martillador</MenuItem>
-                    <MenuItem value="contabilidad">Contabilidad</MenuItem>
-                </RHFSelect>
             </Stack>
 
             <Stack direction="row" spacing={1.5} maxWidth={400} margin="auto" mt={5}>

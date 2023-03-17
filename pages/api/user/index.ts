@@ -26,6 +26,7 @@ async function obtenerUsuarios(req: NextApiRequest, res: NextApiResponse) {
             const usuario = await prisma.usuario.findUnique({
                 where: { usuarioid: Number(id) },
             });
+
             return res.status(200).json(usuario);
         }
 
@@ -45,11 +46,6 @@ async function obtenerUsuarios(req: NextApiRequest, res: NextApiResponse) {
 async function crearUsuario(req: NextApiRequest, res: NextApiResponse) {
     try {
         const { identificacion, nombres, rol, clave }: usuario = req.body
-        const { verificacion_clave } = req.body
-        if (clave !== verificacion_clave) {
-
-            return res.status(500).json({ message: 'la clave no coincide' });
-        }
 
 
 
@@ -74,23 +70,20 @@ async function crearUsuario(req: NextApiRequest, res: NextApiResponse) {
 
 async function actualizarUsuario(req: NextApiRequest, res: NextApiResponse) {
     try {
-        const { id, verificacion_clave } = req.query;
-        const { identificacion, nombres, rol, clave }: usuario = req.body
 
-        if (verificacion_clave !== "") {
-            if (clave !== verificacion_clave) {
-                return res.status(500).json({ message: 'la clave no coincide' });
-            }
-        }
+        const { usuarioid, identificacion, nombres, rol, clave }: usuario = req.body
+
+
         const usuario = await prisma.usuario.update({
-            where: { usuarioid: Number(id) },
+            where: { usuarioid },
             data: {
                 identificacion,
                 nombres,
                 clave,
-                rol: `["${rol}"]`
+                rol: `["${rol}"]`,
             }
         });
+
 
         return res.status(200).json(usuario);
     } catch (error) {

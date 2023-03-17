@@ -8,7 +8,7 @@ import { Box, Divider, Typography, MenuItem } from '@mui/material';
 import { AuthContext } from 'src/auth';
 
 // routes
-import { PATH_AUTH } from '../../../routes/paths';
+import { PATH_AUTH,PATH_DASHBOARD } from '../../../routes/paths';
 // auth
 // components
 import { CustomAvatar } from '../../../components/custom-avatar';
@@ -49,6 +49,12 @@ export default function AccountPopover() {
     }
   };
 
+
+  const CambiarClave = () => {
+    push(`${PATH_DASHBOARD.usuarios.cambiar}/${user?.usuarioid}`)
+
+
+  }
   // const handleClickItem = (path: string) => {
   //   handleClosePopover();
   //   push(path);
@@ -91,9 +97,17 @@ export default function AccountPopover() {
 
         {/* <Divider sx={{ borderStyle: 'dashed' }} /> */}
 
+
+        <MenuItem onClick={CambiarClave} sx={{ m: 1 }}>
+          Cambiar Clave
+        </MenuItem>
+
         <MenuItem onClick={handleLogout} sx={{ m: 1 }}>
           Cerrar Sesión
         </MenuItem>
+
+
+
       </MenuPopover>
     </>
   );

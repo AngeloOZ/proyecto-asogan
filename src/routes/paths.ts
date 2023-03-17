@@ -70,6 +70,7 @@ export const PATH_DASHBOARD = {
     root: path(PATH_ADMIN, '/usuarios'),
     agregar: path(PATH_ADMIN, '/usuarios/agregar'),
     editar: path(PATH_ADMIN, '/usuarios/editar'),
+    cambiar: path(PATH_ADMIN, '/usuarios/cambiar'),
   }
 };
 

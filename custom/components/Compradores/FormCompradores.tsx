@@ -96,11 +96,11 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
         try {
             if (!esEditar) {
                 await agregarComprador(data);
-                enqueueSnackbar('Proveedor agregado correctamente', { variant: 'success' });
+                enqueueSnackbar('Comprador agregado correctamente', { variant: 'success' });
                 push(PATH_DASHBOARD.compradores.root);
             } else {
                 await actualizarComprador(data);
-                enqueueSnackbar('Proveedor actualizado correctamente', { variant: 'success' });
+                enqueueSnackbar('Comprador actualizado correctamente', { variant: 'success' });
                 push(PATH_DASHBOARD.compradores.root);
             }
             reset();
