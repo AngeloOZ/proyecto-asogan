@@ -28,7 +28,7 @@ export default function PageAdminEventos() {
             enqueueSnackbar('Evento eliminado correctamente', { variant: 'success' });
         }
         catch (err) {
-            enqueueSnackbar("Oops... hubo un error " + err.message, { variant: 'error' });
+            enqueueSnackbar(`Oops... hubo un error ${err.message}`, { variant: 'error' });
         }
     }
 
@@ -61,7 +61,7 @@ export default function PageAdminEventos() {
                     ]}
                     isLoading={isLoading}
                     dataBody={eventos}
-                    isActions={true}
+                    isActions
                     handeEdit={handleClickEditRow}
                     handleDelete={handleClickDeleteRow}
                 />

@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { Box, Divider, Drawer } from '@mui/material';
 //
 // import Footer from './Footer';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import Header from './Header';
 
 

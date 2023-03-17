@@ -24,7 +24,7 @@ export default function PageAdmin() {
         if (query.id) {
             obtenerCompradores();
         }
-    
+    // eslint-disable-next-line
     }, [query])
 
     const obtenerCompradores= async () => {

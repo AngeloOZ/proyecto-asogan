@@ -36,7 +36,7 @@ export default function PageAdminCompradores() {
             router.push(PATH_DASHBOARD.compradores.root);
 
         } catch (error) {
-             enqueueSnackbar("Oops... hubo un error " + error.message, { variant: 'error' });
+             enqueueSnackbar(`Oops... hubo un error ${error.message}`, { variant: 'error' });
         }
     }
     return (<>
@@ -70,7 +70,7 @@ export default function PageAdminCompradores() {
                 ]}
                 isLoading={isLoading}
                 dataBody={compradores}
-                isActions={true}
+                isActions
                 handeEdit={handleClickEditRow}
                 handleDelete={handleClickDeleteRow}
             />

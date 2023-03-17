@@ -2,6 +2,7 @@ import { compradores, usuario } from "@prisma/client";
 import prisma from 'database/prismaClient';
 import type { NextApiRequest, NextApiResponse } from 'next'
 
+// eslint-disable-next-line
 export default function (req: NextApiRequest, res: NextApiResponse) {
     switch (req.method) {
         case 'GET':
@@ -13,7 +14,7 @@ export default function (req: NextApiRequest, res: NextApiResponse) {
         case 'DELETE':
             return eliminarComprador(req, res);
         default:
-            break;
+            return res.status(405).json({ message: 'Method not allowed' });
     }
 
 }
@@ -32,9 +33,15 @@ async function obtenerCompradores(req: NextApiRequest, res: NextApiResponse) {
 
         const compradores = await prisma.compradores.findMany({ include: { usuario: true } });
 
-        const compradoresConAntecedentes = compradores.map((comprador) => {
-            return { ...comprador, identificacion: comprador.usuario.identificacion, nombres: comprador.usuario.nombres, antecedentes_penales: comprador.antecedentes_penales ? "Si" : "No", estado: comprador.estado ? "Activo" : "Inactivo" };
-        });
+        const compradoresConAntecedentes = compradores.map(comprador => (
+            {
+                ...comprador,
+                identificacion: comprador.usuario.identificacion,
+                nombres: comprador.usuario.nombres,
+                antecedentes_penales: comprador.antecedentes_penales ? "Si" : "No",
+                estado: comprador.estado ? "Activo" : "Inactivo"
+            }
+        ));
 
         return res.status(200).json(compradoresConAntecedentes);
     } catch (error) {
@@ -53,7 +60,7 @@ async function crearComprador(req: NextApiRequest, res: NextApiResponse) {
 
             const { identificacion, nombres }: usuario = req.body
 
-            const verificarUsuario = await prisma.usuario.findUnique({ where: { identificacion: identificacion }});
+            const verificarUsuario = await prisma.usuario.findUnique({ where: { identificacion } });
 
             if (verificarUsuario) {
                 return res.status(500).json({ message: 'el usuario ya existe' });
@@ -62,7 +69,6 @@ async function crearComprador(req: NextApiRequest, res: NextApiResponse) {
 
             const usuario = await prisma.usuario.create({
                 data: {
-
                     identificacion,
                     nombres,
                     clave: identificacion,
@@ -70,6 +76,7 @@ async function crearComprador(req: NextApiRequest, res: NextApiResponse) {
                     tipo: 2
                 }
             });
+
             const { codigo_paleta, antecedentes_penales, procesos_judiciales, calificacion_bancaria, estado }: compradores = req.body;
 
             const verificaCompradorPaleta = await prisma.compradores.findUnique({ where: { codigo_paleta: codigo_paleta! } });
@@ -80,19 +87,18 @@ async function crearComprador(req: NextApiRequest, res: NextApiResponse) {
 
             const comprador = await prisma.compradores.create({
                 data: {
-
                     codigo_paleta,
-                    antecedentes_penales: antecedentes_penales == false ? false : true,
-                    procesos_judiciales: procesos_judiciales == false ? false : true,
+                    antecedentes_penales,
+                    procesos_judiciales,
                     calificacion_bancaria,
-                    estado: estado == false ? false : true,
+                    estado,
                     usuarioid: usuario.usuarioid
                 }
             });
             return res.status(200).json(comprador);
         });
+        return res.status(200).json({ message: 'comprador creado' });
     } catch (error) {
-
         return res.status(500).json({ message: error.message });
     }
     finally {
@@ -100,6 +106,7 @@ async function crearComprador(req: NextApiRequest, res: NextApiResponse) {
     }
 }
 
+// eslint-disable-next-line
 async function actualizarComprador(req: NextApiRequest, res: NextApiResponse) {
     try {
         await prisma.$transaction(async (prisma) => {
@@ -107,7 +114,7 @@ async function actualizarComprador(req: NextApiRequest, res: NextApiResponse) {
             const { id_comprador, codigo_paleta, antecedentes_penales, procesos_judiciales, calificacion_bancaria, estado }: compradores = req.body;
             const { nombres, identificacion }: usuario = req.body
 
-            const verificaCompradorPaleta = await prisma.compradores.findMany({ where: { codigo_paleta: codigo_paleta, id_comprador: { not: id_comprador } }, take:1  });
+            const verificaCompradorPaleta = await prisma.compradores.findMany({ where: { codigo_paleta, id_comprador: { not: id_comprador } }, take: 1 });
 
             if (verificaCompradorPaleta.length > 0) {
 
@@ -149,6 +156,7 @@ async function actualizarComprador(req: NextApiRequest, res: NextApiResponse) {
 
 }
 
+// eslint-disable-next-line
 async function eliminarComprador(req: NextApiRequest, res: NextApiResponse) {
     try {
         await prisma.$transaction(async (prisma) => {

@@ -1,9 +1,12 @@
-import prisma from 'database/prismaClient';
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 import moment from 'moment-timezone';
+
+import prisma from 'database/prismaClient';
+
 moment.tz.setDefault('America/Guayaquil');
 
+// eslint-disable-next-line
 export default function (req: NextApiRequest, res: NextApiResponse) {
     switch (req.method) {
         case 'GET':
@@ -32,12 +35,12 @@ async function obtenerEventosHoy(req: NextApiRequest, res: NextApiResponse) {
         });
 
         const eventosFormateados = eventos.map((evento) => {
-            const lotes = evento.lotes.map(lote => {
-                return {
+            const lotes = evento.lotes.map(lote => (
+                {
                     ...lote,
                     fecha_pesaje: moment(lote.fecha_pesaje).format('DD-MM-YYYY')
-                };
-            });
+                }
+            ));
 
             return {
                 ...evento,

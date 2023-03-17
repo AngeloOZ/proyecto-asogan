@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-import { DEFAULT_VENDEDOR } from 'src/routes/paths';
 
 // ----------------------------------------------------------------------
 

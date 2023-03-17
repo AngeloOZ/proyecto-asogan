@@ -50,7 +50,7 @@ export default function PageAdminProveedores() {
                     ]}
                     isLoading={isLoading}
                     dataBody={proveedores}
-                    isActions={true}
+                    isActions
                     handeEdit={handleClickEditRow}
                 />
             </Container>

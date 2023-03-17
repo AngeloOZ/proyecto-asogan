@@ -1,6 +1,6 @@
 import { useContext, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { PATH_ADMIN, PATH_DASHBOARD, PATH_DASHBOARD_CLEINTE } from 'src/routes/paths';
+import { PATH_DASHBOARD, PATH_DASHBOARD_CLEINTE } from 'src/routes/paths';
 import LoadingScreen from 'src/components/loading-screen/LoadingScreen';
 import { AuthContext } from 'src/auth';
 
@@ -21,6 +21,7 @@ export default function Index() {
                     router.push(`${PATH_DASHBOARD.subastas.root}/martillador/${id_evento}`);
             }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [router.query]);
 
     return <LoadingScreen />;

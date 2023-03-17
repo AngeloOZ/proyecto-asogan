@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { pagoplux } from 'utils';
 
-
+// eslint-disable-next-line
 export default function (req: NextApiRequest, res: NextApiResponse) {
     const clave = pagoplux.generateKey();
 

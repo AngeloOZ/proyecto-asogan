@@ -1,10 +1,15 @@
-import { eventos } from '@prisma/client';
-import prisma from 'database/prismaClient';
 import type { NextApiRequest, NextApiResponse } from 'next'
 
+import { eventos } from '@prisma/client';
+
+import prisma from 'database/prismaClient';
+
+
 import moment from 'moment-timezone';
+
 moment.tz.setDefault('America/Guayaquil');
 
+// eslint-disable-next-line
 export default function (req: NextApiRequest, res: NextApiResponse) {
     switch (req.method) {
         case 'GET':

@@ -51,7 +51,7 @@ export default function PageAdminProveedores() {
                     ]}
                     isLoading={isLoading}
                     dataBody={lotes}
-                    isActions={true}
+                    isActions
                     handeEdit={handleClickEditRow}
 
                 />

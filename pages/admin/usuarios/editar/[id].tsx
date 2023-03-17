@@ -22,7 +22,7 @@ export default function PageAdmin() {
         if (query.id) {
             obtenerUsuarios();
         }
-    
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [query])
 
     const obtenerUsuarios= async () => {

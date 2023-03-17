@@ -1,7 +1,7 @@
-import { Inventory, Category } from '@mui/icons-material';
-import { MdLoyalty, MdPointOfSale } from 'react-icons/md';
+import { Inventory } from '@mui/icons-material';
+import { MdPointOfSale } from 'react-icons/md';
 import { HiTruck, HiCalendar } from 'react-icons/hi';
-import { FaCubes, FaHammer } from 'react-icons/fa';
+import { FaCubes } from 'react-icons/fa';
 // import { HiTruck, HiShoppingCart} from 'react-icons/hi';
 // routes
 import { PATH_DASHBOARD, PATH_DASHBOARD_CLEINTE } from '../../../routes/paths';
@@ -43,12 +43,6 @@ const navConfig = [
         path: PATH_DASHBOARD.lotes.root,
         icon: <FaCubes />,
         roles: ['admin',],
-      },
-      {
-        title: 'Martillador',
-        path: PATH_DASHBOARD.martillador.root,
-        icon: <FaHammer />,
-        roles: ['admin', 'martillador'],
       },
       {
         title: 'Usuarios',

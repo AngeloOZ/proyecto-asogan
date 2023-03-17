@@ -2,7 +2,7 @@ import { proveedores } from '@prisma/client';
 import prisma from 'database/prismaClient';
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-
+// eslint-disable-next-line
 export default function (req: NextApiRequest, res: NextApiResponse) {
     switch (req.method) {
         case 'GET':

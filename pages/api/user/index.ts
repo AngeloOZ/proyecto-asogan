@@ -2,7 +2,7 @@ import { usuario } from "@prisma/client";
 import prisma from 'database/prismaClient';
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-
+// eslint-disable-next-line
 export default function (req: NextApiRequest, res: NextApiResponse) {
     switch (req.method) {
         case 'GET':
@@ -16,108 +16,104 @@ export default function (req: NextApiRequest, res: NextApiResponse) {
         default:
             break;
     }
+}
 
+async function obtenerUsuarios(req: NextApiRequest, res: NextApiResponse) {
+    try {
+        const { id } = req.query;
 
-    async function obtenerUsuarios(req: NextApiRequest, res: NextApiResponse) {
-        try {
-            const { id } = req.query;
-
-            if (id) {
-                const usuario = await prisma.usuario.findUnique({
-                    where: { usuarioid: Number(id) },
-                });
-                return res.status(200).json(usuario);
-            }
-
-            const usuarios = await prisma.usuario.findMany({where:{tipo:1}});
-            const usuariosRol = usuarios.map((usuario) => ({ ...usuario, rol: (JSON.parse(usuario.rol)[0]).charAt(0).toUpperCase() + (JSON.parse(usuario.rol)[0]).slice(1)}));
-           
-            return res.status(200).json(usuariosRol);
-
-        } catch (error) {
-            return res.status(500).json({ message: error.message });
+        if (id) {
+            const usuario = await prisma.usuario.findUnique({
+                where: { usuarioid: Number(id) },
+            });
+            return res.status(200).json(usuario);
         }
-        finally {
-            prisma.$disconnect();
-        }
+
+        const usuarios = await prisma.usuario.findMany({ where: { tipo: 1 } });
+        const usuariosRol = usuarios.map((usuario) => ({ ...usuario, rol: (JSON.parse(usuario.rol)[0]).charAt(0).toUpperCase() + (JSON.parse(usuario.rol)[0]).slice(1) }));
+
+        return res.status(200).json(usuariosRol);
+
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
     }
+    finally {
+        prisma.$disconnect();
+    }
+}
 
-    async function crearUsuario(req: NextApiRequest, res: NextApiResponse) {
-        try {
-            const { identificacion, nombres, rol, clave }: usuario = req.body
-            const { verificacion_clave } = req.body
+async function crearUsuario(req: NextApiRequest, res: NextApiResponse) {
+    try {
+        const { identificacion, nombres, rol, clave }: usuario = req.body
+        const { verificacion_clave } = req.body
+        if (clave !== verificacion_clave) {
+
+            return res.status(500).json({ message: 'la clave no coincide' });
+        }
+
+
+
+        const usuario = await prisma.usuario.create({
+            data: {
+                identificacion,
+                nombres,
+                clave,
+                rol: `["${rol}"]`,
+
+            }
+        });
+
+        return res.status(200).json(usuario);
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+    finally {
+        prisma.$disconnect();
+    }
+}
+
+async function actualizarUsuario(req: NextApiRequest, res: NextApiResponse) {
+    try {
+        const { id, verificacion_clave } = req.query;
+        const { identificacion, nombres, rol, clave }: usuario = req.body
+
+        if (verificacion_clave !== "") {
             if (clave !== verificacion_clave) {
-                
                 return res.status(500).json({ message: 'la clave no coincide' });
             }
-
-         
-
-            const usuario = await prisma.usuario.create({
-                data: {
-                    identificacion,
-                    nombres,
-                    clave,
-                    rol: `["${rol}"]`,
-                   
-                }
-            });
-
-   
-            return res.status(200).json(usuario);
-        } catch (error) {
-           
-            return res.status(500).json({ message: error.message });
         }
-        finally {
-            prisma.$disconnect();
-        }
-    }
-
-    async function actualizarUsuario(req: NextApiRequest, res: NextApiResponse) {
-
-        try {
-            const { id,verificacion_clave } = req.query;
-            const { identificacion, nombres, rol, clave}: usuario = req.body
-
-            if (verificacion_clave !== "")  {
-                if (clave !== verificacion_clave) {
-                    return res.status(500).json({ message: 'la clave no coincide' });
-                }
+        const usuario = await prisma.usuario.update({
+            where: { usuarioid: Number(id) },
+            data: {
+                identificacion,
+                nombres,
+                clave,
+                rol: `["${rol}"]`
             }
-            const usuario = await prisma.usuario.update({
-                where: { usuarioid: Number(id) },
-                data: {
-                    identificacion,
-                    nombres,
-                    clave,
-                    rol: `["${rol}"]`
-                }
-            });
-           
-            return res.status(200).json(usuario);
-        } catch (error) {
-            return res.status(500).json({ message: error.message });
-        }
-        finally {
-            prisma.$disconnect();
-        }
+        });
+
+        return res.status(200).json(usuario);
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
     }
+    finally {
+        prisma.$disconnect();
+    }
+}
 
-    async function eliminarUsuario(req: NextApiRequest, res: NextApiResponse) {
-        try {
-            const { id } = req.query;
+async function eliminarUsuario(req: NextApiRequest, res: NextApiResponse) {
+    try {
+        const { id } = req.query;
 
-            const usuario = await prisma.usuario.delete({
-                where: { usuarioid: Number(id) },
-            });
+        const usuario = await prisma.usuario.delete({
+            where: { usuarioid: Number(id) },
+        });
 
-            return res.status(200).json(usuario);
-        } catch (error) {
-            return res.status(500).json({ message: error.message });
-        }
-        finally {
-            prisma.$disconnect();
-        }
+        return res.status(200).json(usuario);
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+    finally {
+        prisma.$disconnect();
     }
 }

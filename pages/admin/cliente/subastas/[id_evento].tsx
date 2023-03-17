@@ -1,20 +1,18 @@
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import Link from 'next/link'
 
-import { Button, Container, Grid } from '@mui/material'
+import { Container, Grid } from '@mui/material'
 
 import DashboardLayout from 'src/layouts/dashboard/DashboardLayout'
 
-import { ChatPujas, LoteCliente, LoteMartillador, VideoPlayer, useLotesSubasta, useObtenerLotes, useSubastas } from 'custom/components'
-import CustomBreadcrumbs from 'src/components/custom-breadcrumbs/CustomBreadcrumbs'
-import { lotes as ILote, eventos, lotes } from '@prisma/client'
-import { Box } from '@mui/system'
-import { useContext, useEffect, useState } from 'react'
-import { AuthContext } from 'src/auth'
+import { ChatPujas, LoteCliente, VideoPlayer, useSubastas } from 'custom/components'
+import { lotes } from '@prisma/client'
+import {  useEffect, useState } from 'react'
 
 import useSWR from "swr";
+
 import { subastaAPI } from 'custom/api'
+
 const fetcher = (url: string) => subastaAPI.get(url).then(r => r.data)
 
 

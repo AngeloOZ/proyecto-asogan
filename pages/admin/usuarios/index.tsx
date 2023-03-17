@@ -33,7 +33,7 @@ export default function PageAdminUsuarios() {
             router.push(PATH_DASHBOARD.usuarios.root);
 
         } catch (error) {
-            enqueueSnackbar("Oops... hubo un error " + error.message, { variant: 'error' });
+            enqueueSnackbar(`Oops... hubo un error ${error.message}`, { variant: 'error' });
         }
     }
 
@@ -66,7 +66,7 @@ export default function PageAdminUsuarios() {
                 ]}
                 isLoading={isLoading}
                 dataBody={usuario}
-                isActions={true}
+                isActions
                 handeEdit={handleClickEditRow}
                 handleDelete={handleClickDeleteRow}
             />

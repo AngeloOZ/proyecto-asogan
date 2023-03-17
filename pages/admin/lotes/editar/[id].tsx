@@ -7,7 +7,7 @@ import DashboardLayout from 'src/layouts/dashboard/DashboardLayout'
 import { Container } from '@mui/material'
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs/CustomBreadcrumbs'
 import { PATH_DASHBOARD } from 'src/routes/paths'
-import { FormLotes, FormProveedores, LinearProgressBar } from 'custom/components'
+import { FormLotes, LinearProgressBar } from 'custom/components'
 import { subastaAPI } from 'custom/api'
 import { lotes } from '@prisma/client'
 

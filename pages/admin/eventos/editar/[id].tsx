@@ -23,6 +23,7 @@ export default function PageAdmin() {
         if (query.id) {
             obtenerEvento();
         }
+        // eslint-disable-next-line
     }, [query])
 
     const obtenerEvento = async () => {

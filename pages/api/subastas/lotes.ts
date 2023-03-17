@@ -2,8 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 import prisma from 'database/prismaClient';
 
-
-
+// eslint-disable-next-line
 export default function (req: NextApiRequest, res: NextApiResponse) {
 
     switch (req.method) {
@@ -15,7 +14,6 @@ export default function (req: NextApiRequest, res: NextApiResponse) {
             return res.status(405).json({ message: 'Method not allowed' })
 
     }
-
 }
 
 async function obtenerLoteActivo(req: NextApiRequest, res: NextApiResponse) {
@@ -24,7 +22,7 @@ async function obtenerLoteActivo(req: NextApiRequest, res: NextApiResponse) {
         const idEvento = Number(id);
 
 
-        if (isNaN(idEvento)) {
+        if (Number.isNaN(idEvento)) {
             return res.status(202).json({ message: 'no content' });
         }        
 
@@ -68,7 +66,6 @@ async function activarLote(req: NextApiRequest, res: NextApiResponse) {
             }
         });
         return res.status(200).json(lote);
-
     }
     catch (err) {
         console.log(err);
