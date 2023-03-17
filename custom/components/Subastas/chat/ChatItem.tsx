@@ -24,7 +24,7 @@ export const ChatItem = ({ puja }: Props) => {
                 width="90%"
                 maxWidth="200px"
                 style={{
-                    backgroundColor: isMe ? theme.palette.primary.main : theme.palette.grey[300],
+                    backgroundColor: isMe ? theme.palette.primary.light : theme.palette.grey[200],
                     borderRadius: 5,
                 }}
             >

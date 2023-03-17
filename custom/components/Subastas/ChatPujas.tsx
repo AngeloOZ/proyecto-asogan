@@ -47,7 +47,7 @@ export const ChatPujas = ({ lote, evento }: ChatPujasProps) => {
 
     return (
 
-        <Card sx={{ height: '400px', display: 'flex' }}>
+        <Card sx={{ height: '365px', display: 'flex' }}>
             <Stack flexGrow={1}>
                 <Stack
                     direction="row"

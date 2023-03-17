@@ -1,15 +1,10 @@
-import { Box, BoxProps, Card, Grid, InputAdornment, MenuItem, Stack, TextField } from "@mui/material"
+import { BoxProps, Card, Grid, InputAdornment, MenuItem, Stack, TextField } from "@mui/material"
 import { lotes } from "@prisma/client";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import useSWR from "swr";
 
 import FormProvider, {
-    RHFSwitch,
-    RHFEditor,
-    RHFUpload,
     RHFTextField,
     RHFSelect,
-    RHFAutocomplete,
 } from 'src/components/hook-form';
 import { useForm } from "react-hook-form";
 import moment from "moment-timezone";
@@ -27,7 +22,7 @@ interface LoteMartillador extends BoxProps {
 type FormProps = {
     id_lote: string | number;
     puja_inicial: number;
-    incremento: number;
+    incremento: number | string;
 
 }
 export const LoteMartillador = ({ loteActual, setLoteActual, listadoLotes }: LoteMartillador) => {
@@ -35,7 +30,7 @@ export const LoteMartillador = ({ loteActual, setLoteActual, listadoLotes }: Lot
     const defaultValues = {
         id_lote: loteActual?.id_lote || '',
         puja_inicial: Number(loteActual?.puja_inicial) || 0,
-        incremento: Number(loteActual?.incremento) || 0,
+        incremento: Number(loteActual?.incremento).toFixed(2) || 0,
     }
     const methods = useForm<FormProps>({
         defaultValues
@@ -45,6 +40,7 @@ export const LoteMartillador = ({ loteActual, setLoteActual, listadoLotes }: Lot
         reset,
         watch,
         handleSubmit,
+        setValue,
         formState: { isSubmitting },
     } = methods;
     const values = watch();
@@ -64,9 +60,9 @@ export const LoteMartillador = ({ loteActual, setLoteActual, listadoLotes }: Lot
         reset(defaultValues)
         setLoteActual(loteActual)
 
-        if(loteActual && loteActual.id_lote && loteActual.id_evento){
+        if (loteActual && loteActual.id_lote && loteActual.id_evento) {
             console.log(loteActual);
-            
+
             subastaAPI.post('subastas/lotes', {
                 id_lote: loteActual?.id_lote,
                 id_evento: loteActual?.id_evento,
@@ -96,8 +92,8 @@ export const LoteMartillador = ({ loteActual, setLoteActual, listadoLotes }: Lot
                             size="small"
                             variant="outlined"
                             fullWidth
-                            disabled
-                            InputProps={{ inputProps: { readOnly: true } }}
+                            InputProps={{ inputProps: { readOnly: true }}}
+                            InputLabelProps={{ style: { fontSize: 18, color: 'black', fontWeight: "500" }, shrink: true }}
                         />
                     </Grid>
 
@@ -108,8 +104,8 @@ export const LoteMartillador = ({ loteActual, setLoteActual, listadoLotes }: Lot
                             size="small"
                             variant="outlined"
                             fullWidth
-                            disabled
-                            InputProps={{ inputProps: { readOnly: true } }}
+                            InputProps={{ inputProps: { readOnly: true }}}
+                            InputLabelProps={{ style: { fontSize: 18, color: 'black', fontWeight: "500" }, shrink: true }}
                         />
                     </Grid>
 
@@ -120,8 +116,8 @@ export const LoteMartillador = ({ loteActual, setLoteActual, listadoLotes }: Lot
                             size="small"
                             variant="outlined"
                             fullWidth
-                            disabled
-                            InputProps={{ inputProps: { readOnly: true } }}
+                            InputProps={{ inputProps: { readOnly: true }}}
+                            InputLabelProps={{ style: { fontSize: 18, color: 'black', fontWeight: "500" }, shrink: true }}
                         />
                     </Grid>
 
@@ -132,8 +128,8 @@ export const LoteMartillador = ({ loteActual, setLoteActual, listadoLotes }: Lot
                             size="small"
                             variant="outlined"
                             fullWidth
-                            disabled
-                            InputProps={{ inputProps: { readOnly: true } }}
+                            InputProps={{ inputProps: { readOnly: true }}}
+                            InputLabelProps={{ style: { fontSize: 18, color: 'black', fontWeight: "500" }, shrink: true }}
                         />
                     </Grid>
 
@@ -144,8 +140,8 @@ export const LoteMartillador = ({ loteActual, setLoteActual, listadoLotes }: Lot
                             size="small"
                             variant="outlined"
                             fullWidth
-                            disabled
-                            InputProps={{ inputProps: { readOnly: true } }}
+                            InputProps={{ inputProps: { readOnly: true }}}
+                            InputLabelProps={{ style: { fontSize: 18, color: 'black', fontWeight: "500" }, shrink: true }}
                         />
                     </Grid>
 
@@ -156,8 +152,8 @@ export const LoteMartillador = ({ loteActual, setLoteActual, listadoLotes }: Lot
                             size="small"
                             variant="outlined"
                             fullWidth
-                            disabled
-                            InputProps={{ inputProps: { readOnly: true } }}
+                            InputProps={{ inputProps: { readOnly: true }}}
+                            InputLabelProps={{ style: { fontSize: 18, color: 'black', fontWeight: "500" }, shrink: true }}
                         />
                     </Grid>
 
@@ -168,8 +164,8 @@ export const LoteMartillador = ({ loteActual, setLoteActual, listadoLotes }: Lot
                             size="small"
                             variant="outlined"
                             fullWidth
-                            disabled
-                            InputProps={{ inputProps: { readOnly: true } }}
+                            InputProps={{ inputProps: { readOnly: true }}}
+                            InputLabelProps={{ style: { fontSize: 18, color: 'black', fontWeight: "500" }, shrink: true }}
                         />
                     </Grid>
 
@@ -180,8 +176,8 @@ export const LoteMartillador = ({ loteActual, setLoteActual, listadoLotes }: Lot
                             size="small"
                             variant="outlined"
                             fullWidth
-                            disabled
-                            InputProps={{ inputProps: { readOnly: true } }}
+                            InputProps={{ inputProps: { readOnly: true }}}
+                            InputLabelProps={{ style: { fontSize: 18, color: 'black', fontWeight: "500" }, shrink: true }}
                         />
                     </Grid>
 
@@ -192,11 +188,11 @@ export const LoteMartillador = ({ loteActual, setLoteActual, listadoLotes }: Lot
                             size="small"
                             variant="outlined"
                             fullWidth
-                            disabled
                             InputProps={{
                                 inputProps: { readOnly: true },
-                                startAdornment: <InputAdornment position="start">Lb</InputAdornment>,
+                                startAdornment: <InputAdornment position="start">Kg</InputAdornment>,
                             }}
+                            InputLabelProps={{ style: { fontSize: 18, color: 'black', fontWeight: "500" }, shrink: true }}
                         />
                     </Grid>
 
@@ -209,6 +205,7 @@ export const LoteMartillador = ({ loteActual, setLoteActual, listadoLotes }: Lot
                             InputProps={{
                                 startAdornment: <InputAdornment position="start">$</InputAdornment>,
                             }}
+                            InputLabelProps={{ style: { fontSize: 18, color: 'black', fontWeight: "500" }, shrink: true }}
                             inputProps={{
                                 step: "any",
                             }}
@@ -223,6 +220,7 @@ export const LoteMartillador = ({ loteActual, setLoteActual, listadoLotes }: Lot
                             label="Incremento"
                             size='small'
                             type='number'
+                            InputLabelProps={{ style: { fontSize: 18, color: 'black', fontWeight: "500" }, shrink: true }}
                             InputProps={{
                                 startAdornment: <InputAdornment position="start">$</InputAdornment>,
                             }}

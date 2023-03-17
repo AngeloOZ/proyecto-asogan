@@ -203,7 +203,7 @@ export function FormLotes({ esEditar = false, loteEditar }: Props) {
                                 size='small'
                                 type='number'
                                 InputProps={{
-                                    startAdornment: <InputAdornment position="start">Lb</InputAdornment>,
+                                    startAdornment: <InputAdornment position="start">Kg</InputAdornment>,
                                 }}
                                 inputProps={{
                                     step: "any",
