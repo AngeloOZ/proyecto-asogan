@@ -1,5 +1,6 @@
 import prisma from 'database/prismaClient'
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { handleErrorsPrisma } from 'utils';
 
 // eslint-disable-next-line
 export default async function (req: NextApiRequest, res: NextApiResponse) {
@@ -18,7 +19,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
         const lotes = await prisma.lotes.findMany();
         return res.status(200).json(lotes);
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        return res.status(500).json(handleErrorsPrisma(error.code));
     } finally {
         await prisma.$disconnect();
     }

@@ -6,6 +6,7 @@ import prisma from 'database/prismaClient';
 
 
 import moment from 'moment-timezone';
+import { handleErrorsPrisma } from 'utils';
 
 moment.tz.setDefault('America/Guayaquil');
 
@@ -115,9 +116,9 @@ async function eliminarEvento(req: NextApiRequest, res: NextApiResponse) {
             where: { id_evento: Number(id) }
         });
 
-        return res.status(204).json(evento);
+        return res.status(200).json(evento);
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        return res.status(500).json(handleErrorsPrisma(error));
     }
     finally {
         await prisma.$disconnect();

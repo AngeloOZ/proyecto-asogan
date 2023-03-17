@@ -10,18 +10,29 @@ import { PATH_DASHBOARD } from 'src/routes/paths'
 import { TableCustom, useObtenerLotes } from 'custom/components'
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs/CustomBreadcrumbs'
 import { lotes as ILote } from '@prisma/client'
-
+import { useSnackbar } from 'notistack'
+import { useLotes } from 'custom/components/Lotes/hooks';
 
 PageAdminProveedores.getLayout = (page: React.ReactElement) => <DashboardLayout>{page}</DashboardLayout>
 
 export default function PageAdminProveedores() {
     const router = useRouter();
     const { lotes, isLoading } = useObtenerLotes();
+    const { enqueueSnackbar } = useSnackbar();
+    const { eliminarLote } = useLotes();
 
     const handleClickEditRow = (item: ILote) => {
         router.push(`${PATH_DASHBOARD.lotes.editar}/${item.id_lote}`);
     }
-
+    const handleClickDeleteRow = (item: ILote) => {
+        try {
+            eliminarLote(item);
+            enqueueSnackbar('Lote eliminado correctamente', { variant: 'success' });
+        }
+        catch (err) {
+            enqueueSnackbar(`Oops... hubo un error ${err.message}`, { variant: 'error' });
+        }
+    }
     return (
         <>
             <Head>
@@ -36,7 +47,7 @@ export default function PageAdminProveedores() {
                 />
                 <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "-25px", marginBottom: 10 }}>
                     <Link href={PATH_DASHBOARD.lotes.agregar} passHref legacyBehavior>
-                        <Button variant='contained'>Agregar proveedor</Button>
+                        <Button variant='contained'>Agregar lote</Button>
                     </Link>
                 </div>
                 <TableCustom
@@ -53,6 +64,7 @@ export default function PageAdminProveedores() {
                     dataBody={lotes}
                     isActions
                     handeEdit={handleClickEditRow}
+                    handleDelete={handleClickDeleteRow}
 
                 />
             </Container>
