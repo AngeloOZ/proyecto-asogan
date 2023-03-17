@@ -4,7 +4,7 @@ import prisma from 'database/prismaClient';
 
 import { jwt } from 'utils';
 import { UserLogged } from '@types';
-
+import bcrypt from 'bcrypt';
 
 
 type Data =
@@ -38,8 +38,9 @@ async function loginUser(req: NextApiRequest, res: NextApiResponse<Data>) {
         if (!user) {
             return res.status(404).json({ status: 404, message: 'El usuario o la contraseña no son válidos - IDEN' })
         }
-
-        if (user.clave !== clave) {
+        const comprobacion = await bcrypt.compare(clave, user.clave);
+        
+        if (!comprobacion) {
             return res.status(404).json({ status: 404, message: 'El usuario o la contraseña no son válidos - CLAVE' })
         }
 

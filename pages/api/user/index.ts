@@ -1,6 +1,7 @@
 import { usuario } from "@prisma/client";
 import prisma from 'database/prismaClient';
-import type { NextApiRequest, NextApiResponse } from 'next'
+import type { NextApiRequest, NextApiResponse } from 'next';
+import bcrypt from 'bcrypt';
 
 // eslint-disable-next-line
 export default function (req: NextApiRequest, res: NextApiResponse) {
@@ -46,14 +47,13 @@ async function obtenerUsuarios(req: NextApiRequest, res: NextApiResponse) {
 async function crearUsuario(req: NextApiRequest, res: NextApiResponse) {
     try {
         const { identificacion, nombres, rol, clave }: usuario = req.body
-
-
+        const claveEncriptada = await bcrypt.hash(clave, 10);
 
         const usuario = await prisma.usuario.create({
             data: {
                 identificacion,
                 nombres,
-                clave,
+                clave:claveEncriptada,
                 rol: `["${rol}"]`,
 
             }
@@ -70,16 +70,28 @@ async function crearUsuario(req: NextApiRequest, res: NextApiResponse) {
 
 async function actualizarUsuario(req: NextApiRequest, res: NextApiResponse) {
     try {
-
+        
         const { usuarioid, identificacion, nombres, rol, clave }: usuario = req.body
-
+        if (clave === "") {
+            const usuario = await prisma.usuario.update({
+                where: { usuarioid },
+                data: {
+                    identificacion,
+                    nombres,
+                    rol: `["${rol}"]`,
+                }
+            });
+            return res.status(200).json(usuario);
+        }
+        
+        const claveEncriptada = await bcrypt.hash(clave, 10);
 
         const usuario = await prisma.usuario.update({
             where: { usuarioid },
             data: {
                 identificacion,
                 nombres,
-                clave,
+                clave:claveEncriptada,
                 rol: `["${rol}"]`,
             }
         });

@@ -56,6 +56,7 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
     const CompradorEsquema = Yup.object().shape({
         identificacion: Yup.string().required('La identificacion es requerido').min(10, 'La identificacion no puede tener menos de 10 caracteres').max(13, 'La identificacion no puede tener mas de 13 caracteres'),
         nombres: Yup.string().required('El nombre es requerido').max(300, 'El nombre no puede tener mas de 300 caracteres'),
+        
         codigo_paleta: Yup.string().required('El numero de paleta es requerido').max(5, 'El numero de paleta no puede tener mas de 5 caracteres'),
         calificacion_bancaria: Yup.string().required('La calificacion bancaria es requerida').max(5, 'La calificacion bancaria no puede tener mas de 5 caracteres'),
     });

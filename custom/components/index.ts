@@ -15,7 +15,7 @@ export * from './Subastas';
 // Leidy
 
 export * from './Usuarios';
-
+export * from './Globales';
 
 
 // Jhusep
