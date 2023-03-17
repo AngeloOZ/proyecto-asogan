@@ -17,7 +17,7 @@ export const useLotes = () => {
         mutate('/lotes');
     }
 
-    const eliminarLote = async (lote: LoteForm) => {
+    const eliminarLote = async (lote: any) => {
         const { data } = await subastaAPI.delete(`/lotes?id=${lote.id_lote!}`);
         mutate('/lotes');
     }

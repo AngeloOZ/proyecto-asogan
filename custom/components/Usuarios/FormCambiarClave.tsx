@@ -35,11 +35,11 @@ type Props = {
 }
 
 export function FormCambiarClave({ usuariosEditar }: Props) {
-   
+
     const { actualizarUsuario } = useUsuario();
     const { push } = useRouter();
     const { enqueueSnackbar } = useSnackbar();
-    
+
     // Validaciones de los campos
     const UsuariosEsquema = Yup.object().shape({
 
@@ -47,7 +47,7 @@ export function FormCambiarClave({ usuariosEditar }: Props) {
         verificacion_clave: Yup.string().required('La verificación de clave es requerida').max(10, 'La verificación de clave no puede tener mas de 10 digitos').oneOf([Yup.ref('clave'), null], 'Las claves no coinciden'),
     });
 
-    
+
 
     // Se carga los valores en caso de que sea editar
     const defaultValues = useMemo<IUsuario>(() => ({
@@ -56,7 +56,7 @@ export function FormCambiarClave({ usuariosEditar }: Props) {
         usuarioid: usuariosEditar?.usuarioid || 0,
         nombres: usuariosEditar?.nombres || '',
         identificacion: usuariosEditar?.identificacion || '',
-        clave:  '',
+        clave: '',
         rol: JSON.parse(usuariosEditar?.rol || `[""]`)[0],
         tipo: usuariosEditar?.tipo || 1,
     }), [usuariosEditar]);

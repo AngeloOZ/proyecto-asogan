@@ -10,6 +10,5 @@ export function handleErrorsAxios(error: AxiosError) {
     } else {
         mensaje = error.message || "Hubo una interrupción en la petición";
     }
-    console.log(mensaje);
     return mensaje;
 }

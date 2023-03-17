@@ -1,6 +1,6 @@
 
 import * as Yup from 'yup';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 // next
 import { useRouter } from 'next/router';
@@ -28,6 +28,7 @@ import { PATH_DASHBOARD } from 'src/routes/paths';
 
 
 import prisma from 'database/prismaClient';
+import { useGlobales } from '../Globales';
 
 type FormValuesProps = IUsuario;
 type Props = {
@@ -40,6 +41,9 @@ export function FormUsuarios({ esEditar = false, usuariosEditar }: Props) {
     const { push } = useRouter();
     const { enqueueSnackbar } = useSnackbar();
     const { agregarUsuario, actualizarUsuario } = useUsuario();
+    const { consultarIdentificacion } = useGlobales();
+    
+    
 
     useEffect(() => {
         if (esEditar && usuariosEditar) {
@@ -57,9 +61,9 @@ export function FormUsuarios({ esEditar = false, usuariosEditar }: Props) {
     const UsuariosEsquema = Yup.object().shape({
         identificacion: Yup.string().required('La identificacion es requerido').min(10, 'La identificacion no puede tener menos de 10 caracteres').max(13, 'La identificacion no puede tener mas de 13 caracteres'),
         nombres: Yup.string().required('El nombre es requerido').max(300, 'El nombre no puede tener mas de 300 caracteres'),
-        clave: Yup.string().required('La clave es requerida').max(10, 'La clave no puede tener mas de 10 digitos'),
+        clave: Yup.string().max(10, 'La clave no puede tener mas de 10 digitos'),
         rol: Yup.string().required('El rol es requerido'),
-        verificacion_clave: Yup.string().required('La verificación de clave es requerida').max(10, 'La verificación de clave no puede tener mas de 10 digitos').oneOf([Yup.ref('clave'), null], 'Las claves no coinciden'),
+        verificacion_clave: Yup.string().oneOf([Yup.ref('clave'),null], 'Las claves no coinciden'),
     });
 
 
@@ -67,12 +71,11 @@ export function FormUsuarios({ esEditar = false, usuariosEditar }: Props) {
 
     // Se carga los valores en caso de que sea editar
     const defaultValues = useMemo<IUsuario>(() => ({
-
-
         usuarioid: usuariosEditar?.usuarioid || 0,
         nombres: usuariosEditar?.nombres || '',
         identificacion: usuariosEditar?.identificacion || '',
-        clave: usuariosEditar?.clave || '',
+        clave: '' ,
+        verificacion_clave: '',
         rol: JSON.parse(usuariosEditar?.rol || `[""]`)[0],
         tipo: usuariosEditar?.tipo || 1,
     }), [usuariosEditar]);
@@ -82,16 +85,20 @@ export function FormUsuarios({ esEditar = false, usuariosEditar }: Props) {
     const methods = useForm<FormValuesProps>({
         resolver: yupResolver(UsuariosEsquema),
         defaultValues,
+        
+
     });
 
     const {
         reset,
         watch,
+        setValue,
         handleSubmit,
         formState: { isSubmitting },
     } = methods;
-    const onSubmit = async (data: FormValuesProps) => {
 
+    const onSubmit = async (data: FormValuesProps) => {
+      
         try {
             if (!esEditar) {
                 await agregarUsuario(data);
@@ -109,6 +116,12 @@ export function FormUsuarios({ esEditar = false, usuariosEditar }: Props) {
         }
     }
 
+    const verificarIdentificacion = async () => {
+        const data = await consultarIdentificacion(watch("identificacion"));
+        setValue('nombres',data);
+    }
+
+
     return (<FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} >
         <Card sx={{ p: 3, boxShadow: "0 0 2px rgba(0,0,0,0.2)" }}>
             <Stack spacing={2} >
@@ -118,11 +131,14 @@ export function FormUsuarios({ esEditar = false, usuariosEditar }: Props) {
                     label="Identificación"
                     size='small'
                     disabled={esEditar}
+                    onBlur={verificarIdentificacion}
+                    
                 />
                 <RHFTextField
                     name="nombres"
                     label="Nombres"
                     size='small'
+                
                 />
 
                 <RHFTextField
@@ -173,8 +189,6 @@ export function FormUsuarios({ esEditar = false, usuariosEditar }: Props) {
             </Stack>
 
         </Card>
-
-
 
     </FormProvider>)
 }

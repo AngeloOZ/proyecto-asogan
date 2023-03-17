@@ -2,6 +2,7 @@ import { LoteForm } from '@types';
 import prisma from 'database/prismaClient'
 import moment from 'moment-timezone';
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { handleErrorsPrisma } from 'utils';
 
 // eslint-disable-next-line
 export default function (req: NextApiRequest, res: NextApiResponse) {
@@ -12,6 +13,8 @@ export default function (req: NextApiRequest, res: NextApiResponse) {
             return crearLote(req, res);
         case 'PUT':
             return actualizarLote(req, res);
+        case 'DELETE':
+            return eliminarLote(req, res);
         default:
             return res.status(405).end();
     }
@@ -87,7 +90,7 @@ async function actualizarLote(req: NextApiRequest, res: NextApiResponse) {
             where: {
                 id_lote
             },
-            data: { 
+            data: {
                 id_evento: Number(id_evento),
                 id_proveedor: Number(id_proveedor),
                 fecha_pesaje: formattedDate,
@@ -116,3 +119,19 @@ async function actualizarLote(req: NextApiRequest, res: NextApiResponse) {
     }
 }
 
+async function eliminarLote(req: NextApiRequest, res: NextApiResponse) {
+    try {
+        const { id } = req.query;
+
+        const evento = await prisma.lotes.delete({
+            where: { id_lote: Number(id) }
+        });
+
+        return res.status(204).json(evento);
+    } catch (error) {
+        return res.status(500).json(handleErrorsPrisma(error.code));
+    }
+    finally {
+        await prisma.$disconnect();
+    }
+}

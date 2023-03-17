@@ -4,6 +4,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 // eslint-disable-next-line
 export default function (req: NextApiRequest, res: NextApiResponse) {
+    console.log(req.query)
     switch (req.method) {
         case 'GET':
             return obtenerCompradores(req, res);
