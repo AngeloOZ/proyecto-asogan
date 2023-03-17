@@ -56,6 +56,12 @@ const navConfig = [
         icon: <HiCalendar />,
         roles: ['admin',],
       },
+      {
+        title: 'Lotes Comprados',
+        path: PATH_DASHBOARD.lotes.comprados,
+        icon: <FaCubes />,
+        roles: ['comprador',],
+      },
     ],
   },
 ];
