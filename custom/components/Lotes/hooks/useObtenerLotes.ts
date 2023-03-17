@@ -17,3 +17,12 @@ export const useObtenerLotes = () => {
   }
 }
 
+export const useObtenerLotesComprados = (comprador: number) => {
+  const { data, isLoading, error } = useSWR(`/lotes/comprados?comprador=${comprador}`);
+  return {
+    lotes: data || [],
+    isLoading,
+    error
+  }
+}
+
