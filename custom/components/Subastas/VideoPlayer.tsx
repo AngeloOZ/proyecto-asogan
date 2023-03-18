@@ -1,12 +1,13 @@
 import { Box, BoxProps, Skeleton } from "@mui/material"
 import { useEffect, useState } from "react";
-import ReactPlayer from "react-player";
+import ReactPlayer, { ReactPlayerProps } from "react-player";
 
 
 interface VideoPlayerProps extends BoxProps {
   // other?: BoxProps
+  playerProps?: ReactPlayerProps
 }
-export const VideoPlayer = ({ ...other }: VideoPlayerProps) => {
+export const VideoPlayer = ({ playerProps, ...other }: VideoPlayerProps) => {
   const [play, setPlay] = useState(false)
 
   useEffect(() => {
@@ -18,14 +19,14 @@ export const VideoPlayer = ({ ...other }: VideoPlayerProps) => {
   return (
     <Box {...other} component="div" width="100%" height="100%">
       <ReactPlayer
-        url="https://youtu.be/P_SYwtp1BJs"
         playing={play}
         width="100%"
-        muted
+        height="100%"
         onReady={() => setPlay(true)}
         style={{
           aspectRatio: "16/9",
         }}
+        {...playerProps}
       />
     </Box>
   )

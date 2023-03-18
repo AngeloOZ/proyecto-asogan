@@ -6,7 +6,7 @@ import NextLink from 'next/link';
 import { Box, Link, BoxProps } from '@mui/material';
 // import { Image } from '@mui/icons-material';
 import { useRouter } from 'next/router';
-import { DEFAULT_VENDEDOR } from 'src/routes/paths';
+import { PATH_DASHBOARD } from 'src/routes/paths';
 import Image from '../image/Image';
 
 // ----------------------------------------------------------------------
@@ -19,7 +19,6 @@ const Logo = forwardRef<HTMLDivElement, LogoProps>(
   ({ disabledLink = false, sx, ...other }, ref) => {
 
     const { query: { vendedor } } = useRouter() as any;
-    const [idVendedor] = useState<string>(vendedor || DEFAULT_VENDEDOR.toString());
 
     const logo = (
       <Box
@@ -47,7 +46,7 @@ const Logo = forwardRef<HTMLDivElement, LogoProps>(
     }
 
     return (
-      <Link component={NextLink} href={`/${idVendedor}/tienda`} sx={{ display: 'contents' }}>
+      <Link component={NextLink} href={PATH_DASHBOARD.root} sx={{ display: 'contents' }}>
         {logo}
       </Link>
     );

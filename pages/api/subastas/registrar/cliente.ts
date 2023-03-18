@@ -6,7 +6,7 @@ import prisma from 'database/prismaClient';
 export default async function (req: NextApiRequest, res: NextApiResponse) {
     try {
         if (req.method === 'PUT') {
-            const abc = await registrarPuja(req, res);
+            await registrarPuja(req, res);
             await prisma.$disconnect();
             res.status(200).json({ message: 'Puja registrada' });
         } else {

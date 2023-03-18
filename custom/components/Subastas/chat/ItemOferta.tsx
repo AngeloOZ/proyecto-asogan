@@ -1,7 +1,6 @@
 import { useContext } from 'react'
 import { Box, Stack, Typography, useTheme } from '@mui/material'
 
-import { pujas } from '@prisma/client'
 import { AuthContext } from 'src/auth'
 import { Puja } from '@types'
 
@@ -10,6 +9,7 @@ type Props = {
 }
 export const ItemOferta = ({ puja }: Props) => {
     const theme = useTheme();
+    const { rol: [rolLogged] } = useContext(AuthContext);
 
     return (
         <Stack direction="row">
@@ -25,10 +25,14 @@ export const ItemOferta = ({ puja }: Props) => {
                     borderRadius: 5,
                 }}
             >
-                {/* <Typography component="p" variant='subtitle2'>
-                    Nombre:
-                    <Typography component='strong' variant='button'> {puja.usuario?.nombres}</Typography>
-                </Typography> */}
+
+                {
+                    rolLogged !== 'comprador' &&
+                    <Typography component="p" variant='subtitle2'>
+                        Nombre:
+                        <Typography component='strong' variant='button'> {puja.usuario?.nombres}</Typography>
+                    </Typography>
+                }
                 <Typography component="p" variant='subtitle2'>
                     Paleta:
                     <Typography component='strong' variant='button' fontSize={18}> #{puja.codigo_paleta}</Typography>

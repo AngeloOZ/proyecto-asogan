@@ -106,7 +106,7 @@ export function FormCambiarClave({ usuariosEditar }: Props) {
 
             <Stack direction="row" spacing={1.5} maxWidth={400} margin="auto" mt={5}>
 
-                <Link href={PATH_DASHBOARD.usuarios.root} passHref legacyBehavior>
+                <Link href={PATH_DASHBOARD.root} passHref legacyBehavior>
                     <Button
                         fullWidth
                         color="inherit"

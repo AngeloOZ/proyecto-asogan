@@ -1,18 +1,19 @@
-import { useContext, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 // @mui
 import { InputBase, IconButton, InputAdornment, Stack, Button } from '@mui/material';
+import { useSWRConfig } from 'swr';
 
 // components
 import { useSnackbar } from 'src/components/snackbar';
 
 import { IoHandRight } from 'react-icons/io5';
+import { TbEditCircle } from 'react-icons/tb';
 
 import { lotes } from '@prisma/client';
 
 import { subastaAPI } from 'custom/api';
-import { AuthContext } from 'src/auth';
 
-import { useSWRConfig } from 'swr';
+import { AuthContext } from 'src/auth';
 
 import { handleErrorsAxios } from 'utils';
 
@@ -23,12 +24,9 @@ export function ChatInput({ lote }: Props) {
     const { enqueueSnackbar } = useSnackbar();
     const { user, rol: [rolLogged] } = useContext(AuthContext);
     const { mutate } = useSWRConfig();
-
     const [paleta, setPaleta] = useState("");
 
     const incremento = Number(lote.puja_final) + Number(lote.incremento) || 0;
-    const incrementox2 = Number(lote.puja_final) + (Number(lote.incremento) * 2) || 0;
-    const incrementox3 = Number(lote.puja_final) + (Number(lote.incremento) * 3) || 0;
 
 
     const handleClickButton = (incremento: number) => {
@@ -77,29 +75,16 @@ export function ChatInput({ lote }: Props) {
     }
 
     const renderButtonsComprador = () => {
-        return <>
-            <Button
-                variant='contained'
-                onClick={() => handleClickButton(incremento)}
-                color='success'
-            >
-                +{incremento.toFixed(2)}
-            </Button>
-            <Button
-                variant='contained'
-                onClick={() => handleClickButton(incrementox2)}
-                color='warning'
-            >
-                +{incrementox2.toFixed(2)}
-            </Button>
-            <Button
-                variant='contained'
-                onClick={() => handleClickButton(incrementox3)}
-                color='error'
-            >
-                +{incrementox3.toFixed(2)}
-            </Button>
-        </>
+        return (<Button
+            variant='contained'
+            onClick={() => handleClickButton(incremento)}
+            color='success'
+            style={{ width: '150px' }}
+            startIcon={<IoHandRight />}
+        >
+            Pujar
+        </Button>)
+
     }
 
     const renderButtonsMartillador = () => {
@@ -111,8 +96,8 @@ export function ChatInput({ lote }: Props) {
                 type='number'
                 startAdornment={
                     <InputAdornment position="start">
-                        <IconButton size="small">
-                            <IoHandRight />
+                        <IconButton size="medium" disabled >
+                            <TbEditCircle />
                         </IconButton>
                     </InputAdornment>
                 }
@@ -122,16 +107,9 @@ export function ChatInput({ lote }: Props) {
                 onClick={() => handleClickButton(incremento)}
                 color='success'
                 disabled={paleta.length === 0}
+                startIcon={<IoHandRight />}
             >
-                +{incremento.toFixed(2)}
-            </Button>
-            <Button
-                variant='contained'
-                onClick={() => handleClickButton(incrementox2)}
-                color='warning'
-                disabled={paleta.length === 0}
-            >
-                +{incrementox2.toFixed(2)}
+                Pujar
             </Button>
         </>
     }

@@ -5,7 +5,7 @@ import { Container, Grid, Typography } from '@mui/material'
 
 import DashboardLayout from 'src/layouts/dashboard/DashboardLayout'
 
-import { ChatPujas, LoteCliente, VideoPlayer, useSubastas } from 'custom/components'
+import { ChatPujas, LoteMartillador, TabVideos, useSubastas } from 'custom/components'
 import { lotes } from '@prisma/client'
 import { useContext, useEffect, useState } from 'react'
 
@@ -41,13 +41,16 @@ export default function PageAdminProveedores() {
                 <title>Subasta Lote #{loteActual?.codigo_lote}</title>
             </Head>
             <Container maxWidth={false}>
-                <Typography component='h1' variant='h4' mb={2}>Su número de paleta es: #{ user?.comprador?.codigo_paleta || 0 }</Typography>
+                <Typography component='h1' variant='h4' mb={2}>Su número de paleta es: #{user?.comprador?.codigo_paleta || 0}</Typography>
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
-                        <LoteCliente loteActual={loteActual} />
+                        <LoteMartillador loteActual={loteActual} />
                     </Grid>
                     <Grid item xs={12} md={6}>
-                        <VideoPlayer minHeight={200} />
+                        <TabVideos
+                            minHeight={200}
+                            urlVideoDemostracion={evento?.url_video || ''}
+                        />
                     </Grid>
                     <Grid item xs={12} md={6}>
                         {

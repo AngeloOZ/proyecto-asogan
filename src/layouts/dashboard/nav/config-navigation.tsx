@@ -1,10 +1,9 @@
-import { Inventory } from '@mui/icons-material';
-import { MdPointOfSale } from 'react-icons/md';
-import { HiTruck, HiCalendar } from 'react-icons/hi';
-import { FaCubes } from 'react-icons/fa';
-// import { HiTruck, HiShoppingCart} from 'react-icons/hi';
+import { MdSell } from 'react-icons/md';
+
+import { FaCalendarAlt, FaCubes, FaHandHoldingUsd, FaTruckLoading, FaUsers } from 'react-icons/fa';
 // routes
 import { PATH_DASHBOARD, PATH_DASHBOARD_CLEINTE } from '../../../routes/paths';
+
 
 
 // https://react-icons.github.io/react-icons
@@ -12,58 +11,63 @@ import { PATH_DASHBOARD, PATH_DASHBOARD_CLEINTE } from '../../../routes/paths';
 
 const navConfig = [
   {
-    subheader: 'Productos',
+    subheader: '',
     items: [
       {
-        title: 'Subastas cliente',
-        path: PATH_DASHBOARD_CLEINTE.root,
-        icon: <MdPointOfSale />,
-        roles: ['comprador'],
-      },
-      {
-        title: 'Subastas',
-        path: PATH_DASHBOARD.eventos.listado,
-        icon: <MdPointOfSale />,
+        title: 'Usuarios',
+        path: PATH_DASHBOARD.usuarios.root,
+        icon: <FaUsers size={20} />,
         roles: ['admin',],
       },
       {
         title: 'Proveedores',
         path: PATH_DASHBOARD.proveedores.root,
-        icon: <HiTruck />,
+        icon: <FaTruckLoading size={20} />,
         roles: ['admin',],
       },
       {
         title: 'Compradores',
         path: PATH_DASHBOARD.compradores.root,
-        icon: <HiTruck />,
-        roles: ['admin',],
-      },
-      {
-        title: 'Lotes',
-        path: PATH_DASHBOARD.lotes.root,
-        icon: <FaCubes />,
-        roles: ['admin',],
-      },
-      {
-        title: 'Usuarios',
-        path: PATH_DASHBOARD.usuarios.root,
-        icon: <Inventory />,
+        icon: <MdSell size={20} />,
         roles: ['admin',],
       },
       {
         title: 'Eventos',
         path: PATH_DASHBOARD.eventos.root,
-        icon: <HiCalendar />,
+        icon: <FaCalendarAlt size={20} />,
         roles: ['admin',],
       },
       {
-        title: 'Lotes Comprados',
-        path: PATH_DASHBOARD.lotes.comprados,
-        icon: <FaCubes />,
-        roles: ['comprador',],
+        title: 'Lotes',
+        path: PATH_DASHBOARD.lotes.root,
+        icon: <FaCubes size={20} />,
+        roles: ['admin',],
+      },
+      {
+        title: 'Subastas',
+        path: PATH_DASHBOARD.eventos.listado,
+        icon: <FaHandHoldingUsd size={20} />,
+        roles: ['admin',],
       },
     ],
   },
+  {
+    subheader: '',
+    items: [
+      {
+        title: 'Lotes Comprados',
+        path: PATH_DASHBOARD.lotes.comprados,
+        icon: <FaCubes size={20} />,
+        roles: ['comprador',],
+      },
+      {
+        title: 'Subastas',
+        path: PATH_DASHBOARD_CLEINTE.root,
+        icon: <FaHandHoldingUsd size={20} />,
+        roles: ['comprador'],
+      },
+    ],
+  }
 ];
 
 export default navConfig;

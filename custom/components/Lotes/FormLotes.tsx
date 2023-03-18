@@ -25,6 +25,8 @@ import { lotes } from '@prisma/client';
 import { useObtenerEventos } from '../Eventos';
 import { useLotes } from './hooks';
 import { handleErrorsAxios } from 'utils';
+import { IconPeso } from '../Subastas';
+import moment from 'moment-timezone';
 
 
 type FormValuesProps = LoteForm;
@@ -40,15 +42,8 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false }: Pro
     const { enqueueSnackbar } = useSnackbar();
     const { eventos, isLoading: isLoadingEventos } = useObtenerEventos();
     const { proveedores, isLoading: isLoadingProve } = useObtenerProveedores();
-    const { agregarLote, actualizarLote } = useLotes();
-    const [codigoLote, setCodigoLote] = useState(generateUniqueNumber());
 
-    function generateUniqueNumber(): string {
-        const min = 10000;
-        const max = 99999;
-        const uniqueNumber = Math.floor(Math.random() * (max - min + 1) + min);
-        return uniqueNumber.toString().slice(-6);
-    }
+    const { agregarLote, actualizarLote } = useLotes();
 
     useEffect(() => {
         if (esEditar && loteEditar) {
@@ -83,8 +78,8 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false }: Pro
     // Se carga los valores en caso de que sea editar
     const defaultValues = useMemo<LoteForm>(() => ({
         id_lote: loteEditar?.id_lote || 0,
-        fecha_pesaje: new Date(loteEditar?.fecha_pesaje || new Date()).toISOString().slice(0, 10),
-        codigo_lote: loteEditar?.codigo_lote || codigoLote,
+        fecha_pesaje: moment(loteEditar?.fecha_pesaje || new Date()).format('YYYY-MM-DDTHH:mm'),
+        codigo_lote: loteEditar?.codigo_lote || '',
         cantidad_animales: loteEditar?.cantidad_animales || 0,
         tipo_animales: loteEditar?.tipo_animales || '',
         calidad_animales: loteEditar?.calidad_animales || '',
@@ -108,7 +103,6 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false }: Pro
 
     const {
         reset,
-        watch,
         handleSubmit,
         formState: { isSubmitting },
     } = methods;
@@ -143,15 +137,16 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false }: Pro
                             <RHFTextField
                                 name="codigo_lote"
                                 label="Código de lote"
+                                type='number'
                                 size='small'
                                 inputProps={{
-                                    readOnly: true,
+                                    readOnly: soloVer,
                                 }}
                             />
                             <RHFTextField
                                 name="fecha_pesaje"
                                 label="Fecha de pesaje"
-                                type='date'
+                                type='datetime-local'
                                 size='small'
                                 inputProps={{
                                     readOnly: soloVer,
@@ -223,7 +218,7 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false }: Pro
                                 size='small'
                                 type='number'
                                 InputProps={{
-                                    startAdornment: <InputAdornment position="start">Kg</InputAdornment>,
+                                    startAdornment: <InputAdornment position="start"><IconPeso /></InputAdornment>,
                                 }}
                                 inputProps={{
                                     step: "any",

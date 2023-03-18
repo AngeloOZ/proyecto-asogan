@@ -1,14 +1,19 @@
 import { Card, Grid, InputAdornment, TextField } from "@mui/material"
+
 import { lotes } from "@prisma/client";
-import useSWR from "swr";
 
 import moment from "moment-timezone";
+import { IconPeso } from ".";
 
 interface LoteCliente {
     loteActual: lotes | undefined;
 }
 
 export const LoteCliente = ({ loteActual }: LoteCliente) => {
+
+    const cantidadAnimales = loteActual?.cantidad_animales || 0;
+    const pesoTotal = Number(loteActual?.peso_total || 0);
+    const pesoPromedio: number = pesoTotal / cantidadAnimales;
 
     const valorBase = Number(loteActual?.puja_inicial) || 0;
     const valorPuja = Number(loteActual?.incremento) || 0;
@@ -33,8 +38,8 @@ export const LoteCliente = ({ loteActual }: LoteCliente) => {
 
                 <Grid item xs={12} md={4} lg={3}>
                     <TextField
-                        label="Fecha de pesaje"
-                        value={loteActual?.fecha_pesaje ? moment(loteActual.fecha_pesaje).format('DD/MM/YYYY') : ''}
+                        label="Fecha y hora de pesaje"
+                        value={loteActual?.fecha_pesaje ? moment(loteActual.fecha_pesaje).format('DD/MM/YYYY H:i:s') : ''}
                         size="small"
                         variant="outlined"
                         fullWidth
@@ -46,67 +51,7 @@ export const LoteCliente = ({ loteActual }: LoteCliente) => {
                 <Grid item xs={12} md={4} lg={3}>
                     <TextField
                         label="Cantidad de animales"
-                        value={loteActual?.cantidad_animales || ''}
-                        size="small"
-                        variant="outlined"
-                        fullWidth
-                        InputProps={{ inputProps: { readOnly: true } }}
-                        InputLabelProps={{ style: { fontSize: 18, color: 'black', fontWeight: "500" }, shrink: true }}
-                    />
-                </Grid>
-
-                <Grid item xs={12} md={4} lg={3}>
-                    <TextField
-                        label="Tipo de animal"
-                        value={loteActual?.tipo_animales || ''}
-                        size="small"
-                        variant="outlined"
-                        fullWidth
-                        InputProps={{ inputProps: { readOnly: true } }}
-                        InputLabelProps={{ style: { fontSize: 18, color: 'black', fontWeight: "500" }, shrink: true }}
-                    />
-                </Grid>
-
-                {/* <Grid item xs={12} md={4} lg={3}>
-                    <TextField
-                        label="Calidad de animales"
-                        value={loteActual?.calidad_animales || ''}
-                        size="small"
-                        variant="outlined"
-                        fullWidth
-                        InputProps={{ inputProps: { readOnly: true } }}
-                        InputLabelProps={{ style: { fontSize: 18, color: 'black', fontWeight: "500" }, shrink: true }}
-                    />
-                </Grid> */}
-
-                {/* <Grid item xs={12} md={4} lg={3}>
-                    <TextField
-                        label="Sexo"
-                        value={loteActual ? loteActual.sexo == '1' ? 'Macho' : 'Hembra' : ''}
-                        size="small"
-                        variant="outlined"
-                        fullWidth
-                        InputProps={{ inputProps: { readOnly: true } }}
-                        InputLabelProps={{ style: { fontSize: 18, color: 'black', fontWeight: "500" }, shrink: true }}
-                    />
-                </Grid> */}
-
-                <Grid item xs={12} md={4} lg={3}>
-                    <TextField
-                        label="Crias hembras"
-                        value={loteActual?.crias_hembras || '0'}
-                        size="small"
-                        variant="outlined"
-                        fullWidth
-                        InputProps={{ inputProps: { readOnly: true } }}
-                        InputLabelProps={{ style: { fontSize: 18, color: 'black', fontWeight: "500" }, shrink: true }}
-                    />
-                </Grid>
-
-                <Grid item xs={12} md={4} lg={3}>
-                    <TextField
-                        label="Crias machos"
-                        value={loteActual?.crias_machos || '0'}
+                        value={`${loteActual?.cantidad_animales} ${loteActual?.tipo_animales?.toUpperCase()}` || ''}
                         size="small"
                         variant="outlined"
                         fullWidth
@@ -136,9 +81,24 @@ export const LoteCliente = ({ loteActual }: LoteCliente) => {
                         fullWidth
                         InputProps={{
                             inputProps: { readOnly: true },
-                            startAdornment: <InputAdornment position="start">Kg</InputAdornment>,
+                            startAdornment: <InputAdornment position="start"><IconPeso /></InputAdornment>,
                         }}
                         InputLabelProps={{ style: { fontSize: 18, color: 'black', fontWeight: "500" }, shrink: true }}
+                    />
+                </Grid>
+
+                <Grid item xs={12} md={4} lg={3}>
+                    <TextField
+                        label="Peso promedio"
+                        value={pesoPromedio.toFixed(2)}
+                    size="small"
+                    variant="outlined"
+                    fullWidth
+                    InputProps={{
+                        inputProps: { readOnly: true },
+                        startAdornment: <InputAdornment position="start"><IconPeso /></InputAdornment>,
+                    }}
+                    InputLabelProps={{ style: { fontSize: 18, color: 'black', fontWeight: "500" }, shrink: true }}
                     />
                 </Grid>
             </Grid>
@@ -149,6 +109,7 @@ export const LoteCliente = ({ loteActual }: LoteCliente) => {
                         label="Valor base"
                         size='small'
                         type='number'
+                        fullWidth
                         value={valorBase.toFixed(2)}
                         InputProps={{
                             startAdornment: <InputAdornment position="start">$</InputAdornment>,
@@ -164,6 +125,7 @@ export const LoteCliente = ({ loteActual }: LoteCliente) => {
                         label="Puja"
                         size='small'
                         type='number'
+                        fullWidth
                         value={valorPuja.toFixed(2)}
                         InputProps={{
                             startAdornment: <InputAdornment position="start">$</InputAdornment>,
@@ -179,6 +141,7 @@ export const LoteCliente = ({ loteActual }: LoteCliente) => {
                         label="Valor Final"
                         size='small'
                         type='number'
+                        fullWidth
                         value={valorFinal2.toFixed(2) || 0}
                         InputProps={{
                             startAdornment: <InputAdornment position="start">$</InputAdornment>,
