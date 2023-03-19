@@ -1,11 +1,10 @@
-import { forwardRef, useState } from 'react';
+import { forwardRef } from 'react';
 // next
 import NextLink from 'next/link';
 // @mui
 // import { useTheme } from '@mui/material/styles';
 import { Box, Link, BoxProps } from '@mui/material';
 // import { Image } from '@mui/icons-material';
-import { useRouter } from 'next/router';
 import { PATH_DASHBOARD } from 'src/routes/paths';
 import Image from '../image/Image';
 
@@ -17,8 +16,6 @@ export interface LogoProps extends BoxProps {
 
 const Logo = forwardRef<HTMLDivElement, LogoProps>(
   ({ disabledLink = false, sx, ...other }, ref) => {
-
-    const { query: { vendedor } } = useRouter() as any;
 
     const logo = (
       <Box

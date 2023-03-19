@@ -12,10 +12,10 @@ export interface Puja {
     puja:          string;
     codigo_paleta: string;
     fecha_creado:  string;
-    usuario?:      Usuario;
+    usuario?:      UsuarioA;
 }
 
-export interface Usuario {
+export interface UsuarioA {
     nombres:        string;
     identificacion: string;
 }

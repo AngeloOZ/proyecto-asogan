@@ -23,7 +23,7 @@ export const EventoItem = ({ eventos }: Props) => {
     <>
       <Card>
         <CardContent>
-        {/* <CardActionArea> */}
+          {/* <CardActionArea> */}
           {/* Tabla de Eventos */}
           <TableContainer>
             <Table size="small">
@@ -70,7 +70,7 @@ export const EventoItem = ({ eventos }: Props) => {
               </TableBody>
             </Table>
           </TableContainer>
-        {/* </CardActionArea> */}
+          {/* </CardActionArea> */}
 
           <Divider sx={{ marginTop: 1 }} />
 
@@ -204,6 +204,19 @@ export const EventoItem = ({ eventos }: Props) => {
             >
               Ver
             </Button>
+          </Link>
+          <Link href={`${PATH_DASHBOARD.subastas.monitor}/${eventos.uuid}`} target='_blank' passHref legacyBehavior>
+            <a target='_blank'>
+              <Button
+                fullWidth
+                color="secondary"
+                variant='outlined'
+                size="medium"
+                style={{ marginTop: 10 }}
+              >
+                Ver en monitor
+              </Button>
+            </a>
           </Link>
         </CardContent>
       </Card>
