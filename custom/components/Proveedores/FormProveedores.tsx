@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo,useState } from 'react';
 // next
 import { useRouter } from 'next/router';
 // form
@@ -20,7 +20,7 @@ import { PATH_DASHBOARD } from 'src/routes/paths';
 import { proveedores as IProveedor } from '@prisma/client';
 import Link from 'next/link';
 import { handleErrorsAxios } from 'utils';
-
+import { useGlobales } from '../Globales';
 
 type FormValuesProps = IProveedor;
 
@@ -33,7 +33,8 @@ export function FormProveedores({ esEditar = false, proveedoraEditar }: Props) {
     const { push } = useRouter();
     const { enqueueSnackbar } = useSnackbar();
     const { agregarProveedor, actualizarProveedor } = useProveedores();
-
+    const { validarIdentificacion,consultarIdentificacion } = useGlobales();
+    const [validacionI, setValidacionI ]= useState(false);
     useEffect(() => {
         if (esEditar && proveedoraEditar) {
             reset(defaultValues);
@@ -75,22 +76,28 @@ export function FormProveedores({ esEditar = false, proveedoraEditar }: Props) {
         reset,
         watch,
         handleSubmit,
+        setValue,
         formState: { isSubmitting },
     } = methods;
 
     // Funcion para enviar el formulario
     const onSubmit = async (data: FormValuesProps) => {
         try {
-            if (!esEditar) {
-                await agregarProveedor(data);
-                enqueueSnackbar('Proveedor agregado correctamente', { variant: 'success' });
-                push(PATH_DASHBOARD.proveedores.root);
-            } else {
-                await actualizarProveedor(data);
-                enqueueSnackbar('Proveedor actualizado correctamente', { variant: 'success' });
-                push(PATH_DASHBOARD.proveedores.root);
+            if (validacionI == true ){
+                if (!esEditar) {
+                    await agregarProveedor(data);
+                    enqueueSnackbar('Proveedor agregado correctamente', { variant: 'success' });
+                    push(PATH_DASHBOARD.proveedores.root);
+                } else {
+                    await actualizarProveedor(data);
+                    enqueueSnackbar('Proveedor actualizado correctamente', { variant: 'success' });
+                    push(PATH_DASHBOARD.proveedores.root);
+                }
+                reset();
+            }else{
+                enqueueSnackbar("La identificacion ingresada es incorrecta", { variant: 'error' });
             }
-            reset();
+           
         } catch (error) {
             console.error(error);
             enqueueSnackbar(`Oops... ${handleErrorsAxios(error)}`, { variant: 'error' });
@@ -98,7 +105,26 @@ export function FormProveedores({ esEditar = false, proveedoraEditar }: Props) {
     };
 
     // if (isLoading) return <LinearProgressBar />
+    const verificarIdentificacion = async () => {
 
+        const validacion = validarIdentificacion(watch("identificacion"))
+        
+        if (validacion){
+            
+            const data = await consultarIdentificacion(watch("identificacion"));
+            
+            setValue('nombres',data.razon_social);
+            setValue('direccion',data.direccion);
+            setValue('correo',data.correo);
+            setValue('telefono',data.telefono2);
+            setValidacionI(true);
+        }else {
+            setValidacionI(false);
+            enqueueSnackbar("La identificacion ingresada es incorrecta", { variant: 'error' });
+        }
+
+      
+    }
     return (
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
             <Card sx={{ p: 3, boxShadow: "0 0 2px rgba(0,0,0,0.2)" }}>
@@ -107,6 +133,8 @@ export function FormProveedores({ esEditar = false, proveedoraEditar }: Props) {
                         name="identificacion"
                         label="Identificación"
                         size='small'
+                        disabled={esEditar}
+                        onBlur={verificarIdentificacion}
                     />
                     <RHFTextField
                         name="nombres"

@@ -7,6 +7,7 @@ export const useCompradores = () => {
     const { mutate } = useSWRConfig();
 
     const agregarComprador = async (comprador: any) => {
+       
         const { data } = await subastaAPI.post('/compradores', comprador);
         mutate('/compradores');
     }

@@ -1,7 +1,7 @@
 import { compradores, usuario } from "@prisma/client";
 import prisma from 'database/prismaClient';
 import type { NextApiRequest, NextApiResponse } from 'next'
-
+import bcrypt from 'bcrypt';
 // eslint-disable-next-line
 export default function (req: NextApiRequest, res: NextApiResponse) {
     console.log(req.query)
@@ -60,19 +60,19 @@ async function crearComprador(req: NextApiRequest, res: NextApiResponse) {
         await prisma.$transaction(async (prisma) => {
 
             const { identificacion, nombres }: usuario = req.body
-
             const verificarUsuario = await prisma.usuario.findUnique({ where: { identificacion } });
-
+            
             if (verificarUsuario) {
                 return res.status(500).json({ message: 'el usuario ya existe' });
             }
+            const claveEncriptada = await bcrypt.hash(identificacion, 10);
 
 
             const usuario = await prisma.usuario.create({
                 data: {
                     identificacion,
                     nombres,
-                    clave: identificacion,
+                    clave: claveEncriptada,
                     rol: `["comprador"]`,
                     tipo: 2
                 }
