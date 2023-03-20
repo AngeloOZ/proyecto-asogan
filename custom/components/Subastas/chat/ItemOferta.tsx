@@ -12,37 +12,34 @@ export const ItemOferta = ({ puja }: Props) => {
     const { rol: [rolLogged] } = useContext(AuthContext);
 
     return (
-        <Stack direction="row">
-            <Box
-                component="div"
-                padding={0.5}
-                px={1}
-                key={puja.id_puja}
-                width="90%"
-                maxWidth="200px"
-                style={{
-                    backgroundColor: theme.palette.secondary.lighter,
-                    borderRadius: 5,
-                }}
-            >
+        <Box
+            component="div"
+            padding={0}
+            px={1}
+            key={puja.id_puja}
+            width="90%"
+            maxWidth="200px"
+            style={{
+                backgroundColor: theme.palette.secondary.lighter,
+                borderRadius: 5,
+            }}
+        >
 
-                {
-                    rolLogged !== 'comprador' &&
-                    <Typography component="p" variant='subtitle2'>
-                        Nombre:
-                        <Typography component='strong' variant='button'> {puja.usuario?.nombres}</Typography>
-                    </Typography>
-                }
+            {
+                rolLogged !== 'comprador' &&
                 <Typography component="p" variant='subtitle2'>
-                    Paleta:
-                    <Typography component='strong' variant='button' fontSize={18}> #{puja.codigo_paleta}</Typography>
+                    Nombre:
+                    <Typography component='strong' variant='button'> {puja.usuario?.nombres}</Typography>
                 </Typography>
-                <Typography component="p" variant='subtitle2'>
-                    Oferta:
-                    <Typography component='strong' variant='button' fontSize={18}> ${Number(puja.puja).toFixed(2)}</Typography>
-                </Typography>
-            </Box>
-        </Stack>
-
+            }
+            <Typography component="p" variant='subtitle2'>
+                Paleta:
+                <Typography component='strong' variant='button' fontSize={18}> #{puja.codigo_paleta}</Typography>
+            </Typography>
+            <Typography component="p" variant='subtitle2'>
+                Oferta:
+                <Typography component='strong' variant='button' fontSize={18}> ${Number(puja.puja).toFixed(2)}</Typography>
+            </Typography>
+        </Box>
     )
 }

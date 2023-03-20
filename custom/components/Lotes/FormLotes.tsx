@@ -73,6 +73,7 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false }: Pro
         id_proveedor: Yup.string().required('El proveedor es requerido'),
         puja_inicial: Yup.number().required('La puja inicial es requerida').min(0.0001, 'La puja inicial debe ser mayor a 0').typeError('La puja debe ser un valor numérico'),
         incremento: Yup.number().required('La puja inicial es requerida').min(0.0001, 'La puja inicial debe ser mayor a 0').typeError('La puja debe ser un valor numérico'),
+        url_video: Yup.string().required('La url del video es requerida').url('La url del video debe ser válida'),
     });
 
     // Se carga los valores en caso de que sea editar
@@ -93,6 +94,8 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false }: Pro
         id_proveedor: loteEditar?.id_proveedor || '',
         puja_inicial: Number(loteEditar?.puja_inicial) || 0,
         incremento: Number(loteEditar?.incremento) || 0,
+        url_video: loteEditar?.url_video || '',
+        subastado: loteEditar?.subastado?.toString() || '0',
     }), [loteEditar]);
 
     // funciones para el hook useForm
@@ -237,6 +240,17 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false }: Pro
                                 }}
                             />
 
+                            <RHFTextField
+                                name="url_video"
+                                label="Url del video"
+                                size='small'
+                                multiline
+                                maxRows={3}
+                                inputProps={{
+                                    readOnly: soloVer,
+                                }}
+                            />
+
                         </Stack>
                     </Card>
                 </Grid>
@@ -286,6 +300,20 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false }: Pro
                                     readOnly: soloVer,
                                 }}
                             />
+
+                            {
+                                esEditar && (
+                                    <RHFSelect name='subastado' label='Estado' size='small'
+                                        inputProps={{
+                                            readOnly: soloVer,
+                                        }}>
+                                        <MenuItem value='0'>No subastado</MenuItem>
+                                        <MenuItem value='1'>En subasta</MenuItem>
+                                        <MenuItem value='2'>Rechazado</MenuItem>
+                                        <MenuItem value='3'>Subastado</MenuItem>
+                                    </RHFSelect>
+                                )
+                            }
                         </Stack>
 
                         {!soloVer && (

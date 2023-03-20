@@ -1,10 +1,14 @@
-import { Card, CardContent, Typography, CardActionArea, Box, Divider, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Accordion, AccordionSummary, AccordionDetails, Button } from '@mui/material';
+import { useContext, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import Link from 'next/link';
+
+import { Card, CardContent, Typography, Box, Divider, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Accordion, AccordionSummary, AccordionDetails, Button } from '@mui/material';
+
+import { LotesEventos } from '@types';
+
 import { PATH_DASHBOARD } from 'src/routes/paths'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Link from 'next/link';
-import { LotesEventos } from '@types';
+import { AuthContext } from 'src/auth';
 
 type Props = {
   eventos: LotesEventos;
@@ -12,7 +16,7 @@ type Props = {
 
 
 export const EventoItem = ({ eventos }: Props) => {
-  const router = useRouter();
+  const { rol: [rolLogged] } = useContext(AuthContext)
   const [expanded, setExpanded] = useState<number | false>(false);
 
   const handleChange =
@@ -205,19 +209,22 @@ export const EventoItem = ({ eventos }: Props) => {
               Ver
             </Button>
           </Link>
-          <Link href={`${PATH_DASHBOARD.subastas.monitor}/${eventos.uuid}`} target='_blank' passHref legacyBehavior>
-            <a target='_blank'>
-              <Button
-                fullWidth
-                color="secondary"
-                variant='outlined'
-                size="medium"
-                style={{ marginTop: 10 }}
-              >
-                Ver en monitor
-              </Button>
-            </a>
-          </Link>
+          {
+            rolLogged !== 'comprador' &&
+            <Link href={`${PATH_DASHBOARD.subastas.monitor}/${eventos.uuid}`} target='_blank' passHref legacyBehavior>
+              <a target='_blank' style={{ textDecoration: 'none' }}>
+                <Button
+                  fullWidth
+                  color="secondary"
+                  variant='outlined'
+                  size="medium"
+                  style={{ marginTop: 10 }}
+                >
+                  Ver en monitor
+                </Button>
+              </a>
+            </Link>
+          }
         </CardContent>
       </Card>
     </>

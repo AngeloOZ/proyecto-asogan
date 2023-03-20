@@ -2,12 +2,14 @@ import { useContext } from 'react';
 
 import { m } from 'framer-motion';
 // @mui
-import { Box, Container, Typography } from '@mui/material';
+import { Box, Button, Container, Typography } from '@mui/material';
 import { AuthContext } from './context';
 // components
 import { MotionContainer, varBounce } from '../components/animate';
 // assets
 import { ForbiddenIllustration } from '../assets/illustrations';
+import Link from 'next/link';
+import { PATH_DASHBOARD } from 'src/routes/paths';
 //
 
 // ----------------------------------------------------------------------
@@ -34,23 +36,27 @@ export default function RoleBasedGuard({ hasContent, roles, children }: RoleBase
 
   if (typeof roles !== 'undefined' && !isAllowed) {
     return hasContent ? (
-      <Box component="div" sx={{ height: "100%", width: "100%", display: "flex", justifyContent:"center", alignItems: "center" }}>
+      <Box component="div" sx={{ height: "100%", width: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
         <Container component={MotionContainer} sx={{ textAlign: 'center' }}>
           <m.div variants={varBounce().in}>
-            <Typography variant="h3" paragraph>
-              Permiso Denegado
+            <Typography variant="h2" paragraph>
+              Oops
             </Typography>
           </m.div>
 
           <m.div variants={varBounce().in}>
-            <Typography sx={{ color: 'text.secondary' }}>
-              Tu no tienes permiso para acceder a esta página.
+            <Typography sx={{ color: 'text.secondary' }} fontSize={18} variant='subtitle1'>
+              Parece que te has perdido, y entraste a un lugar sin permiso, te recomendamos regresar a un lugar seguro. 
             </Typography>
           </m.div>
 
           <m.div variants={varBounce().in}>
             <ForbiddenIllustration sx={{ height: 260, my: { xs: 5, sm: 10 } }} />
           </m.div>
+
+          <Link href={PATH_DASHBOARD.root} passHref legacyBehavior>
+            <Button variant='contained' size='large' style={{ textTransform: 'initial' }}>Regresar a un lugar seguro</Button>
+          </Link>
         </Container>
       </Box>
     ) : null;

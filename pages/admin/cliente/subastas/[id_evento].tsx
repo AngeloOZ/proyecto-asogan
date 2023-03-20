@@ -17,7 +17,7 @@ import { AuthContext } from 'src/auth'
 const fetcher = (url: string) => subastaAPI.get(url).then(r => r.data)
 
 
-PageAdminProveedores.getLayout = (page: React.ReactElement) => <DashboardLayout>{page}</DashboardLayout>
+PageAdminProveedores.getLayout = (page: React.ReactElement) => <DashboardLayout roles={['comprador']}>{page}</DashboardLayout>
 
 export default function PageAdminProveedores() {
     const router = useRouter()
@@ -49,9 +49,9 @@ export default function PageAdminProveedores() {
                     <Grid item xs={12} md={6} order={{ xs: 2, md: 1 }}>
                         <TabVideos
                             minHeight={200}
-                            height={365}
-                            urlVideoDemostracion='https://www.youtube.com/watch?v=7sDY4m8KNLc'
-                            urlTransmisionEnVivo='https://www.youtube.com/watch?v=7sDY4m8KNLc'
+                            height={420}
+                            urlVideoDemostracion={loteActual.url_video || ''}
+                            urlTransmisionEnVivo={evento?.url_video || ''}
                         />
                     </Grid>
                     <Grid item xs={12} md={6} order={{ xs: 1, md: 2 }}>

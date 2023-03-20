@@ -13,7 +13,7 @@ import { lotes as ILote } from '@prisma/client'
 import { useSnackbar } from 'notistack'
 import { useLotes } from 'custom/components/Lotes/hooks';
 
-PageAdminProveedores.getLayout = (page: React.ReactElement) => <DashboardLayout>{page}</DashboardLayout>
+PageAdminProveedores.getLayout = (page: React.ReactElement) => <DashboardLayout roles={['admin']}>{page}</DashboardLayout>
 
 export default function PageAdminProveedores() {
     const router = useRouter();

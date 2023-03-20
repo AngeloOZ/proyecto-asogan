@@ -50,7 +50,10 @@ async function activarLote(req: NextApiRequest, res: NextApiResponse) {
 
         await prisma.lotes.updateMany({
             where: {
-                id_evento: Number(id_evento)
+                id_evento: Number(id_evento),
+                subastado: {
+                    lt: 2 
+                }
             },
             data: {
                 subastado: 0

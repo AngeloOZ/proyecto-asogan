@@ -6,7 +6,7 @@ import { PATH_DASHBOARD } from 'src/routes/paths'
 import { EventoList } from "custom/components/Eventos";
 import { useObtenerEventosHoy } from 'custom/components/Eventos/Hooks';
 
-PageAdminEventos.getLayout = (page: React.ReactElement) => <DashboardLayout>{page}</DashboardLayout>
+PageAdminEventos.getLayout = (page: React.ReactElement) => <DashboardLayout roles={['comprador']}>{page}</DashboardLayout>
 
 
 export default function PageAdminEventos() {

@@ -12,7 +12,7 @@ import CustomBreadcrumbs from 'src/components/custom-breadcrumbs/CustomBreadcrum
 import { proveedores as IProveedor } from '@prisma/client'
 
 
-PageAdminProveedores.getLayout = (page: React.ReactElement) => <DashboardLayout>{page}</DashboardLayout>
+PageAdminProveedores.getLayout = (page: React.ReactElement) => <DashboardLayout roles={['admin']}>{page}</DashboardLayout>
 
 export default function PageAdminProveedores() {
     const router = useRouter();
