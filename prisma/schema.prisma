@@ -8,13 +8,13 @@ datasource db {
 }
 
 model usuario {
-  usuarioid      Int           @id @default(autoincrement())
-  nombres        String        @db.VarChar(255)
-  identificacion String        @unique(map: "cedula") @db.VarChar(13)
-  clave          String        @db.VarChar(255)
-  rol            String        @db.VarChar(255)
-  tipo           Int?          @default(1)
-  compradores    compradores[]
+  usuarioid      Int          @id @default(autoincrement())
+  nombres        String       @db.VarChar(255)
+  identificacion String       @unique(map: "cedula") @db.VarChar(13)
+  clave          String       @db.VarChar(255)
+  rol            String       @db.VarChar(255)
+  tipo           Int?         @default(1)
+  compradores    compradores?
   pujas          pujas[]
 }
 
@@ -25,11 +25,9 @@ model compradores {
   procesos_judiciales   Boolean?
   calificacion_bancaria String?  @db.VarChar(50)
   estado                Boolean?
-  usuarioid             Int
+  usuarioid             Int      @unique(map: "fk_usuario_compradores")
   usuario               usuario  @relation(fields: [usuarioid], references: [usuarioid], onUpdate: Restrict, map: "fk_usuario_compradores")
   lotes                 lotes[]
-
-  @@index([usuarioid], map: "fk_usuario_compradores")
 }
 
 model eventos {
@@ -61,6 +59,7 @@ model lotes {
   crias_machos      Int?
   procedencia       String?      @db.VarChar(50)
   observaciones     String?      @db.VarChar(150)
+  url_video         String?      @db.VarChar(300)
   puja_inicial      Decimal?     @db.Decimal(8, 2)
   puja_final        Decimal?     @db.Decimal(8, 2)
   incremento        Decimal?     @default(0.000) @db.Decimal(10, 3)
@@ -98,4 +97,9 @@ model pujas {
 
   @@index([id_usuario], map: "fk_puja_comprador")
   @@index([id_lote], map: "fk_puja_lote")
+}
+
+model imagenes {
+  id_imagen Int    @id @default(autoincrement())
+  ruta      String @db.VarChar(300)
 }

@@ -1,6 +1,6 @@
 import { MdSell } from 'react-icons/md';
 
-import { FaCalendarAlt, FaCubes, FaHandHoldingUsd, FaTruckLoading, FaUsers } from 'react-icons/fa';
+import { FaCalendarAlt, FaCubes, FaHandHoldingUsd, FaImages, FaTruckLoading, FaUsers } from 'react-icons/fa';
 // routes
 import { PATH_DASHBOARD, PATH_DASHBOARD_CLEINTE } from '../../../routes/paths';
 
@@ -47,6 +47,12 @@ const navConfig = [
         title: 'Subastas',
         path: PATH_DASHBOARD.eventos.listado,
         icon: <FaHandHoldingUsd size={20} />,
+        roles: ['admin',],
+      },
+      {
+        title: 'Banner',
+        path: PATH_DASHBOARD.banner.root,
+        icon: <FaImages size={20} />,
         roles: ['admin',],
       },
     ],
