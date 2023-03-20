@@ -46,13 +46,15 @@ export default function PageAdminProveedores() {
                     <Grid item xs={12}>
                         <LoteMartillador loteActual={loteActual} />
                     </Grid>
-                    <Grid item xs={12} md={6}>
+                    <Grid item xs={12} md={6} order={{ xs: 2, md: 1 }}>
                         <TabVideos
                             minHeight={200}
-                            urlVideoDemostracion={evento?.url_video || ''}
+                            height={365}
+                            urlVideoDemostracion='https://www.youtube.com/watch?v=7sDY4m8KNLc'
+                            urlTransmisionEnVivo='https://www.youtube.com/watch?v=7sDY4m8KNLc'
                         />
                     </Grid>
-                    <Grid item xs={12} md={6}>
+                    <Grid item xs={12} md={6} order={{ xs: 1, md: 2 }}>
                         {
                             loteActual && <ChatPujas evento={evento} lote={loteActual} />
                         }

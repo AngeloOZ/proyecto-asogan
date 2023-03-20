@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 
-import { Container, Grid } from '@mui/material'
+import { Card, Container, Grid } from '@mui/material'
 
 import { lotes } from '@prisma/client'
 
@@ -33,17 +33,26 @@ export default function PageAdminProveedores() {
     return (
         <>
             <Head>
-                <title>Subasta Lote #123</title>
+                <title>Subasta Lote #{loteActual?.codigo_lote || ''}</title>
             </Head>
             <Container maxWidth={false}>
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
                         <LoteMartillador loteActual={loteActual} setLoteActual={setLoteActual} listadoLotes={lotes} />
                     </Grid>
-                    <Grid item xs={12} md={6}>
-                        <VideoPlayer minHeight={200} />
+                    <Grid item xs={12} md={6} order={{ xs: 2, md: 1 }}>
+                        <Card sx={{ padding: 2, height: 367 }}>
+                            <VideoPlayer
+                                playerProps={{
+                                    url: evento?.url_video || '',
+                                    height: '100%',
+                                }}
+
+                                minHeight={200}
+                            />
+                        </Card>
                     </Grid>
-                    <Grid item xs={12} md={6}>
+                    <Grid item xs={12} md={6} order={{ xs: 1, md: 2 }}>
                         {
                             loteActual && <ChatPujas evento={evento} lote={loteActual} />
                         }

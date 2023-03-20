@@ -21,7 +21,7 @@ export const VideoPlayer = ({ playerProps, ...other }: VideoPlayerProps) => {
       <ReactPlayer
         playing={play}
         width="100%"
-        height="100%"
+        height="267px"
         onReady={() => setPlay(true)}
         style={{
           aspectRatio: "16/9",
