@@ -8,7 +8,7 @@ import { FormCompradores } from 'custom/components'
 
 
 
-PageAdminCompradores.getLayout = (page: React.ReactElement) => <DashboardLayout>{page}</DashboardLayout>
+PageAdminCompradores.getLayout = (page: React.ReactElement) => <DashboardLayout roles= {['admin']}>{page}</DashboardLayout>
 
 export default function PageAdminCompradores() {
 

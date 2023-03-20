@@ -8,7 +8,7 @@ import { FormUsuarios } from 'custom/components'
 
 
 
-PageAdminUsuarios.getLayout = (page: React.ReactElement) => <DashboardLayout>{page}</DashboardLayout>
+PageAdminUsuarios.getLayout = (page: React.ReactElement) => <DashboardLayout roles= {['admin']}>{page}</DashboardLayout>
 
 export default function PageAdminUsuarios() {
 

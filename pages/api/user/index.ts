@@ -49,11 +49,19 @@ async function crearUsuario(req: NextApiRequest, res: NextApiResponse) {
         const { identificacion, nombres, rol, clave }: usuario = req.body
         const claveEncriptada = await bcrypt.hash(clave, 10);
 
+        const usuarioBuscar = await prisma.usuario.findUnique({
+            where: { identificacion },
+        });
+        if (usuarioBuscar) {
+            return res.status(500).json({ message: "El usuario ya existe" });
+        }
+
+
         const usuario = await prisma.usuario.create({
             data: {
                 identificacion,
                 nombres,
-                clave:claveEncriptada,
+                clave: claveEncriptada,
                 rol: `["${rol}"]`,
 
             }
@@ -70,7 +78,7 @@ async function crearUsuario(req: NextApiRequest, res: NextApiResponse) {
 
 async function actualizarUsuario(req: NextApiRequest, res: NextApiResponse) {
     try {
-        
+
         const { usuarioid, identificacion, nombres, rol, clave }: usuario = req.body
         if (clave === "") {
             const usuario = await prisma.usuario.update({
@@ -83,7 +91,7 @@ async function actualizarUsuario(req: NextApiRequest, res: NextApiResponse) {
             });
             return res.status(200).json(usuario);
         }
-        
+
         const claveEncriptada = await bcrypt.hash(clave, 10);
 
         const usuario = await prisma.usuario.update({
@@ -91,7 +99,7 @@ async function actualizarUsuario(req: NextApiRequest, res: NextApiResponse) {
             data: {
                 identificacion,
                 nombres,
-                clave:claveEncriptada,
+                clave: claveEncriptada,
                 rol: `["${rol}"]`,
             }
         });

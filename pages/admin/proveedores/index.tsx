@@ -7,9 +7,11 @@ import { Button, Container } from '@mui/material'
 import DashboardLayout from 'src/layouts/dashboard/DashboardLayout'
 import { PATH_DASHBOARD } from 'src/routes/paths'
 
-import { TableCustom, useObtenerProveedores } from 'custom/components'
+import { TableCustom, useObtenerProveedores, useProveedores } from 'custom/components'
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs/CustomBreadcrumbs'
 import { proveedores as IProveedor } from '@prisma/client'
+import { useSnackbar } from '../../../src/components/snackbar';
+
 
 
 PageAdminProveedores.getLayout = (page: React.ReactElement) => <DashboardLayout roles={['admin']}>{page}</DashboardLayout>
@@ -17,11 +19,24 @@ PageAdminProveedores.getLayout = (page: React.ReactElement) => <DashboardLayout 
 export default function PageAdminProveedores() {
     const router = useRouter();
     const { proveedores, isLoading } = useObtenerProveedores();
+    const { eliminarProveedor } = useProveedores();
+    const { enqueueSnackbar } = useSnackbar();
 
     const handleClickEditRow = (item: IProveedor) => {
         router.push(`${PATH_DASHBOARD.proveedores.editar}/${item.id_proveedor}`);
     }
 
+    const handleClickDeleteRow = async (item: IProveedor) => {
+        try {
+
+            await eliminarProveedor(item.id_proveedor)
+            enqueueSnackbar('Proveedor eliminado correctamente', { variant: 'success' });
+            router.push(PATH_DASHBOARD.proveedores.root);
+
+        } catch (error) {
+            enqueueSnackbar(`Oops... hubo un error ${error.message}`, { variant: 'error' })
+        }
+    }
     return (
         <>
             <Head>
@@ -52,6 +67,7 @@ export default function PageAdminProveedores() {
                     dataBody={proveedores}
                     isActions
                     handeEdit={handleClickEditRow}
+                    handleDelete={handleClickDeleteRow}
                 />
             </Container>
         </>

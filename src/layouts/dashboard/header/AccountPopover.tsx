@@ -97,10 +97,14 @@ export default function AccountPopover() {
 
         {/* <Divider sx={{ borderStyle: 'dashed' }} /> */}
 
-
-        <MenuItem onClick={CambiarClave} sx={{ m: 1 }}>
-          Cambiar Clave
-        </MenuItem>
+        {
+          user?.tipo === 2 && (
+            <MenuItem onClick={CambiarClave} sx={{ m: 1 }} >
+              Cambiar Clave
+            </MenuItem>
+          )
+        }
+        
 
         <MenuItem onClick={handleLogout} sx={{ m: 1 }}>
           Cerrar Sesión

@@ -28,6 +28,7 @@ import { PATH_DASHBOARD } from 'src/routes/paths';
 import { ICompradores } from '../../../interfaces';
 import { useGlobales } from '../Globales';
 
+import { handleErrorsAxios } from 'utils';
 type FormValuesProps = IComprador;
 type Props = {
     esEditar?: boolean;
@@ -128,7 +129,7 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
             
         } catch (error) {
 
-            enqueueSnackbar("Oops... hubo un error " + error.response.data.message, { variant: 'error' });
+            enqueueSnackbar(`Oops... ${handleErrorsAxios(error)}`, { variant: 'error' });
         }
     }
 

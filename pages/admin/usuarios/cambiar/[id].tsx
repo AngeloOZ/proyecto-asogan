@@ -13,7 +13,7 @@ import { usuario } from '@prisma/client'
 
 
 
-PageAdminCambiar.getLayout = (page: React.ReactElement) => <DashboardLayout>{page}</DashboardLayout>
+PageAdminCambiar.getLayout = (page: React.ReactElement) => <DashboardLayout roles= {['comprador']}>{page}</DashboardLayout>
 
 export default function PageAdminCambiar() {
     const { query } = useRouter();

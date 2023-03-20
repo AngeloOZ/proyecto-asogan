@@ -89,10 +89,11 @@ async function actualizarProveedor(req: NextApiRequest, res: NextApiResponse) {
 
 async function eliminarProveedor(req: NextApiRequest, res: NextApiResponse) {
     try {
-        const { id_proveedor } = req.body;
+       
+        const { id } = req.query;
 
         const proveedor = await prisma.proveedores.delete({
-            where: { id_proveedor: Number(id_proveedor) }
+            where: { id_proveedor: Number(id) }
         });
 
         return res.status(204).json(proveedor);

@@ -13,7 +13,7 @@ import { compradores } from '@prisma/client'
 import { ICompradores } from 'interfaces'
 
 
-PageAdmin.getLayout = (page: React.ReactElement) => <DashboardLayout>{page}</DashboardLayout>
+PageAdmin.getLayout = (page: React.ReactElement) => <DashboardLayout roles= {['admin']}>{page}</DashboardLayout>
 
 export default function PageAdmin() {
     const { query } = useRouter();
