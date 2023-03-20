@@ -1,15 +1,17 @@
 import { useContext } from 'react';
+import Link from 'next/link';
 
 import { m } from 'framer-motion';
 // @mui
 import { Box, Button, Container, Typography } from '@mui/material';
+
+import { PATH_DASHBOARD } from 'src/routes/paths';
+
 import { AuthContext } from './context';
 // components
 import { MotionContainer, varBounce } from '../components/animate';
 // assets
 import { ForbiddenIllustration } from '../assets/illustrations';
-import Link from 'next/link';
-import { PATH_DASHBOARD } from 'src/routes/paths';
 //
 
 // ----------------------------------------------------------------------

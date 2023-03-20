@@ -12,7 +12,9 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 
         if (query === 'rechazado') {
             res.status(200).json({ message: 'el lote ha sido rechazado' });
-        } else {
+        } else if (query === 'oferta') {
+            res.status(200).json({ message: 'tu oferta ha sido recibida' });
+        }else{
             res.status(200).json({ message: 'el lote ha sido subastado' });
         }
 
@@ -37,6 +39,11 @@ async function terminarSubasta(req: NextApiRequest, res: NextApiResponse) {
             }
         });
         return 'rechazado';
+    }
+
+    if (accion === 'oferta') {
+        await registrarOfertaRechazado(req);
+        return 'oferta';
     }
 
     // 1. Obtener ultima puja más alta
@@ -79,4 +86,28 @@ async function terminarSubasta(req: NextApiRequest, res: NextApiResponse) {
         }
     });
     return 'subastado';
+}
+
+async function registrarOfertaRechazado(req: NextApiRequest) {
+    const { id_comprador, id_lote } = req.body;
+
+    const comprador = await prisma.compradores.findUnique({
+        where: {
+            id_comprador: Number(id_comprador),
+        }
+    });
+
+    if (!comprador) throw new Error('No se encontró el comprador en el registro');
+
+    await prisma.lotes.update({
+        where: {
+            id_lote: Number(id_lote),
+        },
+        data: {
+            id_comprador: comprador.id_comprador,
+            paleta_comprador: comprador.codigo_paleta,
+            subastado: 3,
+        }
+    });
+    return 'oferta';
 }

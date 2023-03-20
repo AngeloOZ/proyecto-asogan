@@ -34,22 +34,7 @@ async function obtenerEventosHoy(req: NextApiRequest, res: NextApiResponse) {
             },
         });
 
-        const eventosFormateados = eventos.map((evento) => {
-            const lotes = evento.lotes.map(lote => (
-                {
-                    ...lote,
-                    fecha_pesaje: moment(lote.fecha_pesaje).format('DD-MM-YYYY')
-                }
-            ));
-
-            return {
-                ...evento,
-                fecha: moment(evento.fecha).format('DD-MM-YYYY HH:mm'),
-                lotes,
-            };
-        });
-
-        return res.status(200).json(eventosFormateados);
+        return res.status(200).json(eventos);
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }

@@ -50,7 +50,7 @@ export default function PageAdminProveedores() {
                         <TabVideos
                             minHeight={200}
                             height={420}
-                            urlVideoDemostracion={loteActual.url_video || ''}
+                            urlVideoDemostracion={loteActual?.url_video || ''}
                             urlTransmisionEnVivo={evento?.url_video || ''}
                         />
                     </Grid>

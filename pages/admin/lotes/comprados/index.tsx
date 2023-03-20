@@ -45,10 +45,10 @@ export default function PageAdminProveedores() {
                         { label: 'Calidad de animales', name: 'calidad_animales' },
                         { label: 'Peso total', name: 'peso_total' },
                         { label: 'Procedencia', name: 'procedencia' },
+                        { label: 'F', name: 'fecha_compra' },
                     ]}
                     isLoading={isLoading}
                     dataBody={lotes}
-                    isActions
                     handeEdit={handleClickEditRow}
                 />
             </Container>

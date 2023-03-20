@@ -48,7 +48,7 @@ model lotes {
   id_proveedor      Int
   id_comprador      Int?
   paleta_comprador  String?      @db.VarChar(5)
-  fecha_pesaje      DateTime?    @db.Date
+  fecha_pesaje      DateTime?    @db.DateTime(0)
   codigo_lote       String?      @db.VarChar(50)
   cantidad_animales Int?
   tipo_animales     String?      @db.VarChar(50)
@@ -97,4 +97,9 @@ model pujas {
 
   @@index([id_usuario], map: "fk_puja_comprador")
   @@index([id_lote], map: "fk_puja_lote")
+}
+
+model imagenes {
+  id_imagen Int    @id @default(autoincrement())
+  ruta      String @db.VarChar(300)
 }
