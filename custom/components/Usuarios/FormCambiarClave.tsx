@@ -23,8 +23,8 @@ import { usuario as IUsuario } from '@prisma/client';
 import { useUsuario } from './Hooks';
 import Link from 'next/link';
 
-import { PATH_DASHBOARD } from 'src/routes/paths';
-
+import { PATH_DASHBOARD, PATH_DASHBOARD_CLEINTE } from 'src/routes/paths';
+import { handleErrorsAxios } from 'utils';
 
 
 type FormValuesProps = IUsuario;
@@ -75,11 +75,13 @@ export function FormCambiarClave({ usuariosEditar }: Props) {
 
 
     const onSubmit = async (data: FormValuesProps) => {
-
-        await actualizarUsuario(data);
-        enqueueSnackbar('Usuario actualizado correctamente', { variant: 'success' });
-        push(PATH_DASHBOARD.usuarios.root);
-
+        try {
+            await actualizarUsuario(data);
+            enqueueSnackbar('Usuario actualizado correctamente', { variant: 'success' });
+            push(PATH_DASHBOARD_CLEINTE.root);
+        } catch (error) {
+            enqueueSnackbar(`Oops... ${handleErrorsAxios(error)}`, { variant: 'error' });
+        }
     }
 
     return (<FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} >

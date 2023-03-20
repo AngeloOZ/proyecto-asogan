@@ -12,10 +12,7 @@ import CustomBreadcrumbs from 'src/components/custom-breadcrumbs/CustomBreadcrum
 import { compradores as IComprador } from '@prisma/client'
 import { useSnackbar } from '../../../src/components/snackbar';
 
-
-
-
-PageAdminCompradores.getLayout = (page: React.ReactElement) => <DashboardLayout>{page}</DashboardLayout>
+PageAdminCompradores.getLayout = (page: React.ReactElement) => <DashboardLayout roles= {['admin']}>{page}</DashboardLayout>
 
 export default function PageAdminCompradores() {
 
@@ -30,13 +27,13 @@ export default function PageAdminCompradores() {
 
     const handleClickDeleteRow = async (item: IComprador) => {
         try {
-          
+
             await eliminarComprador(item.id_comprador)
             enqueueSnackbar('Comprador eliminado correctamente', { variant: 'success' });
             router.push(PATH_DASHBOARD.compradores.root);
 
         } catch (error) {
-             enqueueSnackbar(`Oops... hubo un error ${error.message}`, { variant: 'error' });
+            enqueueSnackbar(`Oops... hubo un error ${error.message}`, { variant: 'error' });
         }
     }
     return (<>
@@ -61,7 +58,7 @@ export default function PageAdminCompradores() {
             <TableCustom
                 headers={[
                     { label: "ID", name: "id_comprador", type: 'number', serchable: false },
-                    { label: 'Identificacion', name: 'identificacion'},
+                    { label: 'Identificacion', name: 'identificacion' },
                     { label: 'Nombres', name: 'nombres' },
                     { label: '#Paleta', name: 'codigo_paleta' },
                     { label: 'Antecedentes Penales', name: 'antecedentes_penales', align: 'center' },

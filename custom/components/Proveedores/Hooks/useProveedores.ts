@@ -17,7 +17,7 @@ export const useProveedores = () => {
     }
 
     const eliminarProveedor = async (proveedor: any) => {
-        const { data } = await subastaAPI.delete('/proveedores', proveedor);
+        const { data } = await subastaAPI.delete(`/proveedores?id=${proveedor}`);
         mutate('/proveedores');
     }
 
