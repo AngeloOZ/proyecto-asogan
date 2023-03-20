@@ -26,23 +26,22 @@ import Link from 'next/link';
 
 import { PATH_DASHBOARD } from 'src/routes/paths';
 
-
-import prisma from 'database/prismaClient';
 import { useGlobales } from '../Globales';
 
 type FormValuesProps = IUsuario;
 type Props = {
     esEditar?: boolean;
     usuariosEditar?: IUsuario;
+   
 }
 
 export function FormUsuarios({ esEditar = false, usuariosEditar }: Props) {
-
+    
     const { push } = useRouter();
     const { enqueueSnackbar } = useSnackbar();
     const { agregarUsuario, actualizarUsuario } = useUsuario();
-    const { consultarIdentificacion } = useGlobales();
-    
+    const { validarIdentificacion,consultarIdentificacion } = useGlobales();
+    const [validacionI, setValidacionI ]= useState(false);
     
 
     useEffect(() => {
@@ -56,18 +55,21 @@ export function FormUsuarios({ esEditar = false, usuariosEditar }: Props) {
 
     }, [esEditar, usuariosEditar]);
 
-
     // Validaciones de los campos
     const UsuariosEsquema = Yup.object().shape({
         identificacion: Yup.string().required('La identificacion es requerido').min(10, 'La identificacion no puede tener menos de 10 caracteres').max(13, 'La identificacion no puede tener mas de 13 caracteres'),
         nombres: Yup.string().required('El nombre es requerido').max(300, 'El nombre no puede tener mas de 300 caracteres'),
-        clave: Yup.string().max(10, 'La clave no puede tener mas de 10 digitos'),
+        clave: Yup.string().when('esEditar',{ 
+            is: () => esEditar == false && true,
+             then: Yup.string().required('La clave es requerida')
+             } 
+            ),
+
         rol: Yup.string().required('El rol es requerido'),
         verificacion_clave: Yup.string().oneOf([Yup.ref('clave'),null], 'Las claves no coinciden'),
     });
 
-
-
+    
 
     // Se carga los valores en caso de que sea editar
     const defaultValues = useMemo<IUsuario>(() => ({
@@ -100,16 +102,23 @@ export function FormUsuarios({ esEditar = false, usuariosEditar }: Props) {
     const onSubmit = async (data: FormValuesProps) => {
       
         try {
-            if (!esEditar) {
-                await agregarUsuario(data);
-                enqueueSnackbar('Usuario agregado correctamente', { variant: 'success' });
-                push(PATH_DASHBOARD.usuarios.root);
+            if (validacionI == true) {
+
+                if (!esEditar) {
+                  
+                    await agregarUsuario(data);
+                    enqueueSnackbar('Usuario agregado correctamente', { variant: 'success' });
+                    push(PATH_DASHBOARD.usuarios.root);
+                } else {
+                    await actualizarUsuario(data);
+                    enqueueSnackbar('Usuario actualizado correctamente', { variant: 'success' });
+                    push(PATH_DASHBOARD.usuarios.root);
+                }
+                reset();
             } else {
-                await actualizarUsuario(data);
-                enqueueSnackbar('Usuario actualizado correctamente', { variant: 'success' });
-                push(PATH_DASHBOARD.usuarios.root);
+                enqueueSnackbar("La identificacion ingresada es incorrecta", { variant: 'error' });
             }
-            reset();
+
         } catch (error) {
 
             enqueueSnackbar("Oops... hubo un error " + error.response.data.message, { variant: 'error' });
@@ -117,8 +126,20 @@ export function FormUsuarios({ esEditar = false, usuariosEditar }: Props) {
     }
 
     const verificarIdentificacion = async () => {
-        const data = await consultarIdentificacion(watch("identificacion"));
-        setValue('nombres',data);
+
+        const validacion = validarIdentificacion(watch("identificacion"))
+        
+        if (validacion){
+            
+            const data = await consultarIdentificacion(watch("identificacion"));
+            setValue('nombres',data.razon_social);
+            setValidacionI(true);
+        }else {
+            setValidacionI(false);
+            enqueueSnackbar("La identificacion ingresada es incorrecta", { variant: 'error' });
+        }
+
+      
     }
 
 
