@@ -41,7 +41,7 @@ export default function PageAdminProveedores() {
                         <LoteMartillador loteActual={loteActual} setLoteActual={setLoteActual} listadoLotes={lotes} />
                     </Grid>
                     <Grid item xs={12} md={6} order={{ xs: 2, md: 1 }}>
-                        <Card sx={{ padding: 2, height: 367 }}>
+                        <Card sx={{ padding: 2, height: 420 }}>
                             <VideoPlayer
                                 playerProps={{
                                     url: evento?.url_video || '',

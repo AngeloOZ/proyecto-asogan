@@ -46,7 +46,7 @@ export const ChatPujas = ({ lote, evento }: ChatPujasProps) => {
 
     return (
 
-        <Card sx={{ height: '365px', display: 'flex' }}>
+        <Card sx={{ height: '420px', display: 'flex' }}>
             <Stack flexGrow={1}>
                 <Stack
                     direction="row"
@@ -61,7 +61,7 @@ export const ChatPujas = ({ lote, evento }: ChatPujasProps) => {
                         <ChatInput lote={lote} />
                     </Stack>
 
-                    <ChatOfertas ofetas={mejoresPujas} />
+                    <ChatOfertas ofetas={mejoresPujas} loteActual={lote} />
                 </Stack>
             </Stack>
         </Card>

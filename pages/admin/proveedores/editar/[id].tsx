@@ -12,7 +12,7 @@ import { subastaAPI } from 'custom/api'
 import { proveedores } from '@prisma/client'
 
 
-PageAdmin.getLayout = (page: React.ReactElement) => <DashboardLayout>{page}</DashboardLayout>
+PageAdmin.getLayout = (page: React.ReactElement) => <DashboardLayout roles={['admin']}>{page}</DashboardLayout>
 
 export default function PageAdmin() {
     const { query } = useRouter();

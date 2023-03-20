@@ -8,7 +8,7 @@ import { FormProveedores } from 'custom/components'
 
 
 
-PageAdminProveedores.getLayout = (page: React.ReactElement) => <DashboardLayout>{page}</DashboardLayout>
+PageAdminProveedores.getLayout = (page: React.ReactElement) => <DashboardLayout roles={['admin']}>{page}</DashboardLayout>
 
 export default function PageAdminProveedores() {
 

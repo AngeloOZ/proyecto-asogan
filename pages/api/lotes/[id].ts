@@ -8,7 +8,10 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
     if (id) {
         const lotes = await prisma.lotes.findMany({
             where: {
-                id_evento: Number(id)
+                id_evento: Number(id),
+                subastado: {
+                    lt: 2
+                }
             },
             include: {
                 proveedores: true

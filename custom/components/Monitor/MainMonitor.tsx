@@ -41,6 +41,7 @@ export const MainMonitor = ({ datos }: { datos: LoteMonitor }) => {
                     value={cantidadAnimalesText}
                     className={css.cantidad}
                     bgColorCustom='#FFFF00'
+                    fontSizeCustom='35px'
                 />
 
                 <CardInfo
@@ -55,13 +56,14 @@ export const MainMonitor = ({ datos }: { datos: LoteMonitor }) => {
                     value={lote?.procedencia || ''}
                     className={css.procedencia}
                     bgColorCustom='#FFFF00'
+                    fontSizeCustom='35px'
                 />
 
                 <CardInfo
                     title='valor base'
                     value={'$ ' + valorBase.toFixed(2)}
                     className={css.valor_base}
-                    fontSizeCustom='80px'
+                    fontSizeCustom='68px'
                     bgColorCustom='#FFFF00'
                 />
 
@@ -69,7 +71,7 @@ export const MainMonitor = ({ datos }: { datos: LoteMonitor }) => {
                     title='Puja'
                     value={'$ ' + valorPuja.toFixed(2)}
                     className={css.puja}
-                    fontSizeCustom='80px'
+                    fontSizeCustom='68px'
                     bgColorCustom='#FFFF00'
                 />
 
