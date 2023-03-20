@@ -1,4 +1,4 @@
-import { Box, Grid, Typography } from '@mui/material'
+import { Grid, useTheme } from '@mui/material'
 import { LoteMonitor } from '@types'
 import css from '../../styles/monitor.module.css';
 import { CardInfo } from '.';
@@ -6,6 +6,7 @@ import moment from 'moment-timezone';
 import { SliderAds } from './SliderAds';
 
 export const MainMonitor = ({ datos }: { datos: LoteMonitor }) => {
+    const theme = useTheme();
 
     const { lote, ultimaPuja } = datos;
 
@@ -42,7 +43,7 @@ export const MainMonitor = ({ datos }: { datos: LoteMonitor }) => {
 
                 <CardInfo
                     title='Peso prom'
-                    value={'Lb ' + pesoPromedio.toFixed(2)}
+                    value={pesoPromedio.toFixed(2)+'Lb' }
                     className={css.peso_prom}
                 />
 
@@ -53,7 +54,7 @@ export const MainMonitor = ({ datos }: { datos: LoteMonitor }) => {
                 />
 
                 <CardInfo
-                    title='Procedencia'
+                    title='valor base'
                     value={'$ ' + valorBase.toFixed(2)}
                     className={css.valor_base}
                 />
@@ -89,15 +90,11 @@ export const MainMonitor = ({ datos }: { datos: LoteMonitor }) => {
                 />
 
                 <CardInfo
-                    title='Número de paleta'
+                    title='Paleta'
                     value={ultimaPuja?.codigo_paleta || ''}
                     className={css.numero_paleta}
-                />
-
-                <CardInfo
-                    title='Ultima Puja'
-                    value={'$' + parseFloat(ultimaPuja?.puja || '0').toFixed(2)}
-                    className={css.ultima_puja}
+                    bgColorCustom={theme.palette.secondary.dark}
+                    textColorCustom={theme.palette.secondary.contrastText}
                 />
 
             </Grid>

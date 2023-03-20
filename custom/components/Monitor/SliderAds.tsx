@@ -18,6 +18,7 @@ export function SliderAds() {
     return (
         <>
             <Swiper
+                direction='vertical'
                 spaceBetween={30}
                 centeredSlides={true}
                 autoplay={{
@@ -27,19 +28,28 @@ export function SliderAds() {
                 pagination={{
                     clickable: true,
                 }}
-                navigation={true}
-                modules={[Autoplay, Pagination, Navigation]}
+                loop
+                modules={[Autoplay, Pagination]}
                 className="mySwiper"
             >
-                <SwiperSlide>Slide 1</SwiperSlide>
-                <SwiperSlide>Slide 2</SwiperSlide>
-                <SwiperSlide>Slide 3</SwiperSlide>
-                <SwiperSlide>Slide 4</SwiperSlide>
-                <SwiperSlide>Slide 5</SwiperSlide>
-                <SwiperSlide>Slide 6</SwiperSlide>
-                <SwiperSlide>Slide 7</SwiperSlide>
-                <SwiperSlide>Slide 8</SwiperSlide>
-                <SwiperSlide>Slide 9</SwiperSlide>
+                <SwiperSlide>
+                    <img 
+                        src="https://agroscopio.com/wp-content/uploads/2020/11/ASOGANSD.png"
+                        style={{ objectFit: "cover", objectPosition: "center" }}
+                    />
+                </SwiperSlide>
+                <SwiperSlide>
+                    <img 
+                        src="https://elproductor.com/wp-content/uploads/2019/04/ganado.jpg"
+                        style={{ objectFit: "cover", objectPosition: "center" }}
+                    />
+                </SwiperSlide>
+                <SwiperSlide>
+                    <img 
+                        src="https://aprobal.com/wp-content/uploads/2020/06/Junio_-11-768x768.jpg"
+                        style={{ objectFit: "cover", objectPosition: "center" }}
+                    />
+                </SwiperSlide>
             </Swiper>
         </>
     );

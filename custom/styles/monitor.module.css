@@ -6,7 +6,7 @@
   grid-auto-flow: row;
   grid-template-areas:
     'lote cantidad peso_prom numero_paleta'
-    'procedencia valor_base puja ultima_puja'
+    'procedencia valor_base puja numero_paleta'
     'hora_pesaje hora_pesaje valor_final valor_final'
     'valor_animal valor_animal valor_total valor_total';
   background-color: 'burlywood';
