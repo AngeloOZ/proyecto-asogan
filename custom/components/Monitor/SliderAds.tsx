@@ -34,20 +34,14 @@ export function SliderAds() {
             >
                 <SwiperSlide>
                     <img 
-                        src="https://agroscopio.com/wp-content/uploads/2020/11/ASOGANSD.png"
-                        style={{ objectFit: "cover", objectPosition: "center" }}
-                    />
-                </SwiperSlide>
-                <SwiperSlide>
-                    <img 
-                        src="https://elproductor.com/wp-content/uploads/2019/04/ganado.jpg"
-                        style={{ objectFit: "cover", objectPosition: "center" }}
+                        src="/banner-coca-cola.webp"
+                        style={{ objectFit: "fill", objectPosition: "center" }}
                     />
                 </SwiperSlide>
                 <SwiperSlide>
                     <img 
                         src="https://aprobal.com/wp-content/uploads/2020/06/Junio_-11-768x768.jpg"
-                        style={{ objectFit: "cover", objectPosition: "center" }}
+                        style={{ objectFit: "fill", objectPosition: "center" }}
                     />
                 </SwiperSlide>
             </Swiper>

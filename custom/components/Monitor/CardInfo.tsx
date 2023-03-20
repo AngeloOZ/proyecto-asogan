@@ -4,15 +4,23 @@ interface Props extends BoxProps {
     value: string;
     bgColorCustom?: string;
     textColorCustom?: string;
+    fontSizeCustom?: string;
 }
-export const CardInfo = ({ title, value, bgColorCustom = 'transparent', textColorCustom = "#000", ...other }: Props) => {
+export const CardInfo = ({ title, value, bgColorCustom = 'transparent', textColorCustom = "#000", fontSizeCustom = '40px', ...other }: Props) => {
 
     return (
         <Box component="div" {...other} >
             <Card sx={{ height: "100%", boxShadow: '0 0 4px rgba(0,0,0,0.3)' }}>
                 <CardContent component='div' style={{ padding: 0, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'stretch' }} >
                     <Box style={{ textAlign: 'center', padding: 5, borderBottom: "1px #0c0 dashed" }}>
-                        <Typography component='h3' fontWeight='bold' fontSize='28px' textTransform='uppercase'>{title}</Typography>
+                        <Typography
+                            component='h3'
+                            fontWeight='bold'
+                            fontSize='28px'
+                            textTransform='uppercase'
+                        >
+                            {title}
+                        </Typography>
                     </Box>
                     <Box component='div'
                         style={{
@@ -29,7 +37,7 @@ export const CardInfo = ({ title, value, bgColorCustom = 'transparent', textColo
                         <Typography
                             component='p'
                             fontWeight='bold'
-                            fontSize='40px'
+                            fontSize={fontSizeCustom}
                             textTransform='uppercase'
                             textOverflow='ellipsis'
                         >

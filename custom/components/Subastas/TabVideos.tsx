@@ -51,7 +51,7 @@ export function TabVideos({ urlTransmisionEnVivo = '', urlVideoDemostracion = ''
 
     return (
         <Box sx={{ width: '100%' }} {...other}>
-            <Card>
+            <Card style={{ height: '100%' }}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }} paddingX={2}>
                     <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
                         <Tab label="Video demostración" {...a11yProps(0)} />
