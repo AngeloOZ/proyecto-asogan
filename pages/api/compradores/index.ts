@@ -61,7 +61,7 @@ async function crearComprador(req: NextApiRequest, res: NextApiResponse) {
     try {
         await prisma.$transaction(async (prisma) => {
 
-            const { codigo_paleta, antecedentes_penales, procesos_judiciales, calificacion_bancaria, estado }: compradores = req.body;
+            const { codigo_paleta, antecedentes_penales, procesos_judiciales, calificacion_bancaria, estado,correo,celular }: compradores = req.body;
             const { identificacion, nombres }: usuario = req.body
             const verificarUsuario = await prisma.usuario.findUnique({ where: { identificacion } });
             
@@ -82,6 +82,7 @@ async function crearComprador(req: NextApiRequest, res: NextApiResponse) {
             });
 
 
+
             const verificaCompradorPaleta = await prisma.compradores.findUnique({ where: { codigo_paleta: codigo_paleta! } });
 
             if (verificaCompradorPaleta) {
@@ -95,6 +96,8 @@ async function crearComprador(req: NextApiRequest, res: NextApiResponse) {
                     procesos_judiciales,
                     calificacion_bancaria,
                     estado,
+                    correo,
+                    celular,
                     usuarioid: usuario.usuarioid
                 }
             });
@@ -115,7 +118,7 @@ async function actualizarComprador(req: NextApiRequest, res: NextApiResponse) {
     try {
         await prisma.$transaction(async (prisma) => {
 
-            const { id_comprador, codigo_paleta, antecedentes_penales, procesos_judiciales, calificacion_bancaria, estado }: compradores = req.body;
+            const { id_comprador, codigo_paleta, antecedentes_penales, procesos_judiciales, calificacion_bancaria, estado, correo, celular }: compradores = req.body;
             const { nombres, identificacion }: usuario = req.body
 
             const verificaCompradorPaleta = await prisma.compradores.findMany({ where: { codigo_paleta, id_comprador: { not: id_comprador } }, take: 1 });
@@ -131,7 +134,9 @@ async function actualizarComprador(req: NextApiRequest, res: NextApiResponse) {
                     antecedentes_penales,
                     procesos_judiciales,
                     calificacion_bancaria,
-                    estado
+                    estado,
+                    correo,
+                    celular
 
                 }
 

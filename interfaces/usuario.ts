@@ -5,5 +5,6 @@ export interface Usuario {
     nombres : string
     clave : string
     rol: string[]
+    celular : string
     fechacreado? : string | Date | null
 }

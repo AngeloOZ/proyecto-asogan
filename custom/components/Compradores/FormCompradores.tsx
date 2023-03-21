@@ -89,6 +89,8 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
           usuarioid: compradorEditar?.usuarioid || 0,
           nombres: nombresV,
           identificacion: compradorEditar?.usuario?.identificacion || "",
+          correo: compradorEditar?.correo || "",
+          celular: compradorEditar?.celular || "",
         };
       }, [compradorEditar]);
 
