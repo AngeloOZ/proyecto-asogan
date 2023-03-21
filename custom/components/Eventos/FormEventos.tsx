@@ -87,9 +87,8 @@ export function FormEventos({ esEditar = false, eventoEditar }: Props) {
             }
             reset();
         } catch (error) {
-            const errorMessage = error.response.data.message || error.message;
-            console.error(errorMessage);
-            enqueueSnackbar(`${errorMessage}`, { variant: 'error' });
+            const errorMessage = error.response.data.message;
+            enqueueSnackbar(`${errorMessage}`, { variant: "error" });
         }
     };
 
