@@ -8,7 +8,8 @@ export interface ICompradores {
     calificacion_bancaria   : string | null
     estado                  : boolean | null
     usuarioid               : number
-
+    correo                  : string  | null
+    celular                 : string  | null       
     usuario                 ?: usuario ;
  
 }

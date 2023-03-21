@@ -2,10 +2,24 @@ import { lotes } from "@prisma/client";
 import { Lote, LoteA } from "@types";
 import moment from "moment-timezone";
 
-export function calcularSubasta(lote: lotes | Lote | LoteA | null) {
-    const horaPesaje = moment(lote?.fecha_pesaje || '').format('H:mm - DD-MM-YYYY');
-    console.log(lote?.fecha_pesaje);
-    
+
+interface CalculosSubasta {
+    horaPesaje: string;
+    cantidadAnimales: number;
+    pesoTotal: number;
+    pesoPromedio: number;
+    tipoAniilaes: string;
+    cantidadAnimalesText: string;
+    valorBase: number;
+    valorPuja: number;
+    valorFinal: number;
+    valorFinal2: number;
+    valorFinalTotal: number;
+}
+
+export function calcularSubasta(lote: lotes | Lote | LoteA | null) : CalculosSubasta {
+    const horaPesaje = moment(lote?.fecha_pesaje || '').format('H:mm');
+
     const cantidadAnimales = lote?.cantidad_animales || 0;
     const pesoTotal = Number(lote?.peso_total || 0);
     const pesoPromedio = pesoTotal / cantidadAnimales || 0;

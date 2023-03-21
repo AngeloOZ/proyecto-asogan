@@ -20,10 +20,14 @@ function TabPanel(props: TabPanelProps) {
             id={`simple-tabpanel-${index}`}
             aria-labelledby={`simple-tab-${index}`}
             {...other}
+            style={{
+                padding: 5,
+                height: '100%',
+            }}
         >
             {value === index && (
-                <Box sx={{ p: 3 }}>
-                    <Typography>{children}</Typography>
+                <Box height='100%'>
+                    {children}
                 </Box>
             )}
         </div>
@@ -42,7 +46,7 @@ interface TabVideosProps extends BoxProps {
     urlTransmisionEnVivo?: string;
 }
 
-export function TabVideos({ urlTransmisionEnVivo = '', urlVideoDemostracion = '', ...other }: TabVideosProps) {
+export function TabVideos({ urlTransmisionEnVivo = '', urlVideoDemostracion = '' }: TabVideosProps) {
     const [value, setValue] = useState(0);
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -50,45 +54,41 @@ export function TabVideos({ urlTransmisionEnVivo = '', urlVideoDemostracion = ''
     };
 
     return (
-        <Box sx={{ width: '100%' }} {...other}>
-            <Card style={{ height: '100%' }}>
-                <Box sx={{ borderBottom: 1, borderColor: 'divider' }} paddingX={2}>
-                    <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-                        <Tab label="Video demostración" {...a11yProps(0)} />
-                        <Tab label="Transmisión en vivo" {...a11yProps(1)} />
-                    </Tabs>
-                </Box>
-                <TabPanel value={value} index={0}>
-                    {
-                        urlVideoDemostracion === '' ?
-                            <Skeleton variant="rectangular" width="100%" style={{ minHeight: 320 }} />
-                            :
-                            <VideoPlayer
-                                playerProps={{
-                                    url: urlVideoDemostracion,
-                                    muted: true,
-                                    height: 320,
-                                }}
-                            />
+        <Box sx={{ width: '100%', padding: 0, height: 'calc( 100% - 60px)' }} >
+            <Box sx={{ borderBottom: 1, borderColor: 'divider', py: 0, my: 0 }} height={60} paddingX={2}>
+                <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+                    <Tab label="Video demostración" {...a11yProps(0)} />
+                    <Tab label="Transmisión en vivo" {...a11yProps(1)} />
+                </Tabs>
+            </Box>
+            <TabPanel value={value} index={0}>
+                {
+                    urlVideoDemostracion === '' ?
+                        <Skeleton variant="rectangular" width="100%" style={{ minHeight: 130 }} />
+                        :
+                        <VideoPlayer
+                            playerProps={{
+                                url: urlVideoDemostracion,
+                                muted: true,
+                            }}
+                        />
 
-                    }
-                </TabPanel>
-                <TabPanel value={value} index={1}>
-                    {
-                        urlTransmisionEnVivo === '' ?
-                            <Skeleton variant="rectangular" width="100%" style={{ minHeight: 320 }} />
-                            :
-                            <VideoPlayer
-                                playerProps={{
-                                    url: urlTransmisionEnVivo,
-                                    muted: true,
-                                    height: 320,
-                                }}
-                            />
+                }
+            </TabPanel>
+            <TabPanel value={value} index={1}>
+                {
+                    urlTransmisionEnVivo === '' ?
+                        <Skeleton variant="rectangular" width="100%" style={{ minHeight: 130 }} />
+                        :
+                        <VideoPlayer
+                            playerProps={{
+                                url: urlTransmisionEnVivo,
+                                muted: true,
+                            }}
+                        />
 
-                    }
-                </TabPanel>
-            </Card>
+                }
+            </TabPanel>
         </Box>
     );
 }

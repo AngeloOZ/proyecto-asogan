@@ -28,6 +28,13 @@ async function listado(req: NextApiRequest, res: NextApiResponse) {
             const lote = await prisma.lotes.findUnique({
                 where: {
                     id_lote: Number(id)
+                },
+                include: {
+                    compradores: {
+                        include: {
+                            usuario: true,
+                        }
+                    }
                 }
             });
             return res.status(200).json(lote);
@@ -72,9 +79,7 @@ async function crearLote(req: NextApiRequest, res: NextApiResponse) {
         });
         return res.status(200).json(lote);
     } catch (error) {
-        console.log(error.code);
-        console.dir(error, { depth: null });
-        return res.status(500).json({ message: error.message });
+        return res.status(500).json(handleErrorsPrisma(error?.code));
     }
     finally {
         await prisma.$disconnect();
@@ -86,13 +91,13 @@ async function actualizarLote(req: NextApiRequest, res: NextApiResponse) {
         const { id_lote, id_evento, id_proveedor, fecha_pesaje, codigo_lote, cantidad_animales, tipo_animales, calidad_animales, peso_total, sexo, crias_hembras, crias_machos, procedencia, observaciones, puja_inicial, incremento, url_video, subastado } = req.body as LoteForm;
 
         const formattedDate = moment(fecha_pesaje, 'YYYY/MM/DD H:mm:ss').toDate();
-        
-        const lotePrev = await prisma.lotes.findUnique({ where: { id_lote: Number(id_lote) } });
-        
-        let puja_inicialBase = Number(lotePrev!.puja_inicial);
-        let puja_final = Number(lotePrev!.puja_final); 
 
-        if(puja_inicial !== puja_inicialBase) {
+        const lotePrev = await prisma.lotes.findUnique({ where: { id_lote: Number(id_lote) } });
+
+        let puja_inicialBase = Number(lotePrev!.puja_inicial);
+        let puja_final = Number(lotePrev!.puja_final);
+
+        if (puja_inicial !== puja_inicialBase) {
             puja_final = puja_inicial;
             puja_inicialBase = puja_inicial;
         }
@@ -128,7 +133,7 @@ async function actualizarLote(req: NextApiRequest, res: NextApiResponse) {
         return res.status(200).json(lote);
 
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        return res.status(500).json(handleErrorsPrisma(error?.code));
     }
     finally {
         await prisma.$disconnect();
@@ -145,7 +150,7 @@ async function eliminarLote(req: NextApiRequest, res: NextApiResponse) {
 
         return res.status(204).json(evento);
     } catch (error) {
-        return res.status(500).json(handleErrorsPrisma(error.code));
+        return res.status(500).json(handleErrorsPrisma(error?.code));
     }
     finally {
         await prisma.$disconnect();

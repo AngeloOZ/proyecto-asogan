@@ -6,4 +6,5 @@ export * from './LoteCliente';
 export * from './chat';
 export * from './IconPeso';
 export * from './TabVideos';
+export * from './VistaLoteCliente';
 

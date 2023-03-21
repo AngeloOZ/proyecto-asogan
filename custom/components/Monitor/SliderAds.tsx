@@ -11,9 +11,9 @@ import 'swiper/css/navigation';
 // import required modules
 import { Autoplay, Pagination, Navigation } from 'swiper';
 
-export function SliderAds() {
-    const progressCircle = useRef(null);
-    const progressContent = useRef(null);
+import { imagenes } from '@prisma/client';
+
+export function SliderAds({ banners }: { banners: imagenes[] }) {
 
     return (
         <>
@@ -32,18 +32,17 @@ export function SliderAds() {
                 modules={[Autoplay, Pagination]}
                 className="mySwiper"
             >
-                <SwiperSlide>
-                    <img 
-                        src="/banner-coca-cola.webp"
-                        style={{ objectFit: "fill", objectPosition: "center" }}
-                    />
-                </SwiperSlide>
-                <SwiperSlide>
-                    <img 
-                        src="https://aprobal.com/wp-content/uploads/2020/06/Junio_-11-768x768.jpg"
-                        style={{ objectFit: "fill", objectPosition: "center" }}
-                    />
-                </SwiperSlide>
+                {
+                    banners.map((banner, index) => (
+                        <SwiperSlide key={banner.id_imagen}>
+                            <img
+                                src={banner.ruta}
+                                alt={banner.ruta}
+                                style={{ objectFit: "fill", objectPosition: "center" }}
+                            />
+                        </SwiperSlide>
+                    ))
+                }
             </Swiper>
         </>
     );
