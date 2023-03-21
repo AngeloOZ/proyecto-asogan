@@ -1,0 +1,89 @@
+.container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+  gap: 5px 5px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    "lote lote cantidad cantidad procedencia procedencia nombre nombre nombre video video video"
+    "peso_promedio peso_promedio hora_pesaje hora_pesaje incremento incremento numero_paleta numero_paleta numero_paleta video video video"
+    "valor_base valor_base valor_base valor_final valor_final valor_final proxima_puja proxima_puja proxima_puja observaciones observaciones observaciones"
+    "valor_por_animal valor_por_animal valor_por_animal valor_por_animal proximo_valor_por_animal proximo_valor_por_animal proximo_valor_por_animal proximo_valor_por_animal pujas_realizadas pujas_realizadas pujas_realizadas pujas_realizadas"
+    "valor_total valor_total valor_total valor_total proximo_valor_total proximo_valor_total proximo_valor_total proximo_valor_total pujas_realizadas pujas_realizadas pujas_realizadas pujas_realizadas";
+  background-color: 'burlywood';
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+}
+
+.lote {
+  grid-area: lote;
+}
+
+.cantidad {
+  grid-area: cantidad;
+}
+
+.procedencia {
+  grid-area: procedencia;
+}
+
+.video {
+  grid-area: video;
+}
+
+.nombre {
+  grid-area: nombre;
+}
+
+.numero_paleta {
+  grid-area: numero_paleta;
+}
+
+.peso_promedio {
+  grid-area: peso_promedio;
+}
+
+.hora_pesaje {
+  grid-area: hora_pesaje;
+}
+
+.incremento {
+  grid-area: incremento;
+}
+
+.valor_base {
+  grid-area: valor_base;
+}
+
+.valor_final {
+  grid-area: valor_final;
+}
+
+.proxima_puja {
+  grid-area: proxima_puja;
+}
+
+.observaciones {
+  grid-area: observaciones;
+}
+
+.valor_por_animal {
+  grid-area: valor_por_animal;
+}
+
+.proximo_valor_por_animal {
+  grid-area: proximo_valor_por_animal;
+}
+
+.pujas_realizadas {
+  grid-area: pujas_realizadas;
+}
+
+.valor_total {
+  grid-area: valor_total;
+}
+
+.proximo_valor_total {
+  grid-area: proximo_valor_total;
+}

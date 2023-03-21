@@ -5,9 +5,9 @@
   gap: 10px 10px;
   grid-auto-flow: row;
   grid-template-areas:
-    'lote cantidad peso_prom numero_paleta'
-    'procedencia valor_base puja numero_paleta'
-    'hora_pesaje hora_pesaje valor_final valor_final'
+    'lote cantidad procedencia numero_paleta'
+    'peso_prom hora_pesaje puja numero_paleta'
+    'valor_base valor_base valor_final valor_final'
     'valor_animal valor_animal valor_total valor_total';
   background-color: 'burlywood';
   width: 100%;

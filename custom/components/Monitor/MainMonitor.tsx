@@ -1,4 +1,4 @@
- import { Grid, useTheme } from '@mui/material'
+import { Grid, useTheme } from '@mui/material'
 import { LoteMonitor } from '@types'
 import css from '../../styles/monitor.module.css';
 import { CardInfo } from '.';
@@ -33,30 +33,48 @@ export const MainMonitor = ({ datos }: { datos: LoteMonitor }) => {
                     title='#lote'
                     value={lote?.codigo_lote || ''}
                     className={css.lote}
-                    bgColorCustom='#FFFF00'
+                    bgColorCustom='#6bb73b'
+                    fontSizeCustom='60px'
                 />
 
                 <CardInfo
                     title='Cantidad'
                     value={cantidadAnimalesText}
                     className={css.cantidad}
-                    bgColorCustom='#FFFF00'
-                    fontSizeCustom='35px'
-                />
-
-                <CardInfo
-                    title='Peso prom'
-                    value={pesoPromedio.toFixed(2)+'Lb' }
-                    className={css.peso_prom}
-                    bgColorCustom='#FFFF00'
+                    bgColorCustom='#6bb73b'
+                    fontSizeCustom='60px'
                 />
 
                 <CardInfo
                     title='Procedencia'
                     value={lote?.procedencia || ''}
                     className={css.procedencia}
-                    bgColorCustom='#FFFF00'
+                    bgColorCustom='#6bb73b'
                     fontSizeCustom='35px'
+                />
+
+                <CardInfo
+                    title='Peso prom (Lbs)'
+                    value={pesoPromedio.toFixed(2)}
+                    className={css.peso_prom}
+                    bgColorCustom='#6bb73b'
+                    fontSizeCustom='60px'
+                />
+
+                <CardInfo
+                    title='Hora de pesaje'
+                    value={moment(lote?.fecha_pesaje).format('HH:mm')}
+                    className={css.hora_pesaje}
+                    fontSizeCustom='60px'
+                    bgColorCustom='#6bb73b'
+                />
+
+                <CardInfo
+                    title='Incremento'
+                    value={'$ ' + valorPuja.toFixed(2)}
+                    className={css.puja}
+                    bgColorCustom='#ebeb3d'
+                    fontSizeCustom='60px'
                 />
 
                 <CardInfo
@@ -64,31 +82,15 @@ export const MainMonitor = ({ datos }: { datos: LoteMonitor }) => {
                     value={'$ ' + valorBase.toFixed(2)}
                     className={css.valor_base}
                     fontSizeCustom='68px'
-                    bgColorCustom='#FFFF00'
-                />
-
-                <CardInfo
-                    title='Puja'
-                    value={'$ ' + valorPuja.toFixed(2)}
-                    className={css.puja}
-                    fontSizeCustom='68px'
-                    bgColorCustom='#FFFF00'
-                />
-
-                <CardInfo
-                    title='Hora de pesaje'
-                    value={moment(lote?.fecha_pesaje).format('HH:mm:ss')}
-                    className={css.hora_pesaje}
-                    fontSizeCustom='60px'
-                    bgColorCustom='#FFFF00'
+                    bgColorCustom='#ebeb3d'
                 />
 
                 <CardInfo
                     title='Valor Final'
-                    value={'$' + valorFinal2.toFixed(2)}
+                    value={'$' + valorFinal.toFixed(2)}
                     className={css.valor_final}
-                    fontSizeCustom='80px'
-                    bgColorCustom='#dc3545'
+                    fontSizeCustom='68px'
+                    bgColorCustom='#ef440c'
                     textColorCustom='#fff'
                 />
 
@@ -96,17 +98,16 @@ export const MainMonitor = ({ datos }: { datos: LoteMonitor }) => {
                     title='Valor animal'
                     value={'$' + (pesoPromedio * valorFinal2).toFixed(2)}
                     className={css.valor_animal}
-                    fontSizeCustom='80px'
-                    bgColorCustom='#FFFF00'
+                    fontSizeCustom='68px'
+                    bgColorCustom='#ebeb3d'
                 />
 
                 <CardInfo
                     title='Valor Total'
                     value={'$' + valorFinalTotal.toFixed(2)}
                     className={css.valor_total}
-                    fontSizeCustom='80px'
-                    bgColorCustom={theme.palette.secondary.dark}
-                    textColorCustom={theme.palette.secondary.contrastText}
+                    fontSizeCustom='68px'
+                    bgColorCustom='#fabf25'
                 />
 
                 <CardInfo
@@ -114,7 +115,7 @@ export const MainMonitor = ({ datos }: { datos: LoteMonitor }) => {
                     value={ultimaPuja?.codigo_paleta || ''}
                     className={css.numero_paleta}
                     fontSizeCustom='80px'
-                    bgColorCustom={theme.palette.secondary.dark}
+                    bgColorCustom='#278ac6'
                     textColorCustom={theme.palette.secondary.contrastText}
                 />
 

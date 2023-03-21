@@ -22,6 +22,7 @@ export * from './Globales';
 // Jhusep
 export * from './Eventos';
 export * from './Imagenes';
+export * from './Martillador';
 
 
 
