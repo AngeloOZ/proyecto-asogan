@@ -1,10 +1,12 @@
+import type { NextApiRequest, NextApiResponse } from 'next'
 import { compradores, usuario } from "@prisma/client";
 import prisma from 'database/prismaClient';
-import type { NextApiRequest, NextApiResponse } from 'next'
+import { handleErrorsPrisma } from 'utils';
 import bcrypt from 'bcrypt';
+
 // eslint-disable-next-line
 export default function (req: NextApiRequest, res: NextApiResponse) {
-    console.log(req.query)
+    
     switch (req.method) {
         case 'GET':
             return obtenerCompradores(req, res);
@@ -46,7 +48,7 @@ async function obtenerCompradores(req: NextApiRequest, res: NextApiResponse) {
 
         return res.status(200).json(compradoresConAntecedentes);
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        return res.status(500).json({ message: handleErrorsPrisma(error) });
     }
     finally {
         prisma.$disconnect();
@@ -59,6 +61,7 @@ async function crearComprador(req: NextApiRequest, res: NextApiResponse) {
     try {
         await prisma.$transaction(async (prisma) => {
 
+            const { codigo_paleta, antecedentes_penales, procesos_judiciales, calificacion_bancaria, estado }: compradores = req.body;
             const { identificacion, nombres }: usuario = req.body
             const verificarUsuario = await prisma.usuario.findUnique({ where: { identificacion } });
             
@@ -78,7 +81,6 @@ async function crearComprador(req: NextApiRequest, res: NextApiResponse) {
                 }
             });
 
-            const { codigo_paleta, antecedentes_penales, procesos_judiciales, calificacion_bancaria, estado }: compradores = req.body;
 
             const verificaCompradorPaleta = await prisma.compradores.findUnique({ where: { codigo_paleta: codigo_paleta! } });
 
@@ -100,7 +102,8 @@ async function crearComprador(req: NextApiRequest, res: NextApiResponse) {
         });
         return res.status(200).json({ message: 'comprador creado' });
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        
+        return res.status(500).json({ message: handleErrorsPrisma(error) });
     }
     finally {
         prisma.$disconnect();
@@ -148,7 +151,7 @@ async function actualizarComprador(req: NextApiRequest, res: NextApiResponse) {
         });
 
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        return res.status(500).json({ message: handleErrorsPrisma(error) });
     }
 
     finally {
@@ -181,7 +184,7 @@ async function eliminarComprador(req: NextApiRequest, res: NextApiResponse) {
 
     } catch (error) {
 
-        return res.status(200).json({ message: error.message });
+        return res.status(500).json({ message: handleErrorsPrisma(error) });
     }
     finally {
         prisma.$disconnect();

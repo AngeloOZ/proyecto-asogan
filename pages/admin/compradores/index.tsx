@@ -12,6 +12,8 @@ import CustomBreadcrumbs from 'src/components/custom-breadcrumbs/CustomBreadcrum
 import { compradores as IComprador } from '@prisma/client'
 import { useSnackbar } from '../../../src/components/snackbar';
 
+import { handleErrorsAxios } from '../../../utils';
+
 PageAdminCompradores.getLayout = (page: React.ReactElement) => <DashboardLayout roles= {['admin']}>{page}</DashboardLayout>
 
 export default function PageAdminCompradores() {
@@ -33,7 +35,7 @@ export default function PageAdminCompradores() {
             router.push(PATH_DASHBOARD.compradores.root);
 
         } catch (error) {
-            enqueueSnackbar(`Oops... hubo un error ${error.message}`, { variant: 'error' });
+            enqueueSnackbar(`Oops... ${handleErrorsAxios(error)}`, { variant: 'error' });
         }
     }
     return (<>

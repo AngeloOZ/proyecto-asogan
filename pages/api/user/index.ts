@@ -2,7 +2,7 @@ import { usuario } from "@prisma/client";
 import prisma from 'database/prismaClient';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import bcrypt from 'bcrypt';
-
+import { handleErrorsPrisma } from 'utils';
 // eslint-disable-next-line
 export default function (req: NextApiRequest, res: NextApiResponse) {
     switch (req.method) {
@@ -37,7 +37,7 @@ async function obtenerUsuarios(req: NextApiRequest, res: NextApiResponse) {
         return res.status(200).json(usuariosRol);
 
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        return res.status(500).json({ message: handleErrorsPrisma(error) });
     }
     finally {
         prisma.$disconnect();
@@ -69,7 +69,7 @@ async function crearUsuario(req: NextApiRequest, res: NextApiResponse) {
 
         return res.status(200).json(usuario);
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        return res.status(500).json({ message: handleErrorsPrisma(error) });
     }
     finally {
         prisma.$disconnect();
@@ -107,7 +107,7 @@ async function actualizarUsuario(req: NextApiRequest, res: NextApiResponse) {
 
         return res.status(200).json(usuario);
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        return res.status(500).json({ message: handleErrorsPrisma(error) });
     }
     finally {
         prisma.$disconnect();
@@ -124,7 +124,8 @@ async function eliminarUsuario(req: NextApiRequest, res: NextApiResponse) {
 
         return res.status(200).json(usuario);
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+       
+        return res.status(500).json({ message: handleErrorsPrisma(error) });
     }
     finally {
         prisma.$disconnect();

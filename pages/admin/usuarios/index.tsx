@@ -12,6 +12,8 @@ import CustomBreadcrumbs from 'src/components/custom-breadcrumbs/CustomBreadcrum
 import { usuario as IUsuario } from '@prisma/client'
 import { useSnackbar } from '../../../src/components/snackbar';
 
+import { handleErrorsAxios } from '../../../utils';
+
 PageAdminUsuarios.getLayout = (page: React.ReactElement) => <DashboardLayout roles= {['admin']}>{page}</DashboardLayout>
 export default function PageAdminUsuarios() {
 
@@ -33,7 +35,7 @@ export default function PageAdminUsuarios() {
             router.push(PATH_DASHBOARD.usuarios.root);
 
         } catch (error) {
-            enqueueSnackbar(`Oops... hubo un error ${error.message}`, { variant: 'error' })
+            enqueueSnackbar(`Oops... ${handleErrorsAxios(error)}`, { variant: 'error' });
         }
     }
 
