@@ -10,7 +10,7 @@ import { eventos } from '@prisma/client'
 import { useSnackbar } from 'notistack'
 import { useEventos, useObtenerEventos } from 'custom/components/Eventos/Hooks';
 
-PageAdminEventos.getLayout = (page: React.ReactElement) => <DashboardLayout>{page}</DashboardLayout>
+PageAdminEventos.getLayout = (page: React.ReactElement) => <DashboardLayout roles={['admin']}>{page}</DashboardLayout>
 
 export default function PageAdminEventos() {
     const { enqueueSnackbar } = useSnackbar();
@@ -22,15 +22,15 @@ export default function PageAdminEventos() {
         router.push(`${PATH_DASHBOARD.eventos.editar}/${item.id_evento}`);
     }
 
-    const handleClickDeleteRow = (item: eventos) => {
+    const handleClickDeleteRow = async (item: eventos) => {
         try {
-            eliminarEvento(item);
-            enqueueSnackbar('Evento eliminado correctamente', { variant: 'success' });
+            await eliminarEvento(item);
+            enqueueSnackbar("Evento eliminado correctamente", { variant: "success" });
+        } catch (error) {
+            const errorMessage = error.response.data.message;
+            enqueueSnackbar(`${errorMessage}`, { variant: "error" });
         }
-        catch (err) {
-            enqueueSnackbar(`Oops... hubo un error ${err.message}`, { variant: 'error' });
-        }
-    }
+    };
 
     return (
         <>

@@ -118,7 +118,8 @@ async function eliminarEvento(req: NextApiRequest, res: NextApiResponse) {
 
         return res.status(200).json(evento);
     } catch (error) {
-        return res.status(500).json(handleErrorsPrisma(error));
+        const errorMessage = handleErrorsPrisma(error);
+        return res.status(500).json({ message: errorMessage });
     }
     finally {
         await prisma.$disconnect();
