@@ -87,12 +87,11 @@ export function FormEventos({ esEditar = false, eventoEditar }: Props) {
             }
             reset();
         } catch (error) {
-            console.error(error.message);
-            enqueueSnackbar("Oops... hubo un error " + error.message, { variant: 'error' });
+            const errorMessage = error.response.data.message || error.message;
+            console.error(errorMessage);
+            enqueueSnackbar(`${errorMessage}`, { variant: 'error' });
         }
     };
-
-    //if (isLoading) return <LinearProgressBar />
 
     return (
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
