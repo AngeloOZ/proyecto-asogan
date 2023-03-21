@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 import prisma from 'database/prismaClient'
+import { handleErrorsPrisma } from 'utils';
 
 // eslint-disable-next-line
 export default async function (req: NextApiRequest, res: NextApiResponse) {
@@ -12,7 +13,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
         await obtenerLoteMonitor(req, res);
 
     } catch (error) {
-        res.status(500).json({ error: error.message })
+        res.status(500).json(handleErrorsPrisma(error?.code));
     }
     finally {
         await prisma.$disconnect()

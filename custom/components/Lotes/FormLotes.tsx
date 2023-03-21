@@ -7,7 +7,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Grid, Card, Stack, Button, MenuItem, InputAdornment } from '@mui/material';
+import { Grid, Card, Stack, Button, MenuItem, InputAdornment, Typography, TextField } from '@mui/material';
 
 // components
 import { useSnackbar } from '../../../src/components/snackbar';
@@ -20,7 +20,7 @@ import { useObtenerProveedores } from '../Proveedores';
 import { PATH_DASHBOARD } from 'src/routes/paths';
 import { LinearProgressBar } from '../LinearProgressBar';
 import Link from 'next/link';
-import { LoteForm } from '@types';
+import { LoteForm, LoteEditar } from '@types';
 import { lotes } from '@prisma/client';
 import { useObtenerEventos } from '../Eventos';
 import { useLotes } from './hooks';
@@ -28,12 +28,11 @@ import { handleErrorsAxios } from 'utils';
 import { IconPeso } from '../Subastas';
 import moment from 'moment-timezone';
 
-
 type FormValuesProps = LoteForm;
 
 type Props = {
     esEditar?: boolean;
-    loteEditar?: lotes;
+    loteEditar?: LoteEditar;
     soloVer?: boolean;
 }
 
@@ -131,6 +130,73 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false }: Pro
 
     if (isLoadingEventos || isLoadingProve) return <LinearProgressBar />
 
+    function renderDatosCompra() {
+        const valorCompra = Number(loteEditar?.puja_final) * Number(loteEditar?.peso_total);
+        return (
+            <Card sx={{ p: 2, boxShadow: "0 0 2px rgba(0,0,0,0.2)", mb: 2 }}>
+                <Stack spacing={2} >
+                    <Typography variant='subtitle1'>Datos de la compra</Typography>
+
+                    <RHFTextField
+                        name=""
+                        label="Nombre comprador"
+                        defaultValue={loteEditar!.compradores.usuario.nombres}
+                        size='small'
+                        inputProps={{
+                            readOnly: true,
+                        }}
+                    />
+
+                    <RHFTextField
+                        name=""
+                        label="Identificación comprador"
+                        defaultValue={loteEditar!.compradores.usuario.identificacion}
+                        size='small'
+                        inputProps={{
+                            readOnly: true,
+                        }}
+                    />
+
+                    <RHFTextField
+                        name=""
+                        label="Número de paleta"
+                        defaultValue={loteEditar!.paleta_comprador}
+                        size='small'
+                        inputProps={{
+                            readOnly: true,
+                        }}
+                    />
+
+                    <RHFTextField
+                        name=""
+                        label="Puja final de compra"
+                        defaultValue={Number(loteEditar!.puja_final).toFixed(2)}
+                        size='small'
+                        inputProps={{
+                            readOnly: true,
+                        }}
+                        InputProps={{
+                            startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        }}
+                    />
+
+                    <RHFTextField
+                        name=""
+                        label="Valor de compra"
+                        defaultValue={valorCompra.toFixed(2)}
+                        size='small'
+                        inputProps={{
+                            readOnly: true,
+                        }}
+                        InputProps={{
+                            startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        }}
+                    />
+
+                </Stack>
+            </Card>)
+    }
+
     return (
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
             <Grid container spacing={2}>
@@ -148,7 +214,7 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false }: Pro
                             />
                             <RHFTextField
                                 name="fecha_pesaje"
-                                label="Fecha de pesaje"
+                                label="Fecha y hora de pesaje"
                                 type='datetime-local'
                                 size='small'
                                 inputProps={{
@@ -256,6 +322,10 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false }: Pro
                 </Grid>
 
                 <Grid item xs={12} md={5}>
+                    {
+                        loteEditar?.id_comprador && renderDatosCompra()
+                    }
+
                     <Card sx={{ p: 2, boxShadow: "0 0 2px rgba(0,0,0,0.2)" }}>
                         <Stack spacing={2}>
 

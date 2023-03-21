@@ -4,8 +4,9 @@ import css from '../../styles/monitor.module.css';
 import { CardInfo } from '.';
 import moment from 'moment-timezone';
 import { SliderAds } from './SliderAds';
+import { imagenes } from '@prisma/client';
 
-export const MainMonitor = ({ datos }: { datos: LoteMonitor }) => {
+export const MainMonitor = ({ datos, banners }: { datos: LoteMonitor, banners: imagenes[] }) => {
     const theme = useTheme();
 
     const { lote, ultimaPuja } = datos;
@@ -25,7 +26,7 @@ export const MainMonitor = ({ datos }: { datos: LoteMonitor }) => {
     return (
         <Grid container height="100%" width="100%">
             <Grid item xs={4} height="100%" bgcolor='rosybrown'>
-                <SliderAds />
+                <SliderAds banners={banners} />
             </Grid>
             <Grid item xs={8} height="100%" className={css.container}>
 

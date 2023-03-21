@@ -20,7 +20,7 @@ export default function PageAdminProveedores() {
     const { user } = useContext(AuthContext)
     const { lotes, isLoading } = useObtenerLotesComprados(user?.comprador?.id_comprador!);
 
-    const handleClickEditRow = (item: ILote) => {
+    const handleClickShow = (item: ILote) => {
         router.push(`${PATH_DASHBOARD.lotes.ver}/${item.id_lote}`);
     }
 
@@ -45,11 +45,14 @@ export default function PageAdminProveedores() {
                         { label: 'Calidad de animales', name: 'calidad_animales' },
                         { label: 'Peso total', name: 'peso_total' },
                         { label: 'Procedencia', name: 'procedencia' },
-                        { label: 'F', name: 'fecha_compra' },
+                        { label: 'Puja final', name: 'puja_final' },
                     ]}
                     isLoading={isLoading}
                     dataBody={lotes}
-                    handeEdit={handleClickEditRow}
+                    buttonsActions={{
+                        show: true,
+                    }}
+                    handleShow={handleClickShow}
                 />
             </Container>
         </>

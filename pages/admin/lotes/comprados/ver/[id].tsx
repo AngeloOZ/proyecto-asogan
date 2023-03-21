@@ -10,6 +10,7 @@ import { PATH_DASHBOARD } from 'src/routes/paths'
 import { FormLotes, LinearProgressBar } from 'custom/components'
 import { subastaAPI } from 'custom/api'
 import { lotes } from '@prisma/client'
+import { LoteEditar } from '@types'
 
 
 PageAdmin.getLayout = (page: React.ReactElement) => <DashboardLayout>{page}</DashboardLayout>
@@ -54,7 +55,7 @@ export default function PageAdmin() {
                     ]}
                 />
 
-                <FormLotes esEditar loteEditar={loteActual} soloVer />
+                <FormLotes esEditar loteEditar={loteActual as unknown as LoteEditar} soloVer />
 
             </Container>
         </>

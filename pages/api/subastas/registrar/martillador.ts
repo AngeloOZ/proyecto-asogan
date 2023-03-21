@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 import prisma from 'database/prismaClient';
+import { handleErrorsPrisma } from 'utils';
 
 // eslint-disable-next-line
 export default async function (req: NextApiRequest, res: NextApiResponse) {
@@ -11,7 +12,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
             res.status(405).json({ message: 'Method not allowed' });
         }
     } catch (error) {
-        res.status(500).json({ message: 'Internal server error' });
+        res.status(500).json(handleErrorsPrisma(error?.code));
     }
     finally {
         await prisma.$disconnect();

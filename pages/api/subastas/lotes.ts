@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 import prisma from 'database/prismaClient';
+import { handleErrorsPrisma } from 'utils';
 
 // eslint-disable-next-line
 export default function (req: NextApiRequest, res: NextApiResponse) {
@@ -35,9 +36,9 @@ async function obtenerLoteActivo(req: NextApiRequest, res: NextApiResponse) {
 
         return res.status(200).json(lote);
     }
-    catch (err) {
-        console.log(err);
-        return res.status(500).json({ message: 'Internal server error' })
+    catch (error) {
+        console.log(error);
+        return res.status(500).json(handleErrorsPrisma(error?.code));
     }
     finally {
         await prisma.$disconnect();
@@ -70,9 +71,8 @@ async function activarLote(req: NextApiRequest, res: NextApiResponse) {
         });
         return res.status(200).json(lote);
     }
-    catch (err) {
-        console.log(err);
-        return res.status(500).json({ message: 'Internal server error' })
+    catch (error) {
+        return res.status(500).json(handleErrorsPrisma(error?.code));
     }
     finally {
         await prisma.$disconnect();
