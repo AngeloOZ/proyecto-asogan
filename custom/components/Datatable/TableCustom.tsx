@@ -15,22 +15,40 @@ type HeaderProp = {
     type?: 'number' | 'string' | 'date' | 'boolean';
     serchable?: boolean;
 }
+
 interface Props {
     headers: HeaderProp[];
     dataBody: any[];
     maxHeight?: number;
     pagination?: boolean;
-    isActions?: boolean;
     listButton?: boolean;
+    buttonsActions?: {
+        show?: boolean;
+        edit?: boolean;
+        delete?: boolean;
+    };
     isLoading?: boolean;
     exportOptions?: boolean;
 
     handleDelete?: (item: any) => void;
     handeEdit?: (item: any) => void;
+    handleShow?: (item: any) => void;
 
 }
 
-export function TableCustom({ headers, dataBody = [], pagination = true, maxHeight, exportOptions = false, isActions, listButton = true, isLoading, handleDelete = () => { }, handeEdit = () => { } }: Props) {
+export function TableCustom({
+    headers,
+    dataBody = [],
+    pagination = true,
+    maxHeight,
+    exportOptions = false,
+    buttonsActions,
+    listButton = true,
+    isLoading,
+    handleDelete = () => { },
+    handeEdit = () => { },
+    handleShow = () => { } 
+}: Props) {
     // Filtros
     const [buscador, setBuscador] = useState('');
 
@@ -104,18 +122,19 @@ export function TableCustom({ headers, dataBody = [], pagination = true, maxHeig
                                         {header.label}
                                     </TableCell>))
                             }
-                            {isActions && <TableCell align="center">Acciones</TableCell>}
+                            {buttonsActions && <TableCell align="center">Acciones</TableCell>}
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        <RenderTableBody 
+                        <RenderTableBody
                             isLoading={isLoading}
-                            isActions={isActions}
+                            buttonsActions={buttonsActions}
                             allData={allData}
                             headers={headers}
                             listButton={listButton}
                             handleClickDelete={handleDelete}
                             handleClickEdit={handeEdit}
+                            handleClickShow={handleShow}
                             pagination={pagination}
                             page={page}
                             rowsPerPage={rowsPerPage}

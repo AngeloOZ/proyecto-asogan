@@ -9,18 +9,24 @@ import ConfirmDialog from "src/components/confirm-dialog/ConfirmDialog";
 
 
 type Props = {
-    listButton: boolean | undefined;
+    buttonsActions?: {
+        show?: boolean;
+        edit?: boolean;
+        delete?: boolean;
+    };
     row: any;
     handleClickDelete: (item: any) => void;
     handleClickEdit: (item: any) => void;
+    handleClickShow: (item: any) => void;
 }
 
 
 const EditActionsButtons = ({
-    listButton,
     row,
+    buttonsActions,
     handleClickDelete = (item: any) => { },
-    handleClickEdit = (item: any) => { }
+    handleClickEdit = (item: any) => { },
+    handleClickShow = (item: any) => { }
 }: Props) => {
 
     const [openConfirm, setOpenConfirm] = useState(false);
@@ -46,18 +52,9 @@ const EditActionsButtons = ({
     return (
         <>
             <TableCell align="center">
-                {
-                    listButton ?
-                        <IconButton color={openPopover ? 'inherit' : 'default'} onClick={handleOpenPopover}>
-                            <Iconify icon="eva:more-vertical-fill" />
-                        </IconButton>
-                        :
-                        <>
-                            <IconButton aria-label="delete" size="small" onClick={() => handleClickDelete(row)}>
-                                <Delete fontSize="inherit" />
-                            </IconButton>
-                        </>
-                }
+                <IconButton color={openPopover ? 'inherit' : 'default'} onClick={handleOpenPopover}>
+                    <Iconify icon="eva:more-vertical-fill" />
+                </IconButton>
             </TableCell>
 
             <MenuPopover
@@ -66,25 +63,49 @@ const EditActionsButtons = ({
                 arrow="right-top"
                 sx={{ width: 140 }}
             >
-                <MenuItem
-                    onClick={() => {
-                        handleClickEdit(row);
-                        handleClosePopover();
-                    }}
-                >
-                    <Iconify icon="eva:edit-fill" />
-                    Editar
-                </MenuItem>
-                <MenuItem
-                    onClick={() => {
-                        handleOpenConfirm();
-                        handleClosePopover();
-                    }}
-                    sx={{ color: 'error.main' }}
-                >
-                    <Iconify icon="eva:trash-2-outline" />
-                    Eliminar
-                </MenuItem>
+                {
+                    buttonsActions?.show && (
+                        <MenuItem
+                            onClick={() => {
+                                handleClickShow(row);
+                                handleClosePopover();
+                            }}
+                        >
+                            <Iconify icon="eva:eye-fill" />
+                            ver
+                        </MenuItem>
+                    )
+                }
+
+                {
+                    buttonsActions?.edit && (
+                        <MenuItem
+                            onClick={() => {
+                                handleClickEdit(row);
+                                handleClosePopover();
+                            }}
+                            sx={{ color: 'secondary.main' }}
+                        >
+                            <Iconify icon="eva:edit-2-fill" />
+                            Editar
+                        </MenuItem>
+                    )
+                }
+
+                {
+                    buttonsActions?.delete && (
+                        <MenuItem
+                            onClick={() => {
+                                handleOpenConfirm();
+                                handleClosePopover();
+                            }}
+                            sx={{ color: 'error.main' }}
+                        >
+                            <Iconify icon="eva:trash-2-outline" />
+                            Eliminar
+                        </MenuItem>
+                    )
+                }
             </MenuPopover>
 
             <ConfirmDialog

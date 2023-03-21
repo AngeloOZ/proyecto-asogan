@@ -15,18 +15,23 @@ type Props = {
     headers: HeaderProp[];
     row: any;
     listButton: boolean | undefined;
-    isActions: boolean | undefined;
+    buttonsActions?: {
+        show?: boolean;
+        edit?: boolean;
+        delete?: boolean;
+    };
     handleClickDelete: (item: any) => void;
     handleClickEdit: (item: any) => void;
+    handleClickShow: (item: any) => void;
 }
 
 export const TableRowBody = ({
     headers,
-    isActions,
-    listButton,
+    buttonsActions,
     row,
     handleClickDelete = (item: any) => { },
-    handleClickEdit = (item: any) => { }
+    handleClickEdit = (item: any) => { },
+    handleClickShow = (item: any) => {}
 }: Props) => {
 
     const renderText = (value: any, type = 'string') => {
@@ -42,12 +47,13 @@ export const TableRowBody = ({
                 headers.map((header, i) => <TableCell key={header.name + i} align={header.align || 'left'}>{renderText(row[header.name], header?.type)}</TableCell>)
             }
 
-            {isActions &&
+            {buttonsActions &&
                 <EditActionsButtons
-                    listButton={listButton}
+                    buttonsActions={buttonsActions}
                     row={row}
                     handleClickDelete={handleClickDelete}
                     handleClickEdit={handleClickEdit}
+                    handleClickShow={handleClickShow}
                 />
             }
         </TableRow>

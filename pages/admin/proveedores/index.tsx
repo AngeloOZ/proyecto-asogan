@@ -65,7 +65,10 @@ export default function PageAdminProveedores() {
                     ]}
                     isLoading={isLoading}
                     dataBody={proveedores}
-                    isActions
+                    buttonsActions={{
+                        edit: true,
+                        delete: true,
+                    }}
                     handeEdit={handleClickEditRow}
                     handleDelete={handleClickDeleteRow}
                 />

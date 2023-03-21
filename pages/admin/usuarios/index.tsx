@@ -66,7 +66,10 @@ export default function PageAdminUsuarios() {
                 ]}
                 isLoading={isLoading}
                 dataBody={usuario}
-                isActions
+                buttonsActions={{
+                    edit: true,
+                    delete: true,
+                }}
                 handeEdit={handleClickEditRow}
                 handleDelete={handleClickDeleteRow}
             />

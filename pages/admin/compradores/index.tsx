@@ -67,7 +67,10 @@ export default function PageAdminCompradores() {
                 ]}
                 isLoading={isLoading}
                 dataBody={compradores}
-                isActions
+                buttonsActions={{
+                    edit: true,
+                    delete: true,
+                }}
                 handeEdit={handleClickEditRow}
                 handleDelete={handleClickDeleteRow}
             />

@@ -61,7 +61,10 @@ export default function PageAdminEventos() {
                     ]}
                     isLoading={isLoading}
                     dataBody={eventos}
-                    isActions
+                    buttonsActions={{
+                        edit: true,
+                        delete: true,
+                    }}
                     handeEdit={handleClickEditRow}
                     handleDelete={handleClickDeleteRow}
                 />
