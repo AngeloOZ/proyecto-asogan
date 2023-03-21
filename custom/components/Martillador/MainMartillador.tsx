@@ -8,6 +8,17 @@ import { Box } from '@mui/system';
 import { Puja, PujasRequest } from "@types";
 import { subastaAPI } from "custom/api";
 import useSWR from "swr";
+import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
+import { styled } from '@mui/material/styles';
+
+const Item = styled(Paper)(({ theme }) => ({
+    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+    ...theme.typography.body2,
+    padding: theme.spacing(1),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+}));
 
 const fetcher = (url: string) => subastaAPI.get(url).then(r => r.data)
 
@@ -15,7 +26,7 @@ export const MainMartillador = ({ datos }: { datos: LoteMonitor }) => {
 
     const { lote, ultimaPuja } = datos;
     const { data } = useSWR(`/subastas/pujas?lote=${lote?.id_lote}`, fetcher, { refreshInterval: 1500 }) as { data: PujasRequest };
-
+    console.log(data)
     const cantidadAnimales = lote?.cantidad_animales || 0;
     const pesoTotal = Number(lote?.peso_total || 0);
     const pesoPromedio = pesoTotal / cantidadAnimales || 0;
@@ -82,22 +93,12 @@ export const MainMartillador = ({ datos }: { datos: LoteMonitor }) => {
                                 Video
                             </Typography>
                         </Box>
-                        <Box component='div'
-                            style={{
-                                textAlign: 'center',
-                                padding: '0 10px',
-                                flexGrow: 1,
-                                display: 'grid',
-                                placeContent: 'center',
-                                overflow: 'hidden',
-                            }}
+                        <Box component='div' width="100%" height="100%"
                         >
                             <VideoPlayer
                                 playerProps={{
                                     url: "https://www.youtube.com/watch?v=P_SYwtp1BJs&ab_channel=GanaderiaSD-Ecuador",
                                     muted: true,
-                                    height: 250,
-                                    width: 300,
                                 }}
                             />
                         </Box>
@@ -153,7 +154,7 @@ export const MainMartillador = ({ datos }: { datos: LoteMonitor }) => {
                 fontSizeTitleCustom='20px'
                 value={lote?.observaciones || ''}
                 className={css.observaciones}
-                bgColorCustom='#dad8db'
+                bgColorCustom='#e7ebf0'
                 fontSizeCustom='35px'
             />
             <CardInfo
@@ -171,13 +172,42 @@ export const MainMartillador = ({ datos }: { datos: LoteMonitor }) => {
                 className={css.proximo_valor_por_animal}
                 bgColorCustom='#fabf25'
             />
-            <CardInfo
+            <Box component="div" className={css.pujas_realizadas}>
+                <Card sx={{ height: "100%", boxShadow: '0 0 4px rgba(0,0,0,0.3)' }}>
+                    <CardContent component='div' style={{ padding: 0, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'stretch' }} >
+                        <Box style={{ textAlign: 'center', padding: 5, borderBottom: "1px #dad8db dashed" }}>
+                            <Typography
+                                component='h3'
+                                fontWeight='bold'
+                                fontSize="26px"
+                                textTransform='uppercase'
+                            >
+                                Video
+                            </Typography>
+                        </Box>
+                        <Box component='div' width="100%" height="100%" style={{ backgroundColor: '#e7ebf0' }}
+                        >
+                            <Stack spacing={2}>
+                                {data.mejoresPujas.map((puja) => (
+                                    <Item key={puja.id_puja}>
+                                        PALETA: {puja.codigo_paleta}
+                                        USUARIO: {puja?.usuario?.nombres}
+                                        VALOR: {puja.puja}
+                                    </Item>
+                                ))}
+                            </Stack>
+                        </Box>
+                    </CardContent>
+                </Card>
+            </Box>
+
+            {/* <CardInfo
                 title='Pujas Realizadas'
                 fontSizeTitleCustom='20px'
                 value=''
                 className={css.pujas_realizadas}
                 bgColorCustom='#dad8db'
-            />
+            /> */}
             <CardInfo
                 title='Valor Total'
                 fontSizeTitleCustom='20px'
@@ -193,7 +223,7 @@ export const MainMartillador = ({ datos }: { datos: LoteMonitor }) => {
                 className={css.proximo_valor_total}
                 bgColorCustom='#fabf25'
             />
-        </Grid>
+        </Grid >
     )
 }
 
