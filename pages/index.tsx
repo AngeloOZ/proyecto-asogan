@@ -11,6 +11,9 @@ export default function Index() {
     if (router.pathname === '/') {
       router.push('/login');
     }
+    if (router.pathname === '/registro') {
+      router.push('/registro');
+    }
   });
 
   return <Head><title>Subastas Asogan</title></Head>;

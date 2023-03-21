@@ -25,6 +25,8 @@ model compradores {
   procesos_judiciales   Boolean?
   calificacion_bancaria String?  @db.VarChar(50)
   estado                Boolean?
+  correo               String?  @db.VarChar(100)
+  celular               String?  @db.VarChar(10)
   usuarioid             Int      @unique(map: "fk_usuario_compradores")
   usuario               usuario  @relation(fields: [usuarioid], references: [usuarioid], onUpdate: Restrict, map: "fk_usuario_compradores")
   lotes                 lotes[]
