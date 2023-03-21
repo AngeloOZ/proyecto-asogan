@@ -13,7 +13,7 @@ import { ImagenList, useObtenerImagenes } from 'custom/components/Imagenes'
 PageAdminProveedores.getLayout = (page: React.ReactElement) => <DashboardLayout>{page}</DashboardLayout>
 
 export default function PageAdminProveedores() {
-    const { imagenes } = useObtenerImagenes();
+    const { imagenes, isLoading } = useObtenerImagenes();
 
     return (
         <>
@@ -32,7 +32,7 @@ export default function PageAdminProveedores() {
                         <Button variant='contained'>Agregar imagen</Button>
                     </Link>
                 </div>
-                <ImagenList imagenes={imagenes} />
+                <ImagenList imagenes={imagenes} isLoading={isLoading} />
             </Container>
         </>
     )

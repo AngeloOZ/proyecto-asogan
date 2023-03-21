@@ -1,4 +1,4 @@
-import { Box, BoxProps, Skeleton } from "@mui/material"
+import { Box, BoxProps, Skeleton, Typography } from "@mui/material"
 import { EventoItem } from "."
 import { LotesEventos } from "@types"
 
@@ -8,6 +8,14 @@ interface Props extends BoxProps {
 }
 
 export const EventoList = ({ eventos, isLoading }: Props) => {
+
+    if (eventos.length === 0 && !isLoading) {
+        return (
+            <Box width="100%" textAlign="center" style={{ display: "flex", justifyContent: "center" }}>
+                <Typography variant="h5" component="span">No hay eventos disponibles</Typography>
+            </Box>)
+    }
+
     return (
         <Box
             gap={2}

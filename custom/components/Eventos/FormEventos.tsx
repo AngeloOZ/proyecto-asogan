@@ -53,7 +53,7 @@ export function FormEventos({ esEditar = false, eventoEditar }: Props) {
         fecha: eventoEditar?.fecha || moment().format('YYYY-MM-DD HH:mm') as unknown as Date,
         lugar: eventoEditar?.lugar || '',
         tipo: eventoEditar?.tipo || '',
-        abierto: eventoEditar?.abierto || true,
+        abierto: eventoEditar?.abierto || false,
         url_video: eventoEditar?.url_video || '',
         uuid: eventoEditar?.uuid || '',
     }), [eventoEditar]);
@@ -65,13 +65,9 @@ export function FormEventos({ esEditar = false, eventoEditar }: Props) {
     });
     const {
         reset,
-        watch,
         handleSubmit,
         formState: { isSubmitting },
-        control,
     } = methods;
-
-    const values = watch();
 
     // Funcion para enviar el formulario
     const onSubmit = async (data: FormValuesProps) => {
