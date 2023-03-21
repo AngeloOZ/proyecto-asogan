@@ -17,14 +17,25 @@ export const VideoPlayer = ({ playerProps, ...other }: VideoPlayerProps) => {
   if (!play) return <Skeleton variant="rectangular" width="100%" height="100%" style={{ minHeight: "200px" }} />;
 
   return (
-    <Box {...other} component="div" width="100%" height="100%">
+    <Box {...other}
+      component="div"
+      width="100%"
+      height="100%"
+      bgcolor={'blue'}
+      style={{
+        position: "relative",
+      }}
+    >
       <ReactPlayer
         playing={play}
         width="100%"
-        height="320px"
+        height="100%"
         onReady={() => setPlay(true)}
         style={{
           aspectRatio: "16/9",
+          position: "absolute",
+          top: 0,
+          left: 0,
         }}
         {...playerProps}
       />

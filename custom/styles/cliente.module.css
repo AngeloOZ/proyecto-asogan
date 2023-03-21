@@ -1,0 +1,76 @@
+.container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr;
+  grid-auto-columns: 1fr;
+  grid-auto-rows: 1fr;
+  gap: 10px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    'banner banner lote lote cantidad cantidad cantidad procedencia procedencia procedencia numero_paleta numero_paleta'
+    'banner banner peso_prom peso_prom peso_prom hora_pesaje hora_pesaje hora_pesaje incremento incremento numero_paleta numero_paleta'
+    'valor_base valor_base valor_base valor_base valor_final valor_final valor_final valor_final video_puja video_puja video_puja video_puja'
+    'valor_animal valor_animal valor_animal valor_animal valor_total valor_total valor_total valor_total video_puja video_puja video_puja video_puja';
+}
+
+.banner {
+  grid-area: banner;
+}
+
+.lote {
+  grid-area: lote;
+}
+
+.numero_paleta {
+  grid-area: numero_paleta;
+}
+
+.peso_prom {
+  grid-area: peso_prom;
+}
+
+.incremento {
+  grid-area: incremento;
+}
+
+.hora_pesaje {
+  grid-area: hora_pesaje;
+}
+
+.procedencia {
+  grid-area: procedencia;
+}
+
+.cantidad {
+  grid-area: cantidad;
+}
+
+.valor_final {
+  grid-area: valor_final;
+}
+
+.valor_base {
+  grid-area: valor_base;
+}
+
+.valor_animal {
+  grid-area: valor_animal;
+}
+
+.valor_total {
+  grid-area: valor_total;
+}
+
+.video_puja {
+  display: grid;
+  grid-auto-columns: 1fr;
+  grid-template-rows: 1fr 50px;
+  gap: 0px 0px;
+  grid-area: video_puja;
+}
+.video {
+  grid-template-areas: 'video_1 video_2';
+}
+.button {
+  grid-area: 2 / 1 / 3 / 2;
+}

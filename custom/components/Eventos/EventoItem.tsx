@@ -6,7 +6,7 @@ import { Card, CardContent, Typography, Box, Divider, Table, TableBody, TableCel
 
 import { LotesEventos } from '@types';
 
-import { PATH_DASHBOARD } from 'src/routes/paths'
+import { PATH_DASHBOARD, PATH_DASHBOARD_CLEINTE } from 'src/routes/paths'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { AuthContext } from 'src/auth';
 import { ContenedorLotes } from './ContenedorLotes';
@@ -107,6 +107,22 @@ export const EventoItem = ({ eventos }: Props) => {
 								</Button>
 							</a>
 						</Link>
+					}
+
+					{
+						rolLogged === 'comprador' && (
+							<Link href={`${PATH_DASHBOARD_CLEINTE.subastas}/otra/${eventos.uuid}`} passHref legacyBehavior>
+								<Button
+									fullWidth
+									color="secondary"
+									variant='outlined'
+									size="medium"
+									style={{ marginTop: 10 }}
+								>
+									Ver segunda vista
+								</Button>
+							</Link>
+						)
 					}
 
 				</CardContent>
