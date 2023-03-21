@@ -9,6 +9,7 @@ import { useRouter } from 'next/router'
 import { eventos } from '@prisma/client'
 import { useSnackbar } from 'notistack'
 import { useEventos, useObtenerEventos } from 'custom/components/Eventos/Hooks';
+import { handleErrorsAxios } from '../../../utils';
 
 PageAdminEventos.getLayout = (page: React.ReactElement) => <DashboardLayout roles={['admin']}>{page}</DashboardLayout>
 
@@ -27,8 +28,7 @@ export default function PageAdminEventos() {
             await eliminarEvento(item);
             enqueueSnackbar("Evento eliminado correctamente", { variant: "success" });
         } catch (error) {
-            const errorMessage = error.response.data.message;
-            enqueueSnackbar(`${errorMessage}`, { variant: "error" });
+            enqueueSnackbar(`Oops... ${handleErrorsAxios(error)}`, { variant: 'error' });
         }
     };
 
