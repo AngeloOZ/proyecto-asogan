@@ -22,7 +22,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 async function registrarPujaMartillador(req: NextApiRequest, res: NextApiResponse) {
     const { id_lote, codigo_paleta, puja } = req.body;
 
-    const usuario = await prisma.compradores.findUnique({
+    const usuario = await prisma.compradores.findFirst({
         where: { codigo_paleta },
     });
 
