@@ -108,3 +108,9 @@ model imagenes {
   id_imagen Int    @id @default(autoincrement())
   ruta      String @db.VarChar(300)
 }
+
+model tipo_animales {
+  tipoanimalid      Int     @id @default(autoincrement())
+  codigoanimal      String  @db.VarChar(7)
+  descripcionanimal String? @db.VarChar(50)
+}

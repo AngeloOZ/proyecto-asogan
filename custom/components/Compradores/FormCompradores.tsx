@@ -160,7 +160,7 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
 
                 <RHFTextField
                     name="identificacion"
-                    label="Identificación"
+                    label="Cédula o RUC"
                     size='small'
                     disabled={esEditar}
                     onBlur={(e) => verificarIdentificacion(e.target.value)}

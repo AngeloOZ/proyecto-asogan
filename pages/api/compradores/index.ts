@@ -4,6 +4,8 @@ import prisma from 'database/prismaClient';
 import { handleErrorsPrisma } from 'utils';
 import bcrypt from 'bcrypt';
 
+import { sendMail } from 'custom/components/Globales/sendEmail';
+import { plantilla } from 'custom/components/Globales/plantillaEmail';
 
 // eslint-disable-next-line
 export default function (req: NextApiRequest, res: NextApiResponse) {
@@ -92,7 +94,7 @@ async function crearComprador(req: NextApiRequest, res: NextApiResponse) {
                 }
             });
 
-      
+
             if (codigo_paleta !== "") {
 
                 const verificaCompradorPaleta = await prisma.compradores.findFirst({ where: { codigo_paleta } });
@@ -100,7 +102,7 @@ async function crearComprador(req: NextApiRequest, res: NextApiResponse) {
                     return res.status(500).json({ message: 'el codigo de la paleta ya existe' });
                 }
             }
-        
+
             const comprador = await prisma.compradores.create({
                 data: {
                     codigo_paleta,
@@ -113,7 +115,7 @@ async function crearComprador(req: NextApiRequest, res: NextApiResponse) {
                     usuarioid: usuario.usuarioid
                 }
             });
-      
+
             if (registro === 1) {
                 identificacionC = identificacion
                 nombresC = nombres
@@ -134,7 +136,9 @@ async function crearComprador(req: NextApiRequest, res: NextApiResponse) {
         return res.status(500).json({ message: handleErrorsPrisma(error) });
     }
     finally {
-   
+
+        if (registroC === 1)
+            await sendMail(["llucia01394@gmail.com", correoC], plantilla(identificacionC, nombresC, correoC, celularC), 'Perseo');
 
         prisma.$disconnect();
     }

@@ -1,0 +1,73 @@
+.container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-auto-columns: 1fr;
+  gap: 5px 5px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    "codigo_lote codigo_lote cantidad cantidad procedencia procedencia paleta paleta video video video video"
+    "codigo_lote codigo_lote cantidad cantidad procedencia procedencia paleta paleta video video video video"
+    "peso_promedio peso_promedio hora_pesaje hora_pesaje incremento incremento paleta paleta video video video video"
+    "peso_promedio peso_promedio hora_pesaje hora_pesaje incremento incremento paleta paleta lote lote lote lote"
+    "valor_base valor_base valor_base valor_base puja_actual puja_actual puja_actual puja_actual lote lote lote lote"
+    "valor_base valor_base valor_base valor_base puja_actual puja_actual puja_actual puja_actual lote lote lote lote"
+    "valor_promedio_animal valor_promedio_animal valor_promedio_animal valor_promedio_animal valor_total valor_total valor_total valor_total input input input input"
+    "valor_promedio_animal valor_promedio_animal valor_promedio_animal valor_promedio_animal valor_total valor_total valor_total valor_total input input input input";
+}
+
+.video {
+  grid-area: video;
+}
+
+.lote {
+  grid-area: lote;
+}
+
+.input {
+  grid-area: input;
+}
+
+.codigo_lote {
+  grid-area: codigo_lote;
+}
+
+.cantidad {
+  grid-area: cantidad;
+}
+
+.procedencia {
+  grid-area: procedencia;
+}
+
+.paleta {
+  grid-area: paleta;
+}
+
+.peso_promedio {
+  grid-area: peso_promedio;
+}
+
+.hora_pesaje {
+  grid-area: hora_pesaje;
+}
+
+.incremento {
+  grid-area: incremento;
+}
+
+.valor_base {
+  grid-area: valor_base;
+}
+
+.puja_actual {
+  grid-area: puja_actual;
+}
+
+.valor_promedio_animal {
+  grid-area: valor_promedio_animal;
+}
+
+.valor_total {
+  grid-area: valor_total;
+}

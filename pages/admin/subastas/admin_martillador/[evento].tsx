@@ -1,11 +1,11 @@
 import Head from 'next/head'
 
 import { GetServerSideProps } from 'next';
-import { MainMartillador, useLoteMartillador } from 'custom/components'
+import { MainAdminMartillador, useLoteAdminMartillador } from 'custom/components'
 
 const PageMonitor = ({ uuid }: { uuid: string }) => {
 
-    const { loteActual, isLoading } = useLoteMartillador(uuid);
+    const { loteActual, isLoading } = useLoteAdminMartillador(uuid);
 
     return (
         <>
@@ -13,7 +13,7 @@ const PageMonitor = ({ uuid }: { uuid: string }) => {
                 <title>Subasta Lote</title>
             </Head>
 
-            {!isLoading && <MainMartillador datos={loteActual} uuid={uuid} />}
+            {!isLoading && <MainAdminMartillador datos={loteActual} uuid={uuid} />}
 
         </>
     )

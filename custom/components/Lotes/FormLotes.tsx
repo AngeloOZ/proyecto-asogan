@@ -21,7 +21,7 @@ import { PATH_DASHBOARD } from 'src/routes/paths';
 import { LinearProgressBar } from '../LinearProgressBar';
 import Link from 'next/link';
 import { LoteForm, LoteEditar } from '@types';
-import { lotes } from '@prisma/client';
+import { lotes, tipo_animales } from '@prisma/client';
 import { useObtenerEventos } from '../Eventos';
 import { useLotes } from './hooks';
 import { handleErrorsAxios } from 'utils';
@@ -44,7 +44,7 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false }: Pro
     const { eventos, isLoading: isLoadingEventos } = useObtenerEventos();
     const { proveedores, isLoading: isLoadingProve } = useObtenerProveedores();
     const [codigoLote, setCodigoLote] = useState(generateUniqueNumber());
-
+    const [tipoAnimales, setTipoAnimales] = useState<tipo_animales[]>([]);
     const { agregarLote, actualizarLote } = useLotes();
 
     useEffect(() => {
@@ -61,6 +61,7 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false }: Pro
 
     useEffect(() => {
         obtenerLotesTotales();
+        obtenerTipoAnimales();
     }, []);
 
     useEffect(() => {
@@ -162,6 +163,11 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false }: Pro
     async function obtenerLotesTotales() {
         const { data } = await subastaAPI.get('/lotes');
         setLotesAnteriores(data);
+    }
+
+    async function obtenerTipoAnimales() {
+        const { data } = await subastaAPI.get('/lotes/tipoanimal');
+        setTipoAnimales(data);
     }
 
     if (isLoadingEventos || isLoadingProve) return <LinearProgressBar />
@@ -266,14 +272,13 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false }: Pro
                                     readOnly: soloVer,
                                 }}
                             />
-                            <RHFTextField
-                                name="tipo_animales"
-                                label="Tipo de animales"
-                                size='small'
+                            <RHFSelect name="tipo_animales" label="Tipo de animales" size='small'
                                 inputProps={{
                                     readOnly: soloVer,
-                                }}
-                            />
+                                }}>
+                                {tipoAnimales.map((tipoA) => <MenuItem value={tipoA.codigoanimal}>{tipoA.descripcionanimal}</MenuItem>)}
+                            </RHFSelect>
+
                             <RHFTextField
                                 name="calidad_animales"
                                 label="Calidad de animales"

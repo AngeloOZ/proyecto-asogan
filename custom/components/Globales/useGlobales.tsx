@@ -4,6 +4,10 @@ import { useSWRConfig } from "swr";
 
 export const useGlobales = () => {
 
+
+    
+
+
     const validarIdentificacion = (identificacion: string) => {
         var i;
         var cad = identificacion.trim();
