@@ -38,7 +38,6 @@ type Props = {
 
 export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
 
-  
     const { push } = useRouter();
     const { enqueueSnackbar } = useSnackbar();
     const { agregarComprador, actualizarComprador } = useCompradores();
@@ -82,9 +81,8 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
         
         return {
           id_comprador: compradorEditar?.id_comprador || 0,
-          codigo_paleta: esEditar ?
-            (compradorEditar?.codigo_paleta || '') :  (compradorEditar?.codigo_paleta ||
-                (Math.floor(Math.random() * (99999 - 10000 + 1) + 10000)).toString()),
+          codigo_paleta: (esEditar == true) ?
+            (compradorEditar?.codigo_paleta || '') :  (Math.floor(Math.random() * (99999 - 10000 + 1) + 10000)).toString(),
           calificacion_bancaria: compradorEditar?.calificacion_bancaria || "",
           antecedentes_penales: compradorEditar?.antecedentes_penales || false,
           procesos_judiciales: compradorEditar?.procesos_judiciales || false,
