@@ -66,6 +66,8 @@ export const VistaLoteCliente = ({ loteActual, banners, evento }: Props) => {
                 className={css.numero_paleta}
                 bgColorCustom='#278ac6'
                 textColorCustom='#fff'
+                fontSizeTitleCustom='20px'
+                fontSizeCustom='55px'
             />
 
             <CardInfo
@@ -73,28 +75,35 @@ export const VistaLoteCliente = ({ loteActual, banners, evento }: Props) => {
                 value={lote?.codigo_lote || '-'}
                 className={css.lote}
                 bgColorCustom='#6bb73b'
+                fontSizeTitleCustom='20px'
+                fontSizeCustom='50px'
             />
             <CardInfo
                 title='Cantidad'
                 value={newLote.cantidadAnimalesText}
                 className={css.cantidad}
                 bgColorCustom='#6bb73b'
+                fontSizeTitleCustom='20px'
+                fontSizeCustom='40px'
             />
             <CardInfo
                 title='Procedencia'
                 value={lote?.procedencia || '-'}
                 className={css.procedencia}
                 bgColorCustom='#6bb73b'
+                fontSizeTitleCustom='20px'
                 fontSizeCustom='30px'
             />
             <CardInfo
-                title='Peso prom'
+                title='Peso prom (lbs)'
                 value={newLote.pesoPromedio.toFixed(2) + 'LB'}
                 className={css.peso_prom}
                 bgColorCustom='#6bb73b'
+                fontSizeTitleCustom='20px'
+                fontSizeCustom='45px'
             />
             <CardInfo
-                title='Hora pesaje'
+                title='Hora de pesaje'
                 value={newLote.horaPesaje}
                 className={css.hora_pesaje}
                 bgColorCustom='#6bb73b'
@@ -107,7 +116,7 @@ export const VistaLoteCliente = ({ loteActual, banners, evento }: Props) => {
                 className={css.incremento}
                 bgColorCustom='#ebeb3d'
                 fontSizeTitleCustom='20px'
-                fontSizeCustom='55px'
+                fontSizeCustom='50px'
             />
             <CardInfo
                 title='valor base'
@@ -160,7 +169,7 @@ export const VistaLoteCliente = ({ loteActual, banners, evento }: Props) => {
                     size='large'
                     startIcon={<IoHandRight size={50} />}
                 >
-                    <Typography fontSize={38} variant='subtitle1'>Pujar</Typography>
+                    <Typography fontSize={55} variant='subtitle1'>Pujar</Typography>
                 </Button>
             </Box>
         </Box>

@@ -1,23 +1,29 @@
+import { useContext } from 'react'
+
+import { useRouter } from 'next/router'
 import Head from 'next/head'
 import Link from 'next/link'
-import DashboardLayout from 'src/layouts/dashboard/DashboardLayout'
-import { TableCustom } from 'custom/components'
+
 import { Button, Container } from '@mui/material'
-import CustomBreadcrumbs from 'src/components/custom-breadcrumbs/CustomBreadcrumbs'
-import { PATH_DASHBOARD } from 'src/routes/paths'
-import { useRouter } from 'next/router'
 import { eventos } from '@prisma/client'
 import { useSnackbar } from 'notistack'
-import { useEventos, useObtenerEventos } from 'custom/components/Eventos/Hooks';
+
+import DashboardLayout from 'src/layouts/dashboard/DashboardLayout'
+import CustomBreadcrumbs from 'src/components/custom-breadcrumbs/CustomBreadcrumbs'
+
+import { TableCustom, useEventos, useObtenerEventos } from 'custom/components'
+import { PATH_DASHBOARD } from 'src/routes/paths'
+import { AuthContext } from 'src/auth'
 import { handleErrorsAxios } from '../../../utils';
 
 PageAdminEventos.getLayout = (page: React.ReactElement) => <DashboardLayout roles={['admin']}>{page}</DashboardLayout>
 
 export default function PageAdminEventos() {
-    const { enqueueSnackbar } = useSnackbar();
     const router = useRouter();
-    const { eventos, isLoading } = useObtenerEventos();
+    const { rol: [rolLogged] } = useContext(AuthContext);
     const { eliminarEvento } = useEventos();
+    const { enqueueSnackbar } = useSnackbar();
+    const { eventos, isLoading } = useObtenerEventos();
 
     const handleClickEditRow = (item: eventos) => {
         router.push(`${PATH_DASHBOARD.eventos.editar}/${item.id_evento}`);

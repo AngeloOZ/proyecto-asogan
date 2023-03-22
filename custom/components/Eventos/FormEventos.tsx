@@ -4,10 +4,10 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEventos } from '.';
 import { LoadingButton } from '@mui/lab';
-import { Card, Stack, Button } from '@mui/material';
+import { Card, Stack, Button, MenuItem } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
-import FormProvider, { RHFSwitch, RHFTextField } from '../../../src/components/hook-form';
+import FormProvider, { RHFSelect, RHFSwitch, RHFTextField } from '../../../src/components/hook-form';
 import { useSnackbar } from '../../../src/components/snackbar';
 import { PATH_DASHBOARD } from 'src/routes/paths';
 import { eventos } from '@prisma/client';
@@ -53,7 +53,7 @@ export function FormEventos({ esEditar = false, eventoEditar }: Props) {
         fecha: eventoEditar?.fecha || moment().format('YYYY-MM-DD HH:mm') as unknown as Date,
         lugar: eventoEditar?.lugar || '',
         tipo: eventoEditar?.tipo || '',
-        abierto: eventoEditar?.abierto || false,
+        abierto: eventoEditar?.abierto || 1,
         url_video: eventoEditar?.url_video || '',
         uuid: eventoEditar?.uuid || '',
     }), [eventoEditar]);
@@ -123,11 +123,13 @@ export function FormEventos({ esEditar = false, eventoEditar }: Props) {
                         autoComplete='off'
                     />
 
-                    <RHFSwitch
-                        name="abierto"
-                        label="Abierto"
-                        sx={{ mb: 1, mx: 0, width: 1, }}
-                    />
+                    <RHFSelect name='abierto' label='Estado' size='small'>
+                        <MenuItem value='1'>Cerrado</MenuItem>
+                        {esEditar && <>
+                            <MenuItem value='2'>Abierto</MenuItem>
+                            <MenuItem value='3'>Finalizado</MenuItem>
+                        </>}
+                    </RHFSelect>
 
                 </Stack>
 

@@ -22,6 +22,9 @@ export default function Index() {
         case 'comprador':
           router.push(PATH_DASHBOARD_CLEINTE.root);
           break;
+        case 'digitador':
+          router.push(PATH_DASHBOARD.digitador.root);
+          break;
         default:
           router.push('/404');
       }
