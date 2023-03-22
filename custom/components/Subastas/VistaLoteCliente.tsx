@@ -1,32 +1,68 @@
+import { useContext } from 'react';
 import { Box, Button, Card, Stack } from '@mui/material'
-import { CardInfo } from '../Monitor';
+import { useSWRConfig } from 'swr';
+import { IoHandRight } from 'react-icons/io5';
+
 
 import css from '../../styles/cliente.module.css';
 
+import { useSnackbar } from 'src/components/snackbar';
+
+
 import { LoteMonitor } from '@types';
-import { imagenes } from '@prisma/client';
-import { calcularSubasta } from 'utils';
+import { eventos, imagenes } from '@prisma/client';
+
+import { subastaAPI } from 'custom/api';
+import { calcularSubasta, handleErrorsAxios } from 'utils';
+
 import { TabVideos } from './TabVideos';
-import { VideoPlayer } from './VideoPlayer';
+import { AuthContext } from 'src/auth';
+import { CardInfo } from '../Monitor';
+import { SliderAds } from '../Monitor/SliderAds';
 
 type Props = {
     loteActual: LoteMonitor
     banners: imagenes[]
+    evento: eventos
 }
-export const VistaLoteCliente = ({ loteActual, banners }: Props) => {
+
+export const VistaLoteCliente = ({ loteActual, banners, evento }: Props) => {
+    const { enqueueSnackbar } = useSnackbar();
     const { lote, ultimaPuja } = loteActual;
+    const { mutate } = useSWRConfig();
+    const { user, rol: [rolLogged] } = useContext(AuthContext);
     const newLote = calcularSubasta(lote);
+
+    const incremento = Number(lote?.puja_final || 0) + Number(lote?.incremento || 0);
+
+    const registrarPujaComprador = async () => {
+        try {
+            const body = {
+                id_lote: lote!.id_lote,
+                id_usuario: user?.usuarioid,
+                codigo_paleta: user?.comprador?.codigo_paleta!,
+                puja: incremento,
+            }
+            await subastaAPI.put('subastas/registrar/cliente', body);
+            enqueueSnackbar('Oferta registrada', { variant: 'success' });
+            mutate(`/lotes/${evento.id_evento}`)
+            mutate(`/subastas/pujas?lote=${lote!.id_lote}`)
+            mutate(`/subastas/lotes?id=${lote!.id_evento}`)
+        } catch (error) {
+            enqueueSnackbar(`Oops... ${handleErrorsAxios(error)}`, { variant: 'error' });
+        }
+    }
 
     return (
         <Box className={css.container} component='div' width='100%' height='calc(100vh - 120px)'>
 
             <Card className={css.banner}>
-                banner
+                <SliderAds banners={banners} />
             </Card>
 
             <CardInfo
                 title='Paleta'
-                value={ultimaPuja?.codigo_paleta || ''}
+                value={ultimaPuja?.codigo_paleta || '-'}
                 className={css.numero_paleta}
                 bgColorCustom='#278ac6'
                 textColorCustom='#fff'
@@ -34,7 +70,7 @@ export const VistaLoteCliente = ({ loteActual, banners }: Props) => {
 
             <CardInfo
                 title='#lote'
-                value={''}
+                value={lote?.codigo_lote || '-'}
                 className={css.lote}
                 bgColorCustom='#6bb73b'
             />
@@ -46,7 +82,7 @@ export const VistaLoteCliente = ({ loteActual, banners }: Props) => {
             />
             <CardInfo
                 title='Procedencia'
-                value={lote?.procedencia || ''}
+                value={lote?.procedencia || '-'}
                 className={css.procedencia}
                 bgColorCustom='#6bb73b'
                 fontSizeCustom='30px'
@@ -97,12 +133,21 @@ export const VistaLoteCliente = ({ loteActual, banners }: Props) => {
             <Card className={css.video_puja} >
                 <Box className={css.video} >
                     <TabVideos
-                        urlTransmisionEnVivo='https://www.youtube.com/watch?v=7sDY4m8KNLc'
-                        urlVideoDemostracion='https://www.youtube.com/watch?v=7sDY4m8KNLc'
+                        urlTransmisionEnVivo={evento.url_video || ''}
+                        urlVideoDemostracion={lote?.url_video || ''}
                     />
                 </Box>
                 <Box className={css.button} textAlign='center'>
-                    <Button variant='contained' size='large'>Pujar</Button>
+                    <Button
+                        variant='contained'
+                        onClick={registrarPujaComprador}
+                        color='success'
+                        style={{ width: '150px' }}
+                        disabled={lote ? false : true}
+                        startIcon={<IoHandRight />}
+                    >
+                        Pujar
+                    </Button>
                 </Box>
             </Card>
         </Box>

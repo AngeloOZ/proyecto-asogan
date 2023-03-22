@@ -22,7 +22,7 @@ export default function (req: NextApiRequest, res: NextApiResponse) {
 async function obtenerUsuarios(req: NextApiRequest, res: NextApiResponse) {
     try {
         const { id } = req.query;
-
+      
         if (id) {
             const usuario = await prisma.usuario.findUnique({
                 where: { usuarioid: Number(id) },
@@ -32,11 +32,13 @@ async function obtenerUsuarios(req: NextApiRequest, res: NextApiResponse) {
         }
 
         const usuarios = await prisma.usuario.findMany({ where: { tipo: 1 } });
+       
         const usuariosRol = usuarios.map((usuario) => ({ ...usuario, rol: (JSON.parse(usuario.rol)[0]).charAt(0).toUpperCase() + (JSON.parse(usuario.rol)[0]).slice(1) }));
 
         return res.status(200).json(usuariosRol);
 
     } catch (error) {
+        
         return res.status(500).json({ message: handleErrorsPrisma(error) });
     }
     finally {
@@ -46,7 +48,7 @@ async function obtenerUsuarios(req: NextApiRequest, res: NextApiResponse) {
 
 async function crearUsuario(req: NextApiRequest, res: NextApiResponse) {
     try {
-        const { identificacion, nombres, rol, clave }: usuario = req.body
+        const { identificacion, nombres, rol, clave, correo, celular }: usuario = req.body
         const claveEncriptada = await bcrypt.hash(clave, 10);
 
         const usuarioBuscar = await prisma.usuario.findUnique({
@@ -63,7 +65,8 @@ async function crearUsuario(req: NextApiRequest, res: NextApiResponse) {
                 nombres,
                 clave: claveEncriptada,
                 rol: `["${rol}"]`,
-
+                correo,
+                celular
             }
         });
 
@@ -79,13 +82,15 @@ async function crearUsuario(req: NextApiRequest, res: NextApiResponse) {
 async function actualizarUsuario(req: NextApiRequest, res: NextApiResponse) {
     try {
 
-        const { usuarioid, identificacion, nombres, rol, clave }: usuario = req.body
+        const { usuarioid, identificacion, nombres, rol, clave,celular,correo }: usuario = req.body
         if (clave === "") {
             const usuario = await prisma.usuario.update({
                 where: { usuarioid },
                 data: {
                     identificacion,
                     nombres,
+                    celular,
+                    correo,
                     rol: `["${rol}"]`,
                 }
             });
@@ -99,6 +104,8 @@ async function actualizarUsuario(req: NextApiRequest, res: NextApiResponse) {
             data: {
                 identificacion,
                 nombres,
+                celular,
+                correo,
                 clave: claveEncriptada,
                 rol: `["${rol}"]`,
             }

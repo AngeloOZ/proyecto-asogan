@@ -27,6 +27,7 @@ import { useLotes } from './hooks';
 import { handleErrorsAxios } from 'utils';
 import { IconPeso } from '../Subastas';
 import moment from 'moment-timezone';
+import { subastaAPI } from 'custom/api';
 
 type FormValuesProps = LoteForm;
 
@@ -39,8 +40,10 @@ type Props = {
 export function FormLotes({ esEditar = false, loteEditar, soloVer = false }: Props) {
     const { push } = useRouter();
     const { enqueueSnackbar } = useSnackbar();
+    const [lotesAnteriores, setLotesAnteriores] = useState<lotes[]>([]);
     const { eventos, isLoading: isLoadingEventos } = useObtenerEventos();
     const { proveedores, isLoading: isLoadingProve } = useObtenerProveedores();
+    const [codigoLote, setCodigoLote] = useState(generateUniqueNumber());
 
     const { agregarLote, actualizarLote } = useLotes();
 
@@ -56,17 +59,41 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false }: Pro
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [esEditar, loteEditar]);
 
+    useEffect(() => {
+        obtenerLotesTotales();
+    }, []);
+
+    useEffect(() => {
+        console.log(lotesAnteriores);
+
+    }, [lotesAnteriores]);
+
+    function generateUniqueNumber(): string {
+        const min = 1000;
+        const max = 9999;
+        const uniqueNumber = Math.floor(Math.random() * (max - min + 1) + min);
+        return uniqueNumber.toString().slice(-6);
+    }
+
+
     // Validaciones de los campos
     const ProveedorEsquema = Yup.object().shape({
         fecha_pesaje: Yup.string().required('La fecha es requerida'),
-        codigo_lote: Yup.string().required('El código es requerido'),
+        codigo_lote: Yup.string()
+            .required('El código es requerido')
+            .test('unique', 'El número de paleta ya está ocupado', function (value) {
+                const evento = watch('id_evento');
+                const result = lotesAnteriores.some((lote) => (
+                    lote.codigo_lote === value && lote.id_evento === evento));
+                return !result;
+            }),
         cantidad_animales: Yup.number().required('La cantidad es requerida').min(1, 'La cantidad debe ser mayor a 0'),
         tipo_animales: Yup.string().required('El tipo es requerido'),
         calidad_animales: Yup.string().required('La calidad es requerida'),
         sexo: Yup.string().required('El sexo es requerido'),
         procedencia: Yup.string().required('La procedencia es requerida'),
-        crias_hembras: Yup.number().min(0, 'Las crias hembras deben ser mayor a 0').default(0),
-        crias_machos: Yup.number().min(0, 'Las crias machos deben ser mayor a 0').default(0),
+        crias_hembras: Yup.number().min(0, 'Las crias hembras deben ser mayor a 0').default(0).typeError('Solo se adminite valores numéricos'),
+        crias_machos: Yup.number().min(0, 'Las crias machos deben ser mayor a 0').default(0).typeError('Solo se adminite valores numéricos'),
         peso_total: Yup.number().required('El peso total es requerido').min(1, 'El peso total debe ser mayor a 0').typeError('El peso total debe ser un valor numérico'),
         id_evento: Yup.string().required('El evento es requerido'),
         id_proveedor: Yup.string().required('El proveedor es requerido'),
@@ -78,8 +105,8 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false }: Pro
     // Se carga los valores en caso de que sea editar
     const defaultValues = useMemo<LoteForm>(() => ({
         id_lote: loteEditar?.id_lote || 0,
-        fecha_pesaje: moment(loteEditar?.fecha_pesaje || new Date()).format('YYYY-MM-DDTHH:mm'),
-        codigo_lote: loteEditar?.codigo_lote || '',
+        fecha_pesaje: moment(loteEditar?.fecha_pesaje || new Date()).format('HH:mm'),
+        codigo_lote: loteEditar?.codigo_lote || codigoLote,
         cantidad_animales: loteEditar?.cantidad_animales || 0,
         tipo_animales: loteEditar?.tipo_animales || '',
         calidad_animales: loteEditar?.calidad_animales || '',
@@ -105,6 +132,7 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false }: Pro
 
     const {
         reset,
+        watch,
         handleSubmit,
         formState: { isSubmitting },
     } = methods;
@@ -113,7 +141,7 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false }: Pro
     const onSubmit = async (data: FormValuesProps) => {
         try {
             if (!esEditar) {
-                data.codigo_lote = data.id_evento + '-' + data.codigo_lote;
+                // data.codigo_lote = data.id_evento + '-' + data.codigo_lote;
                 await agregarLote(data);
                 enqueueSnackbar('Lote agregado correctamente', { variant: 'success' });
             } else {
@@ -127,6 +155,11 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false }: Pro
             enqueueSnackbar(`Oops... ${handleErrorsAxios(error)}`, { variant: 'error' });
         }
     };
+
+    async function obtenerLotesTotales() {
+        const { data } = await subastaAPI.get('/lotes');
+        setLotesAnteriores(data);
+    }
 
     if (isLoadingEventos || isLoadingProve) return <LinearProgressBar />
 
@@ -214,8 +247,8 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false }: Pro
                             />
                             <RHFTextField
                                 name="fecha_pesaje"
-                                label="Fecha y hora de pesaje"
-                                type='datetime-local'
+                                label="Hora de pesaje"
+                                type='time'
                                 size='small'
                                 inputProps={{
                                     readOnly: soloVer,
@@ -263,24 +296,28 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false }: Pro
                                     readOnly: soloVer,
                                 }}
                             />
-                            <RHFTextField
-                                name="crias_hembras"
-                                label="Número de crías hembras"
-                                size='small'
-                                type='number'
-                                inputProps={{
-                                    readOnly: soloVer,
-                                }}
-                            />
-                            <RHFTextField
-                                name="crias_machos"
-                                label="Número de crías machos"
-                                size='small'
-                                type='number'
-                                inputProps={{
-                                    readOnly: soloVer,
-                                }}
-                            />
+                            {
+                                watch('sexo') === '0' && (<>
+                                    <RHFTextField
+                                        name="crias_hembras"
+                                        label="Número de crías hembras"
+                                        size='small'
+                                        type='number'
+                                        inputProps={{
+                                            readOnly: soloVer,
+                                        }}
+                                    />
+                                    <RHFTextField
+                                        name="crias_machos"
+                                        label="Número de crías machos"
+                                        size='small'
+                                        type='number'
+                                        inputProps={{
+                                            readOnly: soloVer,
+                                        }}
+                                    />
+                                </>)
+                            }
                             <RHFTextField
                                 name="peso_total"
                                 label="Peso total"

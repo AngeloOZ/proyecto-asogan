@@ -64,7 +64,7 @@ export function TabVideos({ urlTransmisionEnVivo = '', urlVideoDemostracion = ''
             <TabPanel value={value} index={0}>
                 {
                     urlVideoDemostracion === '' ?
-                        <Skeleton variant="rectangular" width="100%" style={{ minHeight: 130 }} />
+                        <Skeleton variant="rectangular" width="100%" style={{ minHeight: 130, height: '100%' }} />
                         :
                         <VideoPlayer
                             playerProps={{
@@ -78,7 +78,7 @@ export function TabVideos({ urlTransmisionEnVivo = '', urlVideoDemostracion = ''
             <TabPanel value={value} index={1}>
                 {
                     urlTransmisionEnVivo === '' ?
-                        <Skeleton variant="rectangular" width="100%" style={{ minHeight: 130 }} />
+                        <Skeleton variant="rectangular" width="100%" style={{ minHeight: 130, height: '100%' }} />
                         :
                         <VideoPlayer
                             playerProps={{

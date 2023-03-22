@@ -53,7 +53,7 @@ async function crearLote(req: NextApiRequest, res: NextApiResponse) {
     try {
         const { id_evento, id_proveedor, fecha_pesaje, codigo_lote, cantidad_animales, tipo_animales, calidad_animales, peso_total, sexo, crias_hembras, crias_machos, procedencia, observaciones, puja_inicial, incremento, url_video } = req.body as LoteForm;
 
-        const formattedDate = moment(fecha_pesaje, 'YYYY/MM/DD H:mm:ss').toDate();
+        const formattedDate = moment(fecha_pesaje, 'H:mm').toDate();
 
         const lote = await prisma.lotes.create({
             data: {

@@ -49,7 +49,6 @@ export const Registro = () => {
             then: Yup.string().required('El nombre es requerido')
         }
         ),
-        codigo_paleta: Yup.string().required('El numero de paleta es requerido').max(5, 'El numero de paleta no puede tener mas de 5 caracteres'),
         celular: Yup.string().required('El celular es requerido').max(10, 'El celular no puede tener mas de 10 caracteres'),
         correo: Yup.string().required('El correo es requerido').email('El correo no es valido'),
     });
@@ -59,7 +58,7 @@ export const Registro = () => {
 
         return {
             id_comprador: 0,
-            codigo_paleta: "",
+            codigo_paleta: (Math.floor(Math.random() * (99999 - 10000 + 1) + 10000)).toString(),
             calificacion_bancaria: "",
             antecedentes_penales: false,
             procesos_judiciales: false,
@@ -88,9 +87,9 @@ export const Registro = () => {
     const onSubmit = async (data: FormValuesProps ) => {
         try {
             if (validacionI == true) {
-
-                await agregarComprador({...data, nombres: nombresV, identificacionV: identificacionV});
-                enqueueSnackbar('Proveedor agregado correctamente', { variant: 'success' });
+                console.log(data)
+                await agregarComprador({...data, nombres: nombresV, identificacion: identificacionV});
+                enqueueSnackbar('Registrado Correctamente', { variant: 'success' });
                 reset();
                 setNombres('');
                 setIdentificacionV('');
@@ -99,7 +98,7 @@ export const Registro = () => {
             }
 
         } catch (error) {
-            console.error(error);
+          
             enqueueSnackbar(`Oops... ${handleErrorsAxios(error)}`, { variant: 'error' });
         }
     }
