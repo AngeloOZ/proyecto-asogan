@@ -14,8 +14,8 @@ model usuario {
   clave          String       @db.VarChar(255)
   rol            String       @db.VarChar(255)
   tipo           Int?         @default(1)
-  correo         String       @db.VarChar(100)
   celular        String       @db.VarChar(10)
+  correo         String       @db.VarChar(100)
   compradores    compradores?
   pujas          pujas[]
 }
@@ -27,9 +27,9 @@ model compradores {
   procesos_judiciales   Boolean?
   calificacion_bancaria String?  @db.VarChar(50)
   estado                Boolean?
-  correo                String?  @db.VarChar(100)
-  celular               String?  @db.VarChar(10)
   usuarioid             Int      @unique(map: "fk_usuario_compradores")
+  celular               String?  @db.VarChar(10)
+  correo                String?  @db.VarChar(100)
   usuario               usuario  @relation(fields: [usuarioid], references: [usuarioid], onUpdate: Restrict, map: "fk_usuario_compradores")
   lotes                 lotes[]
 }
@@ -68,6 +68,7 @@ model lotes {
   puja_final        Decimal?     @db.Decimal(8, 2)
   incremento        Decimal?     @default(0.000) @db.Decimal(10, 3)
   subastado         Int?         @default(0) @db.TinyInt
+  fecha_inicio      DateTime?    @db.DateTime(0)
   compradores       compradores? @relation(fields: [id_comprador], references: [id_comprador], onDelete: Restrict, onUpdate: Restrict, map: "fk_lotes_compradores")
   eventos           eventos      @relation(fields: [id_evento], references: [id_evento], onUpdate: Restrict, map: "fk_lotes_eventos")
   proveedores       proveedores  @relation(fields: [id_proveedor], references: [id_proveedor], onUpdate: Restrict, map: "fk_lotes_proveedores")
