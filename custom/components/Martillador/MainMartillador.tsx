@@ -99,29 +99,14 @@ export const MainMartillador = ({ datos }: { datos: LoteMonitor }) => {
             />
 
             <Box component="div" className={css.video}>
-                <Card sx={{ height: "100%", boxShadow: '0 0 4px rgba(0,0,0,0.3)' }}>
-                    <CardContent component='div' style={{ padding: 0, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'stretch' }} >
-                        <Box style={{ textAlign: 'center', padding: 5, borderBottom: "1px #dad8db dashed" }}>
-                            <Typography
-                                component='h3'
-                                fontWeight='bold'
-                                fontSize="26px"
-                                textTransform='uppercase'
-                            >
-                                Video
-                            </Typography>
-                        </Box>
-                        <Box component='div' width="100%" height="100%"
-                        >
-                            <VideoPlayer
-                                playerProps={{
-                                    url: "https://www.youtube.com/watch?v=P_SYwtp1BJs&ab_channel=GanaderiaSD-Ecuador",
-                                    muted: true,
-                                }}
-                            />
-                        </Box>
-                    </CardContent>
-                </Card>
+
+                <VideoPlayer
+                    playerProps={{
+                        url: "https://www.youtube.com/watch?v=P_SYwtp1BJs&ab_channel=GanaderiaSD-Ecuador",
+                        muted: true,
+                    }}
+                />
+
             </Box>
 
             <CardInfo
