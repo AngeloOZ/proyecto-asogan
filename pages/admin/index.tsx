@@ -11,7 +11,7 @@ export default function Index() {
   const router = useRouter();
 
   useEffect(() => {
-    if (router.pathname === PATH_ADMIN) {
+    if (router.pathname === PATH_ADMIN && rol.length > 0) {
       switch (rol[0]) {
         case 'admin':
           router.push(PATH_DASHBOARD.eventos.root);

@@ -64,8 +64,10 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false }: Pro
     }, []);
 
     useEffect(() => {
-        console.log(lotesAnteriores);
-
+        if (lotesAnteriores.length > 0 && esEditar) {
+            const filter = lotesAnteriores.filter((lote) => lote.id_lote !== loteEditar?.id_lote);
+            setLotesAnteriores(filter);
+        }
     }, [lotesAnteriores]);
 
     function generateUniqueNumber(): string {
@@ -82,6 +84,7 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false }: Pro
         codigo_lote: Yup.string()
             .required('El código es requerido')
             .test('unique', 'El número de paleta ya está ocupado', function (value) {
+
                 const evento = watch('id_evento');
                 const result = lotesAnteriores.some((lote) => (
                     lote.codigo_lote === value && lote.id_evento === evento));
