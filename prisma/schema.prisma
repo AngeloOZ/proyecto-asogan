@@ -41,7 +41,7 @@ model eventos {
   fecha       DateTime? @db.DateTime(0)
   lugar       String?   @db.VarChar(100)
   tipo        String?   @db.VarChar(50)
-  abierto     Boolean?
+  abierto     Int       @default(1) @db.TinyInt
   uuid        String?   @unique(map: "eventos_UN") @default(uuid()) @db.VarChar(300)
   lotes       lotes[]
 }

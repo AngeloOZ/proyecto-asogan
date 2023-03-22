@@ -32,7 +32,10 @@ async function obtenerEventos(req: NextApiRequest, res: NextApiResponse) {
 
         if (id) {
             const evento = await prisma.eventos.findUnique({
-                where: { id_evento: Number(id) }
+                where: { id_evento: Number(id) },
+                include: {
+                    lotes: true
+                }
             });
             if (evento) {
                 const fechaString = moment(evento.fecha).format('YYYY-MM-DD HH:mm') as unknown as Date;

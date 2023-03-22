@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+
 // Import Swiper React components
 import { Swiper, SwiperSlide } from 'swiper/react';
 
@@ -9,12 +9,25 @@ import 'swiper/css/navigation';
 
 
 // import required modules
-import { Autoplay, Pagination, Navigation } from 'swiper';
+import { Autoplay, Pagination } from 'swiper';
 
 import { imagenes } from '@prisma/client';
 
-export function SliderAds({ banners }: { banners: imagenes[] }) {
+import { Box, Typography } from '@mui/material';
 
+export function SliderAds({ banners }: { banners: imagenes[] }) {
+    if (banners.length === 0) {
+        return (
+            <Box
+                component='div'
+                width='100%'
+                height='100%'
+                display='grid'
+                style={{ placeContent: 'center', backgroundColor: '#fff' }}
+            >
+                <Typography variant='subtitle1' >Sin Publicidad</Typography>
+            </Box>)
+    };
     return (
         <>
             <Swiper
