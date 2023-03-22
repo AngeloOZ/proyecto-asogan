@@ -3,7 +3,7 @@ import { compradores, usuario } from "@prisma/client";
 import prisma from 'database/prismaClient';
 import { handleErrorsPrisma } from 'utils';
 import bcrypt from 'bcrypt';
-import { sendMail } from 'custom/components/Globales/sendEmail';
+
 
 // eslint-disable-next-line
 export default function (req: NextApiRequest, res: NextApiResponse) {
@@ -68,7 +68,7 @@ async function crearComprador(req: NextApiRequest, res: NextApiResponse) {
 
             const verificarUsuario = await prisma.usuario.findUnique({ where: { identificacion } });
 
-
+           
             if (verificarUsuario) {
                 return res.status(500).json({ message: 'el usuario ya existe' });
             }
@@ -120,7 +120,7 @@ async function crearComprador(req: NextApiRequest, res: NextApiResponse) {
     }
     finally {
 
-        await sendMail('llucia01394@gmail.com', 'holaaaaaa', 'encabezado');
+        
         prisma.$disconnect();
     }
 }
