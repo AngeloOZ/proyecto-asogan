@@ -124,7 +124,7 @@ export const Registro = () => {
     }
     return (
 
-        <RegistroLayout illustration="/logo/logo_asogan2.png">
+        <RegistroLayout illustration="/logo/logo.webp">
             <Head>
                 <title>Registro</title>
             </Head>
