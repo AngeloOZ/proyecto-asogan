@@ -30,7 +30,7 @@ export default function PageAdminEventos() {
                     ]}
                 />
                 <Card>
-
+                    sdfsdvsd
                 </Card>
             </Container>
         </>
