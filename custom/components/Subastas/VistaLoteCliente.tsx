@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { Box, Button, Card, Stack } from '@mui/material'
+import { Box, Button, Card, Stack, Typography } from '@mui/material'
 import { useSWRConfig } from 'swr';
 import { IoHandRight } from 'react-icons/io5';
 
@@ -98,37 +98,49 @@ export const VistaLoteCliente = ({ loteActual, banners, evento }: Props) => {
                 value={newLote.horaPesaje}
                 className={css.hora_pesaje}
                 bgColorCustom='#6bb73b'
+                fontSizeTitleCustom='20px'
+                fontSizeCustom='50px'
             />
             <CardInfo
                 title='incremento'
                 value={'$' + newLote.valorPuja.toFixed(2)}
                 className={css.incremento}
                 bgColorCustom='#ebeb3d'
+                fontSizeTitleCustom='20px'
+                fontSizeCustom='55px'
             />
             <CardInfo
                 title='valor base'
                 value={'$' + newLote.valorBase.toFixed(2)}
                 className={css.valor_base}
                 bgColorCustom='#ebeb3d'
+                fontSizeTitleCustom='20px'
+                fontSizeCustom='55px'
             />
             <CardInfo
-                title='Valor final'
+                title='Puja actual'
                 value={'$' + newLote.valorFinal.toFixed(2)}
                 className={css.valor_final}
                 bgColorCustom='#ef440c'
                 textColorCustom='#fff'
+                fontSizeTitleCustom='20px'
+                fontSizeCustom='55px'
             />
             <CardInfo
-                title='valor animal'
+                title='valor promedio animal'
                 value={'$' + (newLote.pesoPromedio * newLote.valorFinal).toFixed(2)}
                 className={css.valor_animal}
                 bgColorCustom='#ebeb3d'
+                fontSizeTitleCustom='20px'
+                fontSizeCustom='55px'
             />
             <CardInfo
                 title='valor total'
                 value={'$' + (newLote.pesoTotal * newLote.valorFinal).toFixed(2)}
                 className={css.valor_total}
                 bgColorCustom='#fabf25'
+                fontSizeTitleCustom='20px'
+                fontSizeCustom='55px'
             />
             <Card className={css.video_puja} >
                 <Box className={css.video} >
@@ -137,19 +149,20 @@ export const VistaLoteCliente = ({ loteActual, banners, evento }: Props) => {
                         urlVideoDemostracion={lote?.url_video || ''}
                     />
                 </Box>
-                <Box className={css.button} textAlign='center'>
-                    <Button
-                        variant='contained'
-                        onClick={registrarPujaComprador}
-                        color='success'
-                        style={{ width: '150px' }}
-                        disabled={lote ? false : true}
-                        startIcon={<IoHandRight />}
-                    >
-                        Pujar
-                    </Button>
-                </Box>
             </Card>
+            <Box className={css.button} textAlign='center'>
+                <Button
+                    variant='contained'
+                    onClick={registrarPujaComprador}
+                    color='primary'
+                    style={{ width: '100%', height: '100%' }}
+                    disabled={lote ? false : true}
+                    size='large'
+                    startIcon={<IoHandRight size={50} />}
+                >
+                    <Typography fontSize={38} variant='subtitle1'>Pujar</Typography>
+                </Button>
+            </Box>
         </Box>
     )
 }

@@ -57,6 +57,4 @@ async function verifyJWT(req: NextApiRequest, res: NextApiResponse<Data>) {
     } finally {
         prisma.$disconnect();
     }
-
-
 }

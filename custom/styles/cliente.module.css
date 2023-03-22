@@ -9,8 +9,8 @@
   grid-template-areas:
     'banner banner lote lote cantidad cantidad cantidad procedencia procedencia procedencia numero_paleta numero_paleta'
     'banner banner peso_prom peso_prom peso_prom hora_pesaje hora_pesaje hora_pesaje incremento incremento numero_paleta numero_paleta'
-    'valor_base valor_base valor_base valor_base valor_final valor_final valor_final valor_final video_puja video_puja video_puja video_puja'
-    'valor_animal valor_animal valor_animal valor_animal valor_total valor_total valor_total valor_total video_puja video_puja video_puja video_puja';
+    'valor_base valor_base valor_base valor_final valor_final valor_final video_puja video_puja video_puja video_puja button button'
+    'valor_animal valor_animal valor_animal valor_total valor_total valor_total video_puja video_puja video_puja video_puja button button';
 }
 
 .banner {
@@ -62,17 +62,11 @@
 }
 
 .video_puja {
-  display: grid;
-  grid-auto-columns: 1fr;
-  grid-template-rows: 1fr 50px;
-  gap: 0px 0px;
   grid-area: video_puja;
 }
-.video {
-  grid-template-areas: 'video_1 video_2';
-}
+
 .button {
-  grid-area: 2 / 1 / 3 / 2;
+  grid-area: button;
 }
 
 /* @media screen and (max-width: 768px) {
