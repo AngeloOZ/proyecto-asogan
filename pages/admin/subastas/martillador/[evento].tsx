@@ -1,10 +1,9 @@
 import Head from 'next/head'
 import { GetServerSideProps } from 'next';
-import { MainMartillador, useLoteMartillador, useSubastas } from 'custom/components'
+import { MainMartillador, useLoteMartillador } from 'custom/components'
 
 const PageMonitor = ({ uuid }: { uuid: string }) => {
     const { loteActual, isLoading } = useLoteMartillador(uuid);
-    const { evento } = useSubastas(uuid);
 
     return (
         <>

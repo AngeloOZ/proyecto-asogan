@@ -1,4 +1,4 @@
-import { Card, CardContent, Grid, Typography, useTheme } from '@mui/material'
+import { Button, Card, CardContent, Grid, Typography, useTheme } from '@mui/material'
 import { LoteMonitor } from '@types'
 import css from '../../styles/martillador.module.css';
 import { CardInfo } from '../Monitor';
@@ -11,12 +11,14 @@ import useSWR from "swr";
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
+import { useSnackbar } from 'notistack';
+import { handleErrorsAxios } from 'utils';
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
     ...theme.typography.body2,
     padding: theme.spacing(1),
-    textAlign: 'center',
+
     color: theme.palette.text.secondary,
 }));
 
@@ -26,7 +28,7 @@ export const MainMartillador = ({ datos }: { datos: LoteMonitor }) => {
 
     const { lote, ultimaPuja } = datos;
     const { data } = useSWR(`/subastas/pujas?lote=${lote?.id_lote}`, fetcher, { refreshInterval: 1500 }) as { data: PujasRequest };
-    console.log(data)
+
     const cantidadAnimales = lote?.cantidad_animales || 0;
     const pesoTotal = Number(lote?.peso_total || 0);
     const pesoPromedio = pesoTotal / cantidadAnimales || 0;
@@ -40,6 +42,21 @@ export const MainMartillador = ({ datos }: { datos: LoteMonitor }) => {
     const proxValorAnimal = pesoPromedio * valorFinal2;
     const valorTotal = valorAnimal * cantidadAnimales;
     const proxValorTotal = proxValorAnimal * cantidadAnimales;
+    const { enqueueSnackbar } = useSnackbar();
+
+    const handleClickButtons = async (accion: string) => {
+        try {
+            const { data } = await subastaAPI.put('subastas/terminar', {
+                id_lote: lote?.id_lote,
+                accion
+            }) as { data: { message: string } };
+
+            enqueueSnackbar(`${data.message}`, { variant: 'success' });
+
+        } catch (error) {
+            enqueueSnackbar(`Oops... ${handleErrorsAxios(error)}`, { variant: 'error' });
+        }
+    }
 
     return (
         <Grid item height="100%" className={css.container}>
@@ -63,7 +80,7 @@ export const MainMartillador = ({ datos }: { datos: LoteMonitor }) => {
                 value={lote?.procedencia || ''}
                 className={css.procedencia}
                 bgColorCustom='#6bb73b'
-                fontSizeCustom='35px'
+                fontSizeCustom='25px'
             />
             <CardInfo
                 title='Nombre'
@@ -71,6 +88,7 @@ export const MainMartillador = ({ datos }: { datos: LoteMonitor }) => {
                 value={ultimaPuja?.usuario?.nombres || ''}
                 className={css.nombre}
                 bgColorCustom='#278ac6'
+                fontSizeCustom='25px'
             />
             <CardInfo
                 title='Paleta'
@@ -155,7 +173,7 @@ export const MainMartillador = ({ datos }: { datos: LoteMonitor }) => {
                 value={lote?.observaciones || ''}
                 className={css.observaciones}
                 bgColorCustom='#e7ebf0'
-                fontSizeCustom='35px'
+                fontSizeCustom='25px'
             />
             <CardInfo
                 title='Valor Por Animal'
@@ -179,23 +197,34 @@ export const MainMartillador = ({ datos }: { datos: LoteMonitor }) => {
                             <Typography
                                 component='h3'
                                 fontWeight='bold'
-                                fontSize="26px"
+                                fontSize="20px"
                                 textTransform='uppercase'
                             >
-                                Video
+                                Pujas Realizadas
                             </Typography>
                         </Box>
-                        <Box component='div' width="100%" height="100%" style={{ backgroundColor: '#e7ebf0' }}
-                        >
-                            <Stack spacing={2}>
-                                {data.mejoresPujas.map((puja) => (
-                                    <Item key={puja.id_puja}>
-                                        PALETA: {puja.codigo_paleta}
-                                        USUARIO: {puja?.usuario?.nombres}
-                                        VALOR: {puja.puja}
-                                    </Item>
-                                ))}
-                            </Stack>
+                        <Box component='div' width="100%" height="100%" style={{ backgroundColor: '#e7ebf0', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                            {data && data.mejoresPujas && data.mejoresPujas.length > 0 ? (
+                                <Stack spacing={0.5}>
+                                    {data.mejoresPujas.map((puja) => (
+                                        <Item key={puja.id_puja} sx={{ fontSize: '11px' }}>
+                                            <strong >PALETA:</strong> {puja.codigo_paleta} <br />
+                                            <strong>USUARIO:</strong> {puja?.usuario?.nombres}<br />
+                                            <strong>VALOR:</strong> {'$' + parseFloat(puja.puja).toFixed(2)}
+                                        </Item>
+                                    ))}
+                                    <Box style={{ display: 'flex', justifyContent: 'center' }}>
+                                        <Button onClick={() => handleClickButtons('subastado')} variant="contained" color="success" style={{ flex: 1, marginRight: 8 }}>
+                                            Vendido
+                                        </Button>
+                                        <Button onClick={() => handleClickButtons('rechazado')} variant="contained" color="error" style={{ flex: 1, marginLeft: 8 }}>
+                                            Pendiente
+                                        </Button>
+                                    </Box>
+                                </Stack>
+                            ) : (
+                                <div>No hay datos de pujas disponibles.</div>
+                            )}
                         </Box>
                     </CardContent>
                 </Card>
