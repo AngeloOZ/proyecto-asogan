@@ -19,7 +19,7 @@ export default function RegistroLayout({ children, illustration, title }: Props)
             visibleByDefault
             alt="auth"
             src={illustration || '/assets/illustrations/illustration_dashboard.png'}
-            sx={{ maxWidth: 750 }}
+            sx={{ maxWidth: 700 }}
           />
           <StyledSectionBg />
         </StyledSection>

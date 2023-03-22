@@ -15,7 +15,7 @@ const transporter = nodemailer.createTransport({
 });
 
 
-export const sendMail = (mailRecipientList: string, contentHTML: string, subject: string) => {
+export const sendMail = (mailRecipientList: string[], contentHTML: string, subject: string) => {
     return new Promise(async (resolve, reject) => {
         try {
             const mailOptions = {

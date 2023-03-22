@@ -43,7 +43,7 @@ export const Registro = () => {
         identificacion: Yup.string().when('identificacionV', {
             is: () => identificacionV != "" ? false : true,
             then: Yup.string().required('La identificacion es requerida ')
-            }).max(13, 'La identificacion no puede tener mas de 13 caracteres'),
+        }).max(13, 'La identificacion no puede tener mas de 13 caracteres'),
         nombres: Yup.string().when('nombresV', {
             is: () => nombresV != "" ? false : true,
             then: Yup.string().required('El nombre es requerido')
@@ -58,7 +58,7 @@ export const Registro = () => {
 
         return {
             id_comprador: 0,
-            codigo_paleta: (Math.floor(Math.random() * (99999 - 10000 + 1) + 10000)).toString(),
+            codigo_paleta: '',
             calificacion_bancaria: "",
             antecedentes_penales: false,
             procesos_judiciales: false,
@@ -84,22 +84,22 @@ export const Registro = () => {
         formState: { isSubmitting },
     } = methods;
 
-    const onSubmit = async (data: FormValuesProps ) => {
+    const onSubmit = async (data: FormValuesProps) => {
         try {
             if (validacionI == true) {
-              
-                await agregarComprador({...data, nombres: nombresV, identificacion: identificacionV});
+
+                await agregarComprador({ ...data, nombres: nombresV, identificacion: identificacionV, registro: 1 });
                 enqueueSnackbar('Registrado Correctamente', { variant: 'success' });
                 reset();
                 setNombres('');
                 setIdentificacionV('');
-                setValue('codigo_paleta','');
+                setValue('codigo_paleta', '');
             } else {
                 enqueueSnackbar("La identificacion ingresada es incorrecta", { variant: 'error' });
             }
 
         } catch (error) {
-          
+
             enqueueSnackbar(`Oops... ${handleErrorsAxios(error)}`, { variant: 'error' });
         }
     }
@@ -152,7 +152,7 @@ export const Registro = () => {
                                 onChange={(e) => { setNombres(e.target.value) }}
                             />
 
-                        
+
                             <RHFTextField
                                 name="celular"
                                 label="Número de celular"
@@ -171,8 +171,6 @@ export const Registro = () => {
                         </Stack>
 
                         <Stack direction="row" spacing={1.5} maxWidth={400} margin="auto" mt={2}>
-
-
 
                             <LoadingButton
                                 fullWidth

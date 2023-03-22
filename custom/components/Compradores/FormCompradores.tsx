@@ -1,6 +1,6 @@
 
 import * as Yup from 'yup';
-import { useEffect, useMemo,useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 // next
 import { useRouter } from 'next/router';
@@ -20,7 +20,7 @@ import FormProvider, {
     RHFTextField,
 } from '../../../src/components/hook-form';
 
-import { compradores as IComprador , usuario as IUsuario } from '@prisma/client';
+import { compradores as IComprador, usuario as IUsuario } from '@prisma/client';
 import { useCompradores } from './Hooks';
 import Link from 'next/link';
 
@@ -33,7 +33,7 @@ type FormValuesProps = IComprador;
 type Props = {
     esEditar?: boolean;
     compradorEditar?: ICompradores;
-   
+
 }
 
 export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
@@ -41,14 +41,14 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
     const { push } = useRouter();
     const { enqueueSnackbar } = useSnackbar();
     const { agregarComprador, actualizarComprador } = useCompradores();
-    const { validarIdentificacion,consultarIdentificacion } = useGlobales();
-    const [validacionI, setValidacionI ]= useState(false);
+    const { validarIdentificacion, consultarIdentificacion } = useGlobales();
+    const [validacionI, setValidacionI] = useState(false);
     const [nombresV, setNombres] = useState<string>();
-   
+
     useEffect(() => {
         if (esEditar && compradorEditar) {
             reset(defaultValues);
-          
+
         }
 
         if (!esEditar) {
@@ -60,14 +60,14 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
     // Validaciones de los campos
     const CompradorEsquema = Yup.object().shape({
         identificacion: Yup.string().required('La identificacion es requerido').min(10, 'La identificacion no puede tener menos de 10 caracteres').max(13, 'La identificacion no puede tener mas de 13 caracteres'),
-        nombres: Yup.string().when('nombresV',{ 
+        nombres: Yup.string().when('nombresV', {
             is: () => nombresV != "" ? false : true,
-             then: Yup.string().required('El nombre es requerido')
-             } 
-            ),
+            then: Yup.string().required('El nombre es requerido')
+        }
+        ),
         correo: Yup.string().required('El correo es requerido').email('El correo ingresado es invalido'),
-         celular: Yup.string().required('El celular es requerido').length(10,'El número de celular no puede tener mas de 10 digitos'),
-            
+        celular: Yup.string().required('El celular es requerido').length(10, 'El número de celular no puede tener mas de 10 digitos'),
+
         codigo_paleta: Yup.string().max(5, 'El numero de paleta no puede tener mas de 5 caracteres'),
         calificacion_bancaria: Yup.string().required('La calificacion bancaria es requerida').max(5, 'La calificacion bancaria no puede tener mas de 5 caracteres'),
     });
@@ -76,26 +76,26 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
     // Se carga los valores en caso de que sea editar
     const defaultValues = useMemo<IComprador>(() => {
 
-            setNombres(compradorEditar?.usuario?.nombres || '');
-            esEditar && setValidacionI(true);
-        
-        return {
-          id_comprador: compradorEditar?.id_comprador || 0,
-          codigo_paleta: (esEditar == true) ?
-            (compradorEditar?.codigo_paleta || '') :  (Math.floor(Math.random() * (99999 - 10000 + 1) + 10000)).toString(),
-          calificacion_bancaria: compradorEditar?.calificacion_bancaria || "",
-          antecedentes_penales: compradorEditar?.antecedentes_penales || false,
-          procesos_judiciales: compradorEditar?.procesos_judiciales || false,
-          estado: compradorEditar?.estado || true,
-          usuarioid: compradorEditar?.usuarioid || 0,
-          nombres: nombresV,
-          identificacion: compradorEditar?.usuario?.identificacion || "",
-          correo: compradorEditar?.correo || "",
-          celular: compradorEditar?.celular || "",
-        };
-      }, [compradorEditar]);
+        setNombres(compradorEditar?.usuario?.nombres || '');
+        esEditar && setValidacionI(true);
 
-    
+        return {
+            id_comprador: compradorEditar?.id_comprador || 0,
+            codigo_paleta: (esEditar == true) ?
+                (compradorEditar?.codigo_paleta || '') : (Math.floor(Math.random() * (100 - 999 + 1) + 999)).toString(),
+            calificacion_bancaria: compradorEditar?.calificacion_bancaria || "",
+            antecedentes_penales: compradorEditar?.antecedentes_penales || false,
+            procesos_judiciales: compradorEditar?.procesos_judiciales || false,
+            estado: (esEditar == true) ? (compradorEditar?.estado || false) : true,
+            usuarioid: compradorEditar?.usuarioid || 0,
+            nombres: nombresV,
+            identificacion: compradorEditar?.usuario?.identificacion || "",
+            correo: compradorEditar?.correo || "",
+            celular: compradorEditar?.celular || "",
+        };
+    }, [compradorEditar]);
+
+
 
     // funciones para el hook useForm
     const methods = useForm<FormValuesProps>({
@@ -109,49 +109,49 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
         setValue,
         formState: { isSubmitting },
     } = methods;
-    
+
 
     const onSubmit = async (data: FormValuesProps) => {
         try {
-        
+
             if (validacionI == true) {
                 if (!esEditar) {
-                 
-                    await agregarComprador({...data, nombres: nombresV});
+
+                    await agregarComprador({ ...data, nombres: nombresV, registro:0 });
                     enqueueSnackbar('Comprador agregado correctamente', { variant: 'success' });
                     push(PATH_DASHBOARD.compradores.root);
                 } else {
-                    await actualizarComprador({...data, nombres: nombresV});
+                    await actualizarComprador({ ...data, nombres: nombresV });
                     enqueueSnackbar('Comprador actualizado correctamente', { variant: 'success' });
                     push(PATH_DASHBOARD.compradores.root);
                 }
                 reset();
-            }else{
+            } else {
                 enqueueSnackbar("La identificacion ingresada es incorrecta", { variant: 'error' });
             }
-            
+
         } catch (error) {
 
             enqueueSnackbar(`Oops... ${handleErrorsAxios(error)}`, { variant: 'error' });
         }
     }
 
-    const verificarIdentificacion = async (identificacion:string) => {
+    const verificarIdentificacion = async (identificacion: string) => {
 
         const validacion = validarIdentificacion(identificacion)
-        
-        if (validacion){
+
+        if (validacion) {
             const nombres = await consultarIdentificacion(identificacion);
             setNombres(nombres.razon_social);
             setValue('correo', nombres.correo);
             setValue('celular', nombres.telefono2);
             setValidacionI(true);
-        }else {
+        } else {
             setValidacionI(false);
             enqueueSnackbar("La identificacion ingresada es incorrecta", { variant: 'error' });
         }
 
-      
+
     }
 
     return (<FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} >
@@ -170,9 +170,9 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
                     label="Nombres"
                     size='small'
                     value={nombresV}
-                    onChange={(e) => {setNombres(e.target.value)}}
+                    onChange={(e) => { setNombres(e.target.value) }}
                 />
-                 <RHFTextField
+                <RHFTextField
                     name="correo"
                     label="Correo"
                     size='small'
@@ -190,8 +190,8 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
 
                 />
 
-               
-                  <RHFTextField
+
+                <RHFTextField
                     name="calificacion_bancaria"
                     label="Calificación Bancaria"
                     size='small'
