@@ -87,12 +87,13 @@ export const Registro = () => {
     const onSubmit = async (data: FormValuesProps ) => {
         try {
             if (validacionI == true) {
-                console.log(data)
+              
                 await agregarComprador({...data, nombres: nombresV, identificacion: identificacionV});
                 enqueueSnackbar('Registrado Correctamente', { variant: 'success' });
                 reset();
                 setNombres('');
                 setIdentificacionV('');
+                setValue('codigo_paleta','');
             } else {
                 enqueueSnackbar("La identificacion ingresada es incorrecta", { variant: 'error' });
             }
