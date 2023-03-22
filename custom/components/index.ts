@@ -6,6 +6,7 @@ export * from './Proveedores';
 export * from './Compradores';
 export * from './Subastas';
 export * from './Monitor';
+export * from './Eventos';
 
 // Angello
 

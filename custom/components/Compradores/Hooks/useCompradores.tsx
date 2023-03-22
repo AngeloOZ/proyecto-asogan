@@ -8,9 +8,7 @@ export const useCompradores = () => {
 
     const agregarComprador = async (comprador: any) => {
    
-       if (comprador.codigo_paleta=="")
-       comprador.codigo_paleta =   (Math.floor(Math.random() * (99999 - 10000 + 1) + 10000)).toString();
-      
+
         const { data } = await subastaAPI.post('/compradores', comprador);
         mutate('/compradores');
     }

@@ -4,6 +4,8 @@ import prisma from 'database/prismaClient';
 import { handleErrorsPrisma } from 'utils';
 import bcrypt from 'bcrypt';
 
+import { sendMail } from 'custom/components/Globales/sendEmail';
+import { plantilla } from 'custom/components/Globales/plantillaEmail';
 
 // eslint-disable-next-line
 export default function (req: NextApiRequest, res: NextApiResponse) {
@@ -60,15 +62,21 @@ async function obtenerCompradores(req: NextApiRequest, res: NextApiResponse) {
 
 async function crearComprador(req: NextApiRequest, res: NextApiResponse) {
 
+    let identificacionC = ""
+    let nombresC = ""
+    let correoC = ""
+    let celularC = ""
+    let registroC = 0
     try {
 
         return await prisma.$transaction(async (prisma) => {
+            const { registro } = req.body;
             const { codigo_paleta, antecedentes_penales, procesos_judiciales, calificacion_bancaria, estado, correo, celular }: compradores = req.body;
             const { identificacion, nombres }: usuario = req.body
 
             const verificarUsuario = await prisma.usuario.findUnique({ where: { identificacion } });
 
-           
+
             if (verificarUsuario) {
                 return res.status(500).json({ message: 'el usuario ya existe' });
             }
@@ -89,7 +97,7 @@ async function crearComprador(req: NextApiRequest, res: NextApiResponse) {
 
             if (codigo_paleta !== "") {
 
-                const verificaCompradorPaleta = await prisma.compradores.findUnique({ where: { codigo_paleta: codigo_paleta! } });
+                const verificaCompradorPaleta = await prisma.compradores.findFirst({ where: { codigo_paleta } });
                 if (verificaCompradorPaleta) {
                     return res.status(500).json({ message: 'el codigo de la paleta ya existe' });
                 }
@@ -108,6 +116,15 @@ async function crearComprador(req: NextApiRequest, res: NextApiResponse) {
                 }
             });
 
+            if (registro === 1) {
+                identificacionC = identificacion
+                nombresC = nombres
+                correoC = correo!
+                celularC = celular!
+                registroC = 1
+            }
+
+
             return res.status(200).json(comprador);
 
 
@@ -115,12 +132,14 @@ async function crearComprador(req: NextApiRequest, res: NextApiResponse) {
         });
 
     } catch (error) {
-
+        console.log(error)
         return res.status(500).json({ message: handleErrorsPrisma(error) });
     }
     finally {
 
-        
+        if (registroC === 1)
+            await sendMail(["llucia01394@gmail.com", correoC], plantilla(identificacionC, nombresC, correoC, celularC), 'Perseo');
+
         prisma.$disconnect();
     }
 }
