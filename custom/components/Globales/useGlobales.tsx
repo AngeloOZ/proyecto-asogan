@@ -12,7 +12,6 @@ export const useGlobales = () => {
         var longcheck = longitud - 1;
         var digitos = cad.split('').map(Number);
         var codigo_provincia = digitos[0] * 10 + digitos[1];
-        console.log(longitud);
         if (cad !== "" && longitud === 10) {
 
             if (cad != '2222222222' && codigo_provincia >= 1 && (codigo_provincia <= 24 || codigo_provincia == 30)) {

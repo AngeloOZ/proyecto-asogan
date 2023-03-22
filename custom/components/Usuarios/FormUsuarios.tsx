@@ -205,7 +205,7 @@ export function FormUsuarios({ esEditar = false, usuariosEditar }: Props) {
                     <MenuItem value="admin">Administrador</MenuItem>
                     <MenuItem value="martillador">Martillador</MenuItem>
                     <MenuItem value="contabilidad">Contabilidad</MenuItem>
-                    <MenuItem value="pendiente">Rol pendiente</MenuItem>
+                    <MenuItem value="digitador">Digitador</MenuItem>
                 </RHFSelect>
             </Stack>
 
