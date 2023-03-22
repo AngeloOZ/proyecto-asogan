@@ -87,7 +87,7 @@ export const MainMonitor = ({ datos, banners }: { datos: LoteMonitor, banners: i
                 />
 
                 <CardInfo
-                    title='Valor Final'
+                    title='Puja Actual'
                     value={'$' + valorFinal.toFixed(2)}
                     className={css.valor_final}
                     fontSizeCustom='68px'
@@ -96,7 +96,7 @@ export const MainMonitor = ({ datos, banners }: { datos: LoteMonitor, banners: i
                 />
 
                 <CardInfo
-                    title='Valor animal'
+                    title='Valor Promedio animal'
                     value={'$' + (pesoPromedio * valorFinal2).toFixed(2)}
                     className={css.valor_animal}
                     fontSizeCustom='68px'

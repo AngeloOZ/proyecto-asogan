@@ -80,33 +80,52 @@ export const EventoItem = ({ eventos }: Props) => {
 					{
 						eventos.abierto && (
 							<Link href={`${PATH_DASHBOARD.subastas.root}/${eventos.uuid}`} passHref legacyBehavior>
-								<Button
-									fullWidth
-									color="primary"
-									variant='contained'
-									size="medium"
-								>
-									Ver
-								</Button>
+								<a target='_blank' style={{ textDecoration: 'none' }}>
+									<Button
+										fullWidth
+										color="primary"
+										variant='contained'
+										size="medium"
+									>
+										Ver
+									</Button>
+								</a>
 							</Link>
 						)
 					}
 
 					{
 						rolLogged !== 'comprador' &&
-						<Link href={`${PATH_DASHBOARD.subastas.monitor}/${eventos.uuid}`} target='_blank' passHref legacyBehavior>
-							<a target='_blank' style={{ textDecoration: 'none' }}>
-								<Button
-									fullWidth
-									color="secondary"
-									variant='outlined'
-									size="medium"
-									style={{ marginTop: 10 }}
-								>
-									Ver en monitor
-								</Button>
-							</a>
-						</Link>
+						<>
+							<Link href={`${PATH_DASHBOARD.subastas.monitor}/${eventos.uuid}`} target='_blank' passHref legacyBehavior>
+								<a target='_blank' style={{ textDecoration: 'none' }}>
+									<Button
+										fullWidth
+										color="secondary"
+										variant='outlined'
+										size="medium"
+										style={{ marginTop: 10 }}
+									>
+										Ver en monitor
+									</Button>
+								</a>
+							</Link>
+							<Link href={`${PATH_DASHBOARD.subastas.admin_martillador}/${eventos.uuid}`} target='_blank' passHref legacyBehavior>
+								<a target='_blank' style={{ textDecoration: 'none' }}>
+									<Button
+										fullWidth
+										color="secondary"
+										variant='outlined'
+										size="medium"
+										style={{ marginTop: 10 }}
+									>
+										Ver Admin Martillador
+									</Button>
+								</a>
+							</Link>
+						</>
+
+
 					}
 
 					{

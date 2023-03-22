@@ -26,6 +26,7 @@ export const PATH_DASHBOARD = {
   subastas: {
     root: path(PATH_ADMIN, '/subastas'),
     monitor: path(PATH_ADMIN, '/subastas/monitor'),
+    admin_martillador: path(PATH_ADMIN, '/subastas/admin_martillador'),
   },
   martillador: {
     root: path(PATH_ADMIN, '/martillador'),
