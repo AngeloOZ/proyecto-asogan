@@ -18,7 +18,11 @@ interface CalculosSubasta {
 }
 
 export function calcularSubasta(lote: lotes | Lote | LoteA | null) : CalculosSubasta {
-    const horaPesaje = moment(lote?.fecha_pesaje || '').format('H:mm');
+    let horaPesaje = moment(lote?.fecha_pesaje || '').format('H:mm');
+
+    if (horaPesaje === 'Invalid date') {
+        horaPesaje = '-';
+    }
 
     const cantidadAnimales = lote?.cantidad_animales || 0;
     const pesoTotal = Number(lote?.peso_total || 0);

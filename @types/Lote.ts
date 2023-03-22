@@ -49,6 +49,7 @@ export interface LoteA {
     puja_final:        string;
     incremento:        string;
     subastado:         number;
+    url_video:         string;
 }
 
 export interface UltimaPuja {

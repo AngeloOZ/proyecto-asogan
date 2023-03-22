@@ -15,7 +15,7 @@ model usuario {
   rol            String       @db.VarChar(255)
   tipo           Int?         @default(1)
   correo         String       @db.VarChar(100)
-  celular        String      @db.VarChar(10)
+  celular        String       @db.VarChar(10)
   compradores    compradores?
   pujas          pujas[]
 }
@@ -27,7 +27,7 @@ model compradores {
   procesos_judiciales   Boolean?
   calificacion_bancaria String?  @db.VarChar(50)
   estado                Boolean?
-  correo               String?  @db.VarChar(100)
+  correo                String?  @db.VarChar(100)
   celular               String?  @db.VarChar(10)
   usuarioid             Int      @unique(map: "fk_usuario_compradores")
   usuario               usuario  @relation(fields: [usuarioid], references: [usuarioid], onUpdate: Restrict, map: "fk_usuario_compradores")
@@ -52,7 +52,7 @@ model lotes {
   id_proveedor      Int
   id_comprador      Int?
   paleta_comprador  String?      @db.VarChar(5)
-  fecha_pesaje      DateTime?    @db.DateTime(0)
+  fecha_pesaje      DateTime?    @db.Time(0)
   codigo_lote       String?      @db.VarChar(50)
   cantidad_animales Int?
   tipo_animales     String?      @db.VarChar(50)
