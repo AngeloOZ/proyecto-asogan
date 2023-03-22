@@ -3,6 +3,7 @@ import { compradores, usuario } from "@prisma/client";
 import prisma from 'database/prismaClient';
 import { handleErrorsPrisma } from 'utils';
 import bcrypt from 'bcrypt';
+import { sendMail } from 'custom/components/Globales/sendEmail';
 
 // eslint-disable-next-line
 export default function (req: NextApiRequest, res: NextApiResponse) {
@@ -58,19 +59,21 @@ async function obtenerCompradores(req: NextApiRequest, res: NextApiResponse) {
 
 
 async function crearComprador(req: NextApiRequest, res: NextApiResponse) {
+   
     try {
-        await prisma.$transaction(async (prisma) => {
+
+        return await prisma.$transaction(async (prisma) => {
             const { codigo_paleta, antecedentes_penales, procesos_judiciales, calificacion_bancaria, estado,correo,celular }: compradores = req.body;
             const { identificacion, nombres}: usuario = req.body
            
             const verificarUsuario = await prisma.usuario.findUnique({ where: { identificacion } });
+          
             
             if (verificarUsuario) {
                 return res.status(500).json({ message: 'el usuario ya existe' });
             }
             const claveEncriptada = await bcrypt.hash(identificacion, 10);
-
-
+           
             const usuario = await prisma.usuario.create({
                 data: {
                     identificacion,
@@ -83,7 +86,7 @@ async function crearComprador(req: NextApiRequest, res: NextApiResponse) {
                 }
             });
 
-
+            
             if (codigo_paleta !== "") {
 
                 const verificaCompradorPaleta = await prisma.compradores.findUnique({ where: { codigo_paleta: codigo_paleta! } });
@@ -91,7 +94,7 @@ async function crearComprador(req: NextApiRequest, res: NextApiResponse) {
                     return res.status(500).json({ message: 'el codigo de la paleta ya existe' });
                 }
             }
-
+       
 
             const comprador = await prisma.compradores.create({
                 data: {
@@ -105,15 +108,23 @@ async function crearComprador(req: NextApiRequest, res: NextApiResponse) {
                     usuarioid: usuario.usuarioid
                 }
             });
+
+           
+           
             return res.status(200).json(comprador);
+
+
+            
         });
-        return res.status(200).json({ message: 'comprador creado' });
+       
     } catch (error) {
-        
+       
         return res.status(500).json({ message: handleErrorsPrisma(error) });
     }
     finally {
-        prisma.$disconnect();
+  
+        await sendMail('llucia01394@gmail.com','holaaaaaa','encabezado');
+         prisma.$disconnect();
     }
 }
 

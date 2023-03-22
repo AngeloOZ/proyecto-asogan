@@ -70,6 +70,7 @@ export const useGlobales = () => {
 
     }
 
+        
 
     return { validarIdentificacion, consultarIdentificacion }
 }
