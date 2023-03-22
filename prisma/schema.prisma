@@ -22,7 +22,7 @@ model usuario {
 
 model compradores {
   id_comprador          Int      @id @default(autoincrement())
-  codigo_paleta         String?  @unique(map: "compradores_UN") @db.VarChar(5)
+  codigo_paleta         String?  @db.VarChar(3)
   antecedentes_penales  Boolean?
   procesos_judiciales   Boolean?
   calificacion_bancaria String?  @db.VarChar(50)
