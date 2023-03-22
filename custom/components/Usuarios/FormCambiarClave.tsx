@@ -59,6 +59,9 @@ export function FormCambiarClave({ usuariosEditar }: Props) {
         clave: '',
         rol: JSON.parse(usuariosEditar?.rol || `[""]`)[0],
         tipo: usuariosEditar?.tipo || 1,
+        correo: usuariosEditar?.correo || '',
+        celular: usuariosEditar?.celular || ''
+
     }), [usuariosEditar]);
 
 

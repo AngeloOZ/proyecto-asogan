@@ -66,7 +66,10 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
              then: Yup.string().required('El nombre es requerido')
              } 
             ),
-        codigo_paleta: Yup.string().required('El numero de paleta es requerido').max(5, 'El numero de paleta no puede tener mas de 5 caracteres'),
+        correo: Yup.string().required('El correo es requerido').email('El correo ingresado es invalido'),
+         celular: Yup.string().required('El celular es requerido').length(10,'El número de celular no puede tener mas de 10 digitos'),
+            
+        codigo_paleta: Yup.string().max(5, 'El numero de paleta no puede tener mas de 5 caracteres'),
         calificacion_bancaria: Yup.string().required('La calificacion bancaria es requerida').max(5, 'La calificacion bancaria no puede tener mas de 5 caracteres'),
     });
 
@@ -79,9 +82,9 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
         
         return {
           id_comprador: compradorEditar?.id_comprador || 0,
-          codigo_paleta:
-            compradorEditar?.codigo_paleta ||
-            (Math.floor(Math.random() * (99999 - 10000 + 1) + 10000)).toString(),
+          codigo_paleta: esEditar ?
+            (compradorEditar?.codigo_paleta || '') :  (compradorEditar?.codigo_paleta ||
+                (Math.floor(Math.random() * (99999 - 10000 + 1) + 10000)).toString()),
           calificacion_bancaria: compradorEditar?.calificacion_bancaria || "",
           antecedentes_penales: compradorEditar?.antecedentes_penales || false,
           procesos_judiciales: compradorEditar?.procesos_judiciales || false,
@@ -105,7 +108,7 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
     const {
         reset,
         handleSubmit,
-      
+        setValue,
         formState: { isSubmitting },
     } = methods;
     
@@ -142,6 +145,8 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
         if (validacion){
             const nombres = await consultarIdentificacion(identificacion);
             setNombres(nombres.razon_social);
+            setValue('correo', nombres.correo);
+            setValue('celular', nombres.telefono2);
             setValidacionI(true);
         }else {
             setValidacionI(false);
@@ -169,7 +174,17 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
                     value={nombresV}
                     onChange={(e) => {setNombres(e.target.value)}}
                 />
+                 <RHFTextField
+                    name="correo"
+                    label="Correo"
+                    size='small'
+                />
 
+                <RHFTextField
+                    name="celular"
+                    label="Celular"
+                    size='small'
+                />
                 <RHFTextField
                     name="codigo_paleta"
                     label="Número de paleta"
@@ -177,7 +192,8 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
 
                 />
 
-                <RHFTextField
+               
+                  <RHFTextField
                     name="calificacion_bancaria"
                     label="Calificación Bancaria"
                     size='small'

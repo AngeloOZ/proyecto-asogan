@@ -60,9 +60,9 @@ async function obtenerCompradores(req: NextApiRequest, res: NextApiResponse) {
 async function crearComprador(req: NextApiRequest, res: NextApiResponse) {
     try {
         await prisma.$transaction(async (prisma) => {
-
             const { codigo_paleta, antecedentes_penales, procesos_judiciales, calificacion_bancaria, estado,correo,celular }: compradores = req.body;
-            const { identificacion, nombres }: usuario = req.body
+            const { identificacion, nombres}: usuario = req.body
+           
             const verificarUsuario = await prisma.usuario.findUnique({ where: { identificacion } });
             
             if (verificarUsuario) {
@@ -77,17 +77,21 @@ async function crearComprador(req: NextApiRequest, res: NextApiResponse) {
                     nombres,
                     clave: claveEncriptada,
                     rol: `["comprador"]`,
-                    tipo: 2
+                    tipo: 2,
+                    correo: correo!,
+                    celular: celular!
                 }
             });
 
 
+            if (codigo_paleta !== "") {
 
-            const verificaCompradorPaleta = await prisma.compradores.findUnique({ where: { codigo_paleta: codigo_paleta! } });
-
-            if (verificaCompradorPaleta) {
-                return res.status(500).json({ message: 'el codigo de la paleta ya existe' });
+                const verificaCompradorPaleta = await prisma.compradores.findUnique({ where: { codigo_paleta: codigo_paleta! } });
+                if (verificaCompradorPaleta) {
+                    return res.status(500).json({ message: 'el codigo de la paleta ya existe' });
+                }
             }
+
 
             const comprador = await prisma.compradores.create({
                 data: {
@@ -121,12 +125,15 @@ async function actualizarComprador(req: NextApiRequest, res: NextApiResponse) {
             const { id_comprador, codigo_paleta, antecedentes_penales, procesos_judiciales, calificacion_bancaria, estado, correo, celular }: compradores = req.body;
             const { nombres, identificacion }: usuario = req.body
 
-            const verificaCompradorPaleta = await prisma.compradores.findMany({ where: { codigo_paleta, id_comprador: { not: id_comprador } }, take: 1 });
+            if (codigo_paleta !== "") {
+                const verificaCompradorPaleta = await prisma.compradores.findMany({ where: { codigo_paleta, id_comprador: { not: id_comprador } }, take: 1 });
 
-            if (verificaCompradorPaleta.length > 0) {
-
-                return res.status(500).json({ message: 'el codigo de la paleta ya existe' });
+                if (verificaCompradorPaleta.length > 0) {
+    
+                    return res.status(500).json({ message: 'el codigo de la paleta ya existe' });
+                }
             }
+           
             const comprador = await prisma.compradores.update({
                 where: { id_comprador },
                 data: {

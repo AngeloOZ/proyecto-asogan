@@ -65,7 +65,8 @@ export function FormUsuarios({ esEditar = false, usuariosEditar }: Props) {
             then: Yup.string().required('La clave es requerida')
         }
         ),
-
+        correo: Yup.string().required('El correo es requerido').email('El correo ingresado es invalido'),
+        celular: Yup.string().required('El celular es requerido').length(10,'El número de celular no puede tener mas de 10 digitos'),
         rol: Yup.string().required('El rol es requerido'),
         verificacion_clave: Yup.string().oneOf([Yup.ref('clave'), null], 'Las claves no coinciden'),
     });
@@ -73,15 +74,22 @@ export function FormUsuarios({ esEditar = false, usuariosEditar }: Props) {
 
 
     // Se carga los valores en caso de que sea editar
-    const defaultValues = useMemo<IUsuario>(() => ({
-        usuarioid: usuariosEditar?.usuarioid || 0,
-        nombres: usuariosEditar?.nombres || '',
-        identificacion: usuariosEditar?.identificacion || '',
-        clave: '',
-        verificacion_clave: '',
-        rol: JSON.parse(usuariosEditar?.rol || `[""]`)[0],
-        tipo: usuariosEditar?.tipo || 1,
-    }), [usuariosEditar]);
+    const defaultValues = useMemo<IUsuario>(() => {
+
+        esEditar && setValidacionI(true);
+
+        return {
+            usuarioid: usuariosEditar?.usuarioid || 0,
+            nombres: usuariosEditar?.nombres || '',
+            identificacion: usuariosEditar?.identificacion || '',
+            clave: '',
+            verificacion_clave: '',
+            rol: JSON.parse(usuariosEditar?.rol || `[""]`)[0],
+            tipo: usuariosEditar?.tipo || 1,
+            correo: usuariosEditar?.correo || '',
+            celular:usuariosEditar?.celular || ''
+        };
+    }, [usuariosEditar]);
 
 
     // funciones para el hook useForm
@@ -134,6 +142,8 @@ export function FormUsuarios({ esEditar = false, usuariosEditar }: Props) {
 
             const data = await consultarIdentificacion(watch("identificacion"));
             setValue('nombres', data.razon_social);
+            setValue('correo', data.correo);
+            setValue('celular', data.telefono2);
             setValidacionI(true);
         } else {
             setValidacionI(false);
@@ -159,6 +169,19 @@ export function FormUsuarios({ esEditar = false, usuariosEditar }: Props) {
                 <RHFTextField
                     name="nombres"
                     label="Nombres"
+                    size='small'
+
+                />
+                  <RHFTextField
+                    name="correo"
+                    label="Correo"
+                    size='small'
+
+                />
+
+                <RHFTextField
+                    name="celular"
+                    label="Celular"
                     size='small'
 
                 />

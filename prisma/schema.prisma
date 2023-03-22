@@ -14,6 +14,8 @@ model usuario {
   clave          String       @db.VarChar(255)
   rol            String       @db.VarChar(255)
   tipo           Int?         @default(1)
+  correo         String       @db.VarChar(100)
+  celular        String      @db.VarChar(10)
   compradores    compradores?
   pujas          pujas[]
 }
