@@ -13,7 +13,7 @@ export const EstadoLote = ({ estado }: { estado: number }) => {
             </Label>
         case 2:
             return <Label color="warning" variant="filled">
-                Pendiente
+                Postergado
             </Label>
         case 3:
             return <Label color="error" variant="filled">

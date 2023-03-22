@@ -23,7 +23,7 @@ export default function Index() {
           router.push(PATH_DASHBOARD_CLEINTE.root);
           break;
         default:
-          router.push(PATH_DASHBOARD.eventos.root);
+          router.push('/404');
       }
     }
   });

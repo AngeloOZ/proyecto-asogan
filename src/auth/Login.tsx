@@ -38,7 +38,7 @@ export const Login = () => {
     }
 
     return (
-        <LoginLayout illustration="/logo/logo_asogan2.png">
+        <LoginLayout illustration="/logo/logo.webp">
             <Head>
                 <title>Inicio de sesión</title>
             </Head>

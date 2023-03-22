@@ -419,7 +419,7 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false }: Pro
                                         }}>
                                         <MenuItem value='0'>No subastado</MenuItem>
                                         <MenuItem value='1'>En subasta</MenuItem>
-                                        <MenuItem value='2'>Rechazado</MenuItem>
+                                        <MenuItem value='2'>Postergado</MenuItem>
                                         <MenuItem value='3'>Subastado</MenuItem>
                                     </RHFSelect>
                                 )
