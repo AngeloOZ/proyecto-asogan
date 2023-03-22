@@ -24,6 +24,7 @@ export * from './Globales';
 export * from './Eventos';
 export * from './Imagenes';
 export * from './Martillador';
+export * from './Admin_martillador';
 
 
 

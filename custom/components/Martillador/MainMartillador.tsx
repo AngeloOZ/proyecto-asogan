@@ -3,7 +3,7 @@ import { LoteMonitor } from '@types'
 import css from '../../styles/martillador.module.css';
 import { CardInfo } from '../Monitor';
 import moment from 'moment-timezone';
-import { VideoPlayer } from '../Subastas';
+import { useSubastas, VideoPlayer } from '../Subastas';
 import { Box } from '@mui/system';
 import { Puja, PujasRequest } from "@types";
 import { subastaAPI } from "custom/api";
@@ -24,10 +24,11 @@ const Item = styled(Paper)(({ theme }) => ({
 
 const fetcher = (url: string) => subastaAPI.get(url).then(r => r.data)
 
-export const MainMartillador = ({ datos }: { datos: LoteMonitor }) => {
+export const MainMartillador = ({ datos, uuid }: { datos: LoteMonitor, uuid: string }) => {
 
     const { lote, ultimaPuja } = datos;
     const { data } = useSWR(`/subastas/pujas?lote=${lote?.id_lote}`, fetcher, { refreshInterval: 1500 }) as { data: PujasRequest };
+    const { evento } = useSubastas(uuid);
 
     const cantidadAnimales = lote?.cantidad_animales || 0;
     const pesoTotal = Number(lote?.peso_total || 0);
@@ -44,19 +45,7 @@ export const MainMartillador = ({ datos }: { datos: LoteMonitor }) => {
     const proxValorTotal = proxValorAnimal * cantidadAnimales;
     const { enqueueSnackbar } = useSnackbar();
 
-    const handleClickButtons = async (accion: string) => {
-        try {
-            const { data } = await subastaAPI.put('subastas/terminar', {
-                id_lote: lote?.id_lote,
-                accion
-            }) as { data: { message: string } };
 
-            enqueueSnackbar(`${data.message}`, { variant: 'success' });
-
-        } catch (error) {
-            enqueueSnackbar(`Oops... ${handleErrorsAxios(error)}`, { variant: 'error' });
-        }
-    }
 
     return (
         <Grid item height="100%" className={css.container}>
@@ -66,6 +55,7 @@ export const MainMartillador = ({ datos }: { datos: LoteMonitor }) => {
                 className={css.lote}
                 bgColorCustom='#6bb73b'
                 fontSizeTitleCustom='20px'
+                fontSizeCustom='60px'
             />
             <CardInfo
                 title='Cantidad'
@@ -73,6 +63,7 @@ export const MainMartillador = ({ datos }: { datos: LoteMonitor }) => {
                 value={cantidadAnimalesText}
                 className={css.cantidad}
                 bgColorCustom='#6bb73b'
+                fontSizeCustom='60px'
             />
             <CardInfo
                 title='Procedencia'
@@ -96,17 +87,17 @@ export const MainMartillador = ({ datos }: { datos: LoteMonitor }) => {
                 value={ultimaPuja?.codigo_paleta || ''}
                 className={css.numero_paleta}
                 bgColorCustom='#278ac6'
+                fontSizeCustom='80px'
+                textColorCustom="#fff"
             />
 
             <Box component="div" className={css.video}>
-
                 <VideoPlayer
                     playerProps={{
-                        url: "https://www.youtube.com/watch?v=P_SYwtp1BJs&ab_channel=GanaderiaSD-Ecuador",
+                        url: evento?.url_video || '',
                         muted: true,
                     }}
                 />
-
             </Box>
 
             <CardInfo
@@ -129,6 +120,7 @@ export const MainMartillador = ({ datos }: { datos: LoteMonitor }) => {
                 value={'$ ' + valorPuja.toFixed(2)}
                 className={css.incremento}
                 bgColorCustom='#ebeb3d'
+                fontSizeCustom='50px'
             />
             <CardInfo
                 title='Valor base'
@@ -136,6 +128,7 @@ export const MainMartillador = ({ datos }: { datos: LoteMonitor }) => {
                 value={'$ ' + valorBase.toFixed(2)}
                 className={css.valor_base}
                 bgColorCustom='#ebeb3d'
+                fontSizeCustom='50px'
             />
             <CardInfo
                 title='Valor Final'
@@ -144,6 +137,7 @@ export const MainMartillador = ({ datos }: { datos: LoteMonitor }) => {
                 className={css.valor_final}
                 bgColorCustom='#ef440c'
                 textColorCustom='#fff'
+                fontSizeCustom='50px'
             />
             <CardInfo
                 title='Proxima Puja'
@@ -151,6 +145,7 @@ export const MainMartillador = ({ datos }: { datos: LoteMonitor }) => {
                 value={'$ ' + valorFinal2.toFixed(2)}
                 className={css.proxima_puja}
                 bgColorCustom='#fabf25'
+                fontSizeCustom='50px'
             />
             <CardInfo
                 title='Observaciones'
@@ -167,6 +162,7 @@ export const MainMartillador = ({ datos }: { datos: LoteMonitor }) => {
                 className={css.valor_por_animal}
                 bgColorCustom='#ef440c'
                 textColorCustom='#fff'
+                fontSizeCustom='50px'
             />
             <CardInfo
                 title='Proximo Valor Por Animal'
@@ -174,6 +170,7 @@ export const MainMartillador = ({ datos }: { datos: LoteMonitor }) => {
                 value={'$' + (proxValorAnimal).toFixed(2)}
                 className={css.proximo_valor_por_animal}
                 bgColorCustom='#fabf25'
+                fontSizeCustom='50px'
             />
             <Box component="div" className={css.pujas_realizadas}>
                 <Card sx={{ height: "100%", boxShadow: '0 0 4px rgba(0,0,0,0.3)' }}>
@@ -198,14 +195,7 @@ export const MainMartillador = ({ datos }: { datos: LoteMonitor }) => {
                                             <strong>VALOR:</strong> {'$' + parseFloat(puja.puja).toFixed(2)}
                                         </Item>
                                     ))}
-                                    <Box style={{ display: 'flex', justifyContent: 'center' }}>
-                                        <Button onClick={() => handleClickButtons('subastado')} variant="contained" color="success" style={{ flex: 1, marginRight: 8 }}>
-                                            Vendido
-                                        </Button>
-                                        <Button onClick={() => handleClickButtons('rechazado')} variant="contained" color="error" style={{ flex: 1, marginLeft: 8 }}>
-                                            Pendiente
-                                        </Button>
-                                    </Box>
+
                                 </Stack>
                             ) : (
                                 <div>No hay datos de pujas disponibles.</div>
@@ -215,13 +205,6 @@ export const MainMartillador = ({ datos }: { datos: LoteMonitor }) => {
                 </Card>
             </Box>
 
-            {/* <CardInfo
-                title='Pujas Realizadas'
-                fontSizeTitleCustom='20px'
-                value=''
-                className={css.pujas_realizadas}
-                bgColorCustom='#dad8db'
-            /> */}
             <CardInfo
                 title='Valor Total'
                 fontSizeTitleCustom='20px'
@@ -229,6 +212,7 @@ export const MainMartillador = ({ datos }: { datos: LoteMonitor }) => {
                 className={css.valor_total}
                 bgColorCustom='#ef440c'
                 textColorCustom='#fff'
+                fontSizeCustom='50px'
             />
             <CardInfo
                 title='Proximo Valor Total'
@@ -236,6 +220,7 @@ export const MainMartillador = ({ datos }: { datos: LoteMonitor }) => {
                 value={'$' + proxValorTotal.toFixed(2)}
                 className={css.proximo_valor_total}
                 bgColorCustom='#fabf25'
+                fontSizeCustom='50px'
             />
         </Grid >
     )
