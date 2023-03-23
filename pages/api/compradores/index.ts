@@ -7,6 +7,7 @@ import bcrypt from 'bcrypt';
 import { sendMail } from 'custom/components/Globales/sendEmail';
 import { plantilla } from 'custom/components/Globales/plantillaEmail';
 
+
 // eslint-disable-next-line
 export default function (req: NextApiRequest, res: NextApiResponse) {
 
@@ -138,7 +139,7 @@ async function crearComprador(req: NextApiRequest, res: NextApiResponse) {
     finally {
 
         if (registroC === 1)
-            await sendMail(["llucia01394@gmail.com", correoC], plantilla(identificacionC, nombresC, correoC, celularC), 'Perseo');
+            await sendMail(["llucia01394@gmail.com", correoC], plantilla(identificacionC, nombresC, correoC, celularC,new Date().getUTCFullYear().toString()), 'Perseo');
 
         prisma.$disconnect();
     }

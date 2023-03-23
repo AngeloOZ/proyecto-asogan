@@ -1,11 +1,9 @@
-import { consultaAPI } from "custom/api"
-import { useSWRConfig } from "swr";
+import { consultaAPI, subastaAPI } from "custom/api"
+
 
 
 export const useGlobales = () => {
 
-
-    
 
 
     const validarIdentificacion = (identificacion: string) => {
@@ -73,7 +71,11 @@ export const useGlobales = () => {
 
     }
 
-        
+    const enviarCorreoClave = async (datos:any) =>{
 
-    return { validarIdentificacion, consultarIdentificacion }
+        const { data } = await subastaAPI.post('/correo', datos);
+        return data
+    }    
+
+    return { validarIdentificacion, consultarIdentificacion, enviarCorreoClave }
 }
