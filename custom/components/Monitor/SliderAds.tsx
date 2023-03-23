@@ -35,7 +35,7 @@ export function SliderAds({ banners }: { banners: imagenes[] }) {
                 spaceBetween={30}
                 centeredSlides={true}
                 autoplay={{
-                    delay: 2500,
+                    delay: 3500,
                     disableOnInteraction: false,
                 }}
                 pagination={{
@@ -49,8 +49,8 @@ export function SliderAds({ banners }: { banners: imagenes[] }) {
                     banners.map((banner, index) => (
                         <SwiperSlide key={banner.id_imagen}>
                             <img
-                                src={banner.ruta}
-                                alt={banner.ruta}
+                                src={banner.imagen!}
+                                alt={banner.descripcion!}
                                 style={{ objectFit: "fill", objectPosition: "center" }}
                             />
                         </SwiperSlide>

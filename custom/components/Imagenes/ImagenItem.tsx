@@ -1,6 +1,6 @@
 import { useState } from 'react';
 // @mui
-import { Card, Stack, Button, MenuItem, IconButton, CardContent, CardMedia, Typography } from '@mui/material';
+import { Card, Stack, Button, MenuItem, IconButton } from '@mui/material';
 
 // @prisma
 import { imagenes } from '@prisma/client';
@@ -10,9 +10,7 @@ import { useSnackbar } from '../../../src/components/snackbar';
 import Iconify from '../../../src/components/iconify';
 import MenuPopover from '../../../src/components/menu-popover';
 import ConfirmDialog from '../../../src/components/confirm-dialog';
-import { useRouter } from 'next/router';
-import { PATH_DASHBOARD } from 'src/routes/paths';
-import { useObtenerImagenes, useImagenes } from '.';
+import { useImagenes } from '.';
 import Image from 'next/image'
 
 type Props = {
@@ -24,7 +22,6 @@ export const ImagenItem = ({ imagenes }: Props) => {
     const [openPopover, setOpenPopover] = useState<HTMLElement | null>(null);
     const [openConfirm, setOpenConfirm] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
-    const router = useRouter();
 
 
     const handleOpenPopover = (event: React.MouseEvent<HTMLElement>) => {
@@ -42,10 +39,6 @@ export const ImagenItem = ({ imagenes }: Props) => {
     const handleCloseConfirm = () => {
         setOpenConfirm(false);
     };
-
-    // const handleClickEdit = () => {
-    //     router.push(`${PATH_DASHBOARD.banner.editar}/${imagenes.id_imagen}`);
-    // }
 
     const handleClickDelete = async () => {
         try {
@@ -71,13 +64,7 @@ export const ImagenItem = ({ imagenes }: Props) => {
                     </IconButton>
                 </Stack>
 
-                {/* <CardMedia
-                    component="img"
-                    height="150"
-                    image="img/imagen.jpg"
-                /> */}
-                <Image src={imagenes.ruta!} alt='Logo' width="350" height="350" />
-
+                <Image src={imagenes.imagen!} alt='Logo' width="350" height="350" />
             </Card>
 
             <MenuPopover

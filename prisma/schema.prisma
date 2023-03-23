@@ -105,8 +105,9 @@ model pujas {
 }
 
 model imagenes {
-  id_imagen Int    @id @default(autoincrement())
-  ruta      String @db.LongText
+  id_imagen   Int     @id @default(autoincrement())
+  descripcion String? @db.VarChar(100)
+  imagen      String  @db.LongText
 }
 
 model tipo_animales {

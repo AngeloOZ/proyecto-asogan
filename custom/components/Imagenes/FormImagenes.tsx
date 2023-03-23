@@ -18,51 +18,39 @@ import FormProvider, {
 
 import { useImagenes } from '.';
 import { PATH_DASHBOARD } from 'src/routes/paths';
-import { imagen } from '@types';
+import { ImagenBaner } from '@types';
 import Link from 'next/link';
 import { handleErrorsAxios } from 'utils';
+import { imagenes } from '@prisma/client';
 
-type FormValuesProps = imagen;
+type FormValuesProps = ImagenBaner;
 
-type Props = {
-    esEditar?: boolean;
-    imagenEditar?: imagen;
-}
 
-export function FormImagenes({ esEditar = false, imagenEditar }: Props) {
+export function FormImagenes() {
     const { push } = useRouter();
     const { enqueueSnackbar } = useSnackbar();
-    const { agregarImagen, actualizarImagen } = useImagenes();
+    const { agregarImagen } = useImagenes();
 
-    useEffect(() => {
-        if (esEditar && imagenEditar) {
-            reset(defaultValues);
-        }
-
-        if (!esEditar) {
-            reset(defaultValues);
-        }
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [esEditar, imagenEditar]);
 
     // Validaciones de los campos
-    const ImagenesEsquema = Yup.object().shape({
-        ruta: Yup.mixed().required('La imagen es requerida'),
-
+    const ImagenEsquema = Yup.object().shape({
+        descripcion: Yup.string().required('La descripción de la imagén es requerido'),
+        imagen: Yup.mixed().required('La imagén es requerida'),
     });
 
     // Se carga los valores en caso de que sea editar
-    const defaultValues = useMemo<imagen>(() => ({
-        id_imagen: imagenEditar?.id_imagen || 0,
-        ruta: imagenEditar?.ruta || '',
-    }), [imagenEditar]);
+    const defaultValues = useMemo<ImagenBaner>(() => ({
+        id_imagen: 0,
+        descripcion: '',
+        imagen: '',
+    }), []);
 
     // funciones para el hook useForm
     const methods = useForm<FormValuesProps>({
-        resolver: yupResolver(ImagenesEsquema),
+        resolver: yupResolver(ImagenEsquema),
         defaultValues,
     });
+
     const {
         reset,
         watch,
@@ -74,17 +62,10 @@ export function FormImagenes({ esEditar = false, imagenEditar }: Props) {
     // Funcion para enviar el formulario
     const onSubmit = async (data: FormValuesProps) => {
         try {
-            if (!esEditar) {
-                await agregarImagen(data);
-                enqueueSnackbar('Imagen agregada correctamente', { variant: 'success' });
-                push(PATH_DASHBOARD.banner.root);
-            } else {
-                await actualizarImagen(data);
-                enqueueSnackbar('Imagen actualizada correctamente', { variant: 'success' });
-                push(PATH_DASHBOARD.banner.root);
-            }
+            await agregarImagen(data);
+            enqueueSnackbar('Imagen agregada correctamente', { variant: 'success' });
+            push(PATH_DASHBOARD.banner.root);
             reset();
-
         } catch (error) {
             console.error(error);
             enqueueSnackbar(`Oops... ${handleErrorsAxios(error)}`, { variant: 'error' });
@@ -100,22 +81,28 @@ export function FormImagenes({ esEditar = false, imagenEditar }: Props) {
             });
 
             if (file) {
-                setValue('ruta', newFile, { shouldValidate: true });
+                setValue('imagen', newFile, { shouldValidate: true });
             }
         },
         [setValue]
     );
 
     const handleRemoveFile = () => {
-        setValue('ruta', null);
+        setValue('imagen', null);
     };
 
     return (
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
             <Card sx={{ p: 3, boxShadow: "0 0 2px rgba(0,0,0,0.2)" }}>
                 <Stack spacing={2}>
+                    <RHFTextField
+                        name="descripcion"
+                        label="Descripción"
+                        fullWidth
+                    />
                     <RHFUpload
-                        name="ruta"
+                        name="imagen"
+                        maxSize={1048576}
                         onDrop={handleDrop}
                         onDelete={handleRemoveFile}
                         onRemove={handleRemoveFile}
