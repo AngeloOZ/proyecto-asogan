@@ -20,7 +20,7 @@ import FormProvider, {
     RHFTextField,
 } from '../../../src/components/hook-form';
 
-import { compradores as IComprador, usuario as IUsuario } from '@prisma/client';
+import { compradores as IComprador} from '@prisma/client';
 import { useCompradores } from './Hooks';
 import Link from 'next/link';
 
@@ -29,6 +29,9 @@ import { ICompradores } from '../../../interfaces';
 import { useGlobales } from '../Globales';
 
 import { handleErrorsAxios } from 'utils';
+import { sendMail } from '../Globales/sendEmail';
+import { plantillaCredencial } from '../Globales/plantillaCredenciales';
+import moment from 'moment-timezone';
 type FormValuesProps = IComprador;
 type Props = {
     esEditar?: boolean;
@@ -41,7 +44,7 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
     const { push } = useRouter();
     const { enqueueSnackbar } = useSnackbar();
     const { agregarComprador, actualizarComprador } = useCompradores();
-    const { validarIdentificacion, consultarIdentificacion } = useGlobales();
+    const { validarIdentificacion, consultarIdentificacion, enviarCorreoClave } = useGlobales();
     const [validacionI, setValidacionI] = useState(false);
     const [nombresV, setNombres] = useState<string>();
 
@@ -117,7 +120,7 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
             if (validacionI == true) {
                 if (!esEditar) {
 
-                    await agregarComprador({ ...data, nombres: nombresV, registro:0 });
+                    await agregarComprador({ ...data, nombres: nombresV?.trim(), registro:0 });
                     enqueueSnackbar('Comprador agregado correctamente', { variant: 'success' });
                     push(PATH_DASHBOARD.compradores.root);
                 } else {
@@ -152,6 +155,17 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
         }
 
 
+    }
+
+    const enviarCorreo = async (data:any) =>{
+        data.nombres = nombresV?.trim()
+        const correo = await enviarCorreoClave(data)
+
+        if (correo){
+            enqueueSnackbar("Se ha enviado correctamente el correo electronico");
+        }else {
+            enqueueSnackbar("Ocurrió un error, volver a intentar");
+        }
     }
 
     return (<FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} >
@@ -239,7 +253,24 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
                 >
                     Guardar
                 </LoadingButton>
+                
+                {
 
+                  (esEditar) &&  <Button
+                  fullWidth
+                  color="inherit"
+                  variant="outlined"
+                  size="medium"
+                  onClick={() => enviarCorreo(methods.getValues())}
+                  >
+                      Enviar Correo
+              </Button>
+                }
+              
+                   
+                
+            
+              
             </Stack>
 
         </Card>
