@@ -52,7 +52,7 @@ export default function PageAdminEventos({ eventos }: { eventos: eventos[] }) {
                                 </Box>
                                 <Box component='div'>
                                     <Typography component='span' variant='subtitle1'>Estado: </Typography>
-                                    <EstadoLote estado={evento.abierto} />
+                                    <EstadoLote estado={evento.abierto!} />
                                 </Box>
                                 <Box component='div' display='flex' justifyContent='flex-end'>
                                     <Link href={`${PATH_DASHBOARD.lotes.agregar}/${evento.id_evento}`} passHref legacyBehavior>
