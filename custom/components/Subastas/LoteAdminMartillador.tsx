@@ -82,9 +82,6 @@ export const LoteAdminMartillador = ({ listadoLotes = [] }: LoteMartillador) => 
             }
 
             await subastaAPI.post(`/subastas/loteAdminMartillador`, loteModificado);
-
-            // Restablece los valores del formulario a sus valores predeterminados
-            reset(defaultValues);
             enqueueSnackbar("Lote modificado correctamente", { variant: 'success' });
         } catch (error) {
             console.error(error);
