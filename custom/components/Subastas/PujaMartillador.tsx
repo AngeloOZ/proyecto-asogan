@@ -1,20 +1,10 @@
-import { useContext, useRef, useState } from 'react';
-// @mui
+import { useState } from 'react';
 import { InputBase, IconButton, InputAdornment, Stack, Button } from '@mui/material';
 import { useSWRConfig } from 'swr';
-
-// components
 import { useSnackbar } from 'src/components/snackbar';
-
 import { IoHandRight } from 'react-icons/io5';
 import { TbEditCircle } from 'react-icons/tb';
-
-import { lotes } from '@prisma/client';
-
 import { subastaAPI } from 'custom/api';
-
-import { AuthContext } from 'src/auth';
-
 import { handleErrorsAxios } from 'utils';
 import { Box } from '@mui/system';
 import { LoteA } from '@types'
