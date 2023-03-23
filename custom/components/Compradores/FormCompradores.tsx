@@ -161,10 +161,13 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
         data.nombres = nombresV?.trim()
         const correo = await enviarCorreoClave(data)
 
-        if (correo){
+        if (correo === true) {
             enqueueSnackbar("Se ha enviado correctamente el correo electronico");
+        }else if(correo === false){
+
+            enqueueSnackbar("Ocurrió un error, volver a intentar", { variant: 'error' });
         }else {
-            enqueueSnackbar("Ocurrió un error, volver a intentar");
+            enqueueSnackbar(`${correo}`, { variant: 'error' });
         }
     }
 
