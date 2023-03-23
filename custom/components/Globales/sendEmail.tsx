@@ -17,7 +17,7 @@ export const sendMail = (mailRecipientList: string[], contentHTML: string, subje
     return new Promise(async (resolve, reject) => {
         try {
             const mailOptions = {
-                from: "llucia01394@gmail.com" ,
+                from: "noresponder@perseo.ec" ,
                 to: mailRecipientList,
                 subject: subject,
                 html: contentHTML
