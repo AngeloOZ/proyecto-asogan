@@ -63,7 +63,6 @@ export default function PageAdminProveedores() {
                     }}
                     handeEdit={handleClickEditRow}
                     handleDelete={handleClickDeleteRow}
-
                 />
             </Container>
         </>

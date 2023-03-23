@@ -32,9 +32,12 @@ export const MainAdminMartillador = ({ datos, uuid }: { datos: LoteMonitor, uuid
         <Grid height="100%" className={css.container}>
 
             <Box component="div" className={css.lote}>
-                <Card sx={{ height: "100%", boxShadow: '0 0 4px rgba(0,0,0,0.3)' }}>
-                    <CardContent component='div' style={{ padding: 0, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'stretch' }} >
-                        <Box component='div' width="100%" height="100%" style={{ backgroundColor: '#e7ebf0', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                <Card sx={{ height: "100%", }}>
+                    <CardContent 
+                        component='div' 
+                        style={{ padding: 0, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'stretch' }}
+                    >
+                        <Box component='div' width="100%" height="100%" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                             <LoteAdminMartillador listadoLotes={lotes} />
                         </Box>
                     </CardContent>

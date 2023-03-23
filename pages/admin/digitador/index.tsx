@@ -82,7 +82,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     });
 
     const eventos2 = eventos.map((evento) => {
-        // evento.fecha = moment(evento.fecha, 'DD/MM/YYYY HH:mm').toDate();
+        evento.fecha = moment(evento.fecha, 'DD/MM/YYYY HH:mm').toDate();
         return {
             ...evento,
             fecha: moment(evento.fecha).format('LLLL'),
