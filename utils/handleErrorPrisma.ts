@@ -3,7 +3,7 @@ export function handleErrorsPrisma(error: any) {
 
     switch (error.code) {
         case "P2003":
-            mensaje = "No se pudo eliminar el registro porque está siendo utilizado por otra parte de la aplicación.";
+            mensaje = "Ha habido un error debido a una relación entre dos campos que no se cumple.";
             break;
 
         case "P2016":
