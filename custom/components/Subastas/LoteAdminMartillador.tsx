@@ -6,8 +6,15 @@ import FormProvider, {
     RHFSelect,
 } from 'src/components/hook-form';
 import { useForm } from "react-hook-form";
+import { useSnackbar } from "notistack";
 
 
+interface Lote {
+    puja_inicial: number;
+    incremento: number;
+    id_lote: number;
+    subastado: number;
+}
 
 interface LoteMartillador {
     setLoteActual?: Dispatch<SetStateAction<lotes | undefined>>;
@@ -18,13 +25,12 @@ interface LoteMartillador {
 type FormProps = {
     id_lote: string | number;
     incremento: number | string;
+    lote: Lote;
 
 }
 export const LoteAdminMartillador = ({ loteActual, setLoteActual = () => { }, listadoLotes = [] }: LoteMartillador) => {
 
-    // const valorBase = Number(loteActual?.puja_inicial) || 0;
-    // const valorPuja = Number(loteActual?.incremento) || 0;
-
+    const { enqueueSnackbar } = useSnackbar();
     const defaultValues = {
         id_lote: loteActual?.id_lote || '',
     }
@@ -33,19 +39,48 @@ export const LoteAdminMartillador = ({ loteActual, setLoteActual = () => { }, li
     });
 
     const {
+        reset,
         watch,
     } = methods;
     const values = watch();
 
+    const guardarLote = async () => {
+        try {
+            const loteModificado = {
+                id_lote: values.id_lote,
+                id_evento: loteActual?.id_evento,
+                puja_inicial: values.lote.puja_inicial,
+                incremento: values.lote.incremento,
+                subastado: values.lote.subastado,
+            };
+
+            await subastaAPI.put(`/subastas/lotes`, loteModificado);
+
+            // Restablece los valores del formulario a sus valores predeterminados
+            reset(defaultValues);
+            enqueueSnackbar("Lote modificado correctamente", { variant: 'success' });
+            // Aquí puedes agregar el código para mostrar una notificación de éxito
+        } catch (error) {
+            console.error(error);
+
+            // Aquí puedes agregar el código para mostrar una notificación de error
+        }
+    };
+
+
     const [selectedLote, setSelectedLote] = useState("");
-    const [valorBase, setValorBase] = useState(0);
-    const [valorPuja, setValorPuja] = useState(0);
+    const [loteData, setLoteData] = useState<Lote>({
+        puja_inicial: 0,
+        incremento: 0,
+        id_lote: 0,
+        subastado: 0,
+    });
 
     const fetchLoteData = async (loteId: string) => {
         try {
             const { data } = await subastaAPI.get(`/lotes?id=${loteId}`);
-            setValorBase(data.valorBase);
-            setValorPuja(data.valorPuja);
+            console.log(data)
+            setLoteData(data);
         } catch (error) {
             console.error(error);
         }
@@ -56,7 +91,6 @@ export const LoteAdminMartillador = ({ loteActual, setLoteActual = () => { }, li
             fetchLoteData(selectedLote);
         }
     }, [selectedLote]);
-
 
     return (
 
@@ -80,6 +114,8 @@ export const LoteAdminMartillador = ({ loteActual, setLoteActual = () => { }, li
                         startAdornment: <InputAdornment position="start">#</InputAdornment>,
                         style: { fontSize: 15 }
                     }}
+                    value={selectedLote} // agregado
+
                 >
                     {
                         listadoLotes.length == 0 ?
@@ -88,7 +124,7 @@ export const LoteAdminMartillador = ({ loteActual, setLoteActual = () => { }, li
                     }
                 </RHFSelect>
 
-                <RHFSelect name='subastado' label='Estado' size='small'>
+                <RHFSelect name='subastado' label='Seleccione Estado' size='small'>
                     <MenuItem value='0'>No subastado</MenuItem>
                     <MenuItem value='1'>En subasta</MenuItem>
                     <MenuItem value='2'>Postergado</MenuItem>
@@ -101,10 +137,9 @@ export const LoteAdminMartillador = ({ loteActual, setLoteActual = () => { }, li
                     size='small'
                     type='number'
                     fullWidth
-                    value={valorBase}
+                    value={loteData?.puja_inicial}
                     InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                        readOnly: true,
                         style: { fontSize: 15 }
                     }}
                     InputLabelProps={{ style: { fontSize: 18, color: 'black', fontWeight: "500" }, shrink: true }}
@@ -115,16 +150,15 @@ export const LoteAdminMartillador = ({ loteActual, setLoteActual = () => { }, li
                     size='small'
                     type='number'
                     fullWidth
-                    value={valorPuja}
+                    value={loteData?.incremento}
                     InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                        readOnly: true,
                         style: { fontSize: 15 }
                     }}
                     InputLabelProps={{ style: { fontSize: 18, color: 'black', fontWeight: "500" }, shrink: true }}
                 />
 
-                <Button variant="contained" color="success" style={{ flex: 1, marginRight: 8 }}>
+                <Button onClick={() => guardarLote()} variant="contained" color="success" style={{ flex: 1, marginRight: 8 }}>
                     Guardar
                 </Button>
 

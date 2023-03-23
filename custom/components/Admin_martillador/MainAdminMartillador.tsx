@@ -41,6 +41,29 @@ export const MainAdminMartillador = ({ datos, uuid }: { datos: LoteMonitor, uuid
                 </Card>
             </Box>
 
+            <Box component="div" className={css.input}>
+                <Card sx={{ height: "100%", boxShadow: '0 0 4px rgba(0,0,0,0.3)' }}>
+                    <CardContent component='div' style={{ padding: 0, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'stretch' }} >
+                        <Box style={{ textAlign: 'center', padding: 5, borderBottom: "1px #dad8db dashed" }}>
+                            <Typography
+                                component='h3'
+                                fontWeight='bold'
+                                fontSize="28px"
+                                textTransform='uppercase'
+                            >
+                                Puja
+                            </Typography>
+                        </Box>
+                        <Box component='div' width="100%" height="100%" style={{ backgroundColor: '#e7ebf0', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                            {lote && (
+                                <PujaMartillador lote={lote!} />
+                            )
+                            }
+                        </Box>
+                    </CardContent>
+                </Card>
+            </Box>
+
             <CardInfo
                 title='#lote'
                 value={lote?.codigo_lote || ''}
@@ -140,28 +163,7 @@ export const MainAdminMartillador = ({ datos, uuid }: { datos: LoteMonitor, uuid
                 />
             </Box>
 
-            <Box component="div" className={css.input}>
-                <Card sx={{ height: "100%", boxShadow: '0 0 4px rgba(0,0,0,0.3)' }}>
-                    <CardContent component='div' style={{ padding: 0, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'stretch' }} >
-                        <Box style={{ textAlign: 'center', padding: 5, borderBottom: "1px #dad8db dashed" }}>
-                            <Typography
-                                component='h3'
-                                fontWeight='bold'
-                                fontSize="28px"
-                                textTransform='uppercase'
-                            >
-                                Puja
-                            </Typography>
-                        </Box>
-                        <Box component='div' width="100%" height="100%" style={{ backgroundColor: '#e7ebf0', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                            {lote && (
-                                <PujaMartillador lote={lote!} />
-                            )
-                            }
-                        </Box>
-                    </CardContent>
-                </Card>
-            </Box>
+
 
 
         </Grid>
