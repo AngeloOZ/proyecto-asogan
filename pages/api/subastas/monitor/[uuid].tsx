@@ -41,14 +41,9 @@ async function obtenerLoteMonitor(req: NextApiRequest, res: NextApiResponse) {
         },
     });
 
-    if (!lote) {
-        res.status(200).json({ lote: null, ultimaPuja: null })
-        return;
-    }
-
-    const ultimaPuja = await prisma.pujas.findMany({
+    const ultimaPuja = await prisma.pujas.findFirst({
         where: {
-            id_lote: lote.id_lote!
+            id_lote: lote?.id_lote
         },
         orderBy: [
             { puja: 'desc' },
@@ -62,5 +57,5 @@ async function obtenerLoteMonitor(req: NextApiRequest, res: NextApiResponse) {
         take: 1
     })
 
-    res.status(200).json({ lote, ultimaPuja: ultimaPuja[0] || null })
+    res.status(200).json({ lote, ultimaPuja: ultimaPuja || null })
 }
