@@ -24,23 +24,24 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 
 async function registrarPuja(req: NextApiRequest, res: NextApiResponse) {
     try {
-        return await prisma.$transaction(async (prisma) => {
-            const { id_lote, id_usuario, codigo_paleta, puja } = req.body;
+        const { id_lote, id_usuario, codigo_paleta, puja } = req.body;
+        // return await prisma.$transaction(async (prisma) => {
 
-            await prisma.pujas.create({
-                data: {
-                    id_lote,
-                    id_usuario,
-                    codigo_paleta,
-                    puja
-                }
-            });
-
-            await prisma.lotes.update({
-                where: { id_lote },
-                data: { puja_final: puja }
-            });
+        await prisma.pujas.create({
+            data: {
+                id_lote,
+                id_usuario,
+                codigo_paleta,
+                puja
+            }
         });
+
+        await prisma.lotes.update({
+            where: { id_lote },
+            data: { puja_final: puja }
+        });
+
+        // });
     } catch (error) {
         throw new Error(error);
     }

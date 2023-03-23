@@ -31,23 +31,23 @@ async function registrarPujaMartillador(req: NextApiRequest, res: NextApiRespons
         return;
     }
 
-    await prisma.$transaction(async (prisma) => {
+    // await prisma.$transaction(async (prisma) => {
 
-        await prisma.pujas.create({
-            data: {
-                id_lote,
-                id_usuario: usuario.usuarioid,
-                codigo_paleta,
-                puja
-            }
-        });
-
-        await prisma.lotes.update({
-            where: { id_lote },
-            data: { puja_final: puja }
-        });
-
+    await prisma.pujas.create({
+        data: {
+            id_lote,
+            id_usuario: usuario.usuarioid,
+            codigo_paleta,
+            puja
+        }
     });
+
+    await prisma.lotes.update({
+        where: { id_lote },
+        data: { puja_final: puja }
+    });
+
+    // });
 
     res.status(200).json({ message: 'Puja registrada' });
 }
