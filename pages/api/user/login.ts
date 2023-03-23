@@ -5,7 +5,7 @@ import prisma from 'database/prismaClient';
 import { jwt } from 'utils';
 import { UserLogged } from '@types';
 import bcrypt from 'bcrypt';
-import user from '.';
+
 
 
 type Data =
