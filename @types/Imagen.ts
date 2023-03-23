@@ -1,4 +1,5 @@
-export interface imagen {
+export interface ImagenBaner {
     id_imagen?: number;
-    ruta: File | string | null;
+    descripcion: string;
+    imagen: File | string | null;
 }

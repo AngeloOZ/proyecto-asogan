@@ -1,5 +1,4 @@
 import { GetServerSideProps } from 'next'
-import { useRouter } from 'next/router'
 import Head from 'next/head'
 import Link from 'next/link'
 
@@ -12,31 +11,11 @@ import CustomBreadcrumbs from 'src/components/custom-breadcrumbs/CustomBreadcrum
 
 import { PATH_DASHBOARD } from 'src/routes/paths'
 import moment from 'moment-timezone'
-import Label from 'src/components/label/Label'
+import { EstadoLote } from 'custom/components'
 
 PageAdminEventos.getLayout = (page: React.ReactElement) => <DashboardLayout roles={['digitador']}>{page}</DashboardLayout>
 
 export default function PageAdminEventos({ eventos }: { eventos: eventos[] }) {
-    const router = useRouter();
-
-    const EstadoLote = ({ estado }: { estado: number }) => {
-        switch (estado) {
-            case 1:
-                return <Label color="info" variant="filled">
-                    Cerrado
-                </Label>
-            case 2:
-                return <Label color="success" variant="filled">
-                    Abierto
-                </Label>
-            case 3:
-                return <Label color="error" variant="filled">
-                    Finalizado
-                </Label>
-            default:
-                return null
-        }
-    }
 
     return (
         <>
@@ -54,10 +33,10 @@ export default function PageAdminEventos({ eventos }: { eventos: eventos[] }) {
                     component='div'
                     display='grid'
                     gridTemplateColumns={{
-                            xs: 'repeat(1, 1fr)',
-                            sm: 'repeat(2, 1fr)',
-                            md: 'repeat(3, 1fr)',
-                        }}
+                        xs: 'repeat(1, 1fr)',
+                        sm: 'repeat(2, 1fr)',
+                        md: 'repeat(3, 1fr)',
+                    }}
                     gap={3}
                 >
                     {eventos.map((evento) => (
@@ -73,7 +52,7 @@ export default function PageAdminEventos({ eventos }: { eventos: eventos[] }) {
                                 </Box>
                                 <Box component='div'>
                                     <Typography component='span' variant='subtitle1'>Estado: </Typography>
-                                    <EstadoLote estado={evento.abierto} />
+                                    <EstadoLote estado={evento.abierto!} />
                                 </Box>
                                 <Box component='div' display='flex' justifyContent='flex-end'>
                                     <Link href={`${PATH_DASHBOARD.lotes.agregar}/${evento.id_evento}`} passHref legacyBehavior>
@@ -93,12 +72,8 @@ export default function PageAdminEventos({ eventos }: { eventos: eventos[] }) {
 
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-    let today = new Date();
 
-    today = moment(today, 'YYYY/MM/DD HH:mm').toDate();
-
-
-    let eventos = await prisma.eventos.findMany({
+    const eventos = await prisma.eventos.findMany({
         where: {
             abierto: {
                 lte: 2

@@ -41,7 +41,7 @@ model eventos {
   fecha       DateTime? @db.DateTime(0)
   lugar       String?   @db.VarChar(100)
   tipo        String?   @db.VarChar(50)
-  abierto     Int       @default(1) @db.TinyInt
+  abierto     Int?      @default(1)
   uuid        String?   @unique(map: "eventos_UN") @default(uuid()) @db.VarChar(300)
   lotes       lotes[]
 }
@@ -105,8 +105,9 @@ model pujas {
 }
 
 model imagenes {
-  id_imagen Int    @id @default(autoincrement())
-  ruta      String @db.VarChar(300)
+  id_imagen   Int     @id @default(autoincrement())
+  descripcion String? @db.VarChar(100)
+  imagen      String  @db.LongText
 }
 
 model tipo_animales {

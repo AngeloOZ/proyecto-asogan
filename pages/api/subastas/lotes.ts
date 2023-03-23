@@ -68,7 +68,7 @@ async function modificarLote(req: NextApiRequest, res: NextApiResponse) {
                 id_lote: Number(id_lote)
             },
             data: {
-                subastado: subastado,
+                subastado: Number(subastado),
                 incremento: Number(incremento),
                 puja_inicial: Number(puja_inicial)
             }
