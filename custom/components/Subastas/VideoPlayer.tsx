@@ -14,7 +14,7 @@ export const VideoPlayer = ({ playerProps, ...other }: VideoPlayerProps) => {
     setPlay(true);
   }, [play])
 
-  if (!play) return <Skeleton variant="rectangular" width="100%" height="100%" style={{ minHeight: "200px", height: '100%' }} />;
+  // if (!play) return <Skeleton variant="rectangular" width="100%" height="100%" style={{ minHeight: "200px", height: '100%' }} />;
 
   return (
     <Box {...other}

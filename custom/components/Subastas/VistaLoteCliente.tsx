@@ -152,10 +152,11 @@ export const VistaLoteCliente = ({ loteActual, banners, evento }: Props) => {
                 fontSizeCustom='55px'
             />
             <Card className={css.video_puja} >
-                <Box className={css.video} >
+                <Box height='100%' width='100%' style={{ height: '100%' }}>
                     <TabVideos
                         urlTransmisionEnVivo={evento.url_video || ''}
                         urlVideoDemostracion={lote?.url_video || ''}
+                        height='100%'
                     />
                 </Box>
             </Card>

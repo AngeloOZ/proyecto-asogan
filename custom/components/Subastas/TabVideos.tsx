@@ -21,7 +21,8 @@ function TabPanel(props: TabPanelProps) {
             aria-labelledby={`simple-tab-${index}`}
             {...other}
             style={{
-                padding: 5,
+                padding: 6,
+                width: '100%',
                 height: '100%',
             }}
         >
@@ -54,7 +55,7 @@ export function TabVideos({ urlTransmisionEnVivo = '', urlVideoDemostracion = ''
     };
 
     return (
-        <Box sx={{ width: '100%', padding: 0, height: 'calc( 100% - 60px)' }} >
+        <Box sx={{ width: '100%', padding: 0, height: 'calc(100% - 60px)' }} >
             <Box sx={{ borderBottom: 1, borderColor: 'divider', py: 0, my: 0 }} height={60} paddingX={2}>
                 <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
                     <Tab label="Video demostración" {...a11yProps(0)} />
@@ -64,12 +65,13 @@ export function TabVideos({ urlTransmisionEnVivo = '', urlVideoDemostracion = ''
             <TabPanel value={value} index={0}>
                 {
                     urlVideoDemostracion === '' ?
-                        <Skeleton variant="rectangular" width="100%" style={{ minHeight: 130, height: '100%' }} />
+                        <Skeleton variant="rectangular" width="100%" style={{ minHeight: 150, height: '100%' }} />
                         :
                         <VideoPlayer
                             playerProps={{
                                 url: urlVideoDemostracion,
                                 muted: true,
+                                controls: true,
                             }}
                         />
 
@@ -78,12 +80,13 @@ export function TabVideos({ urlTransmisionEnVivo = '', urlVideoDemostracion = ''
             <TabPanel value={value} index={1}>
                 {
                     urlTransmisionEnVivo === '' ?
-                        <Skeleton variant="rectangular" width="100%" style={{ minHeight: 130, height: '100%' }} />
+                        <Skeleton variant="rectangular" width="100%" style={{ minHeight: 150, height: '100%' }} />
                         :
                         <VideoPlayer
                             playerProps={{
                                 url: urlTransmisionEnVivo,
                                 muted: true,
+                                controls: true,
                             }}
                         />
 

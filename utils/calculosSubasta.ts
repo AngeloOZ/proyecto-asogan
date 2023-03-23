@@ -19,7 +19,7 @@ interface CalculosSubasta {
 
 export function calcularSubasta(lote: lotes | Lote | LoteA | null) : CalculosSubasta {
     let horaPesaje = moment(lote?.fecha_pesaje || '').format('H:mm');
-
+    
     if (horaPesaje === 'Invalid date') {
         horaPesaje = '-';
     }
