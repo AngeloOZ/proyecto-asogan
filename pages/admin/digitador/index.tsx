@@ -72,7 +72,7 @@ export default function PageAdminEventos({ eventos }: { eventos: eventos[] }) {
 
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-
+    moment.locale('es');
     const eventos = await prisma.eventos.findMany({
         where: {
             abierto: {
@@ -82,10 +82,10 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     });
 
     const eventos2 = eventos.map((evento) => {
-        evento.fecha = moment(evento.fecha, 'DD/MM/YYYY HH:mm').toDate();
+        // evento.fecha = moment(evento.fecha, 'DD/MM/YYYY HH:mm').toDate();
         return {
             ...evento,
-            fecha: moment(evento.fecha).format('DD/MM/YYYY HH:mm'),
+            fecha: moment(evento.fecha).format('LLLL'),
         };
     })
 
