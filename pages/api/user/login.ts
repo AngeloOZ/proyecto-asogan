@@ -7,6 +7,7 @@ import { UserLogged } from '@types';
 import bcrypt from 'bcrypt';
 
 
+
 type Data =
     {
         status: number
@@ -39,9 +40,14 @@ async function loginUser(req: NextApiRequest, res: NextApiResponse<Data>) {
             return res.status(404).json({ status: 404, message: 'El usuario o la contraseña no son válidos - IDEN' })
         }
         const comprobacion = await bcrypt.compare(clave, user.clave);
-        
+
         if (!comprobacion) {
             return res.status(404).json({ status: 404, message: 'El usuario o la contraseña no son válidos - CLAVE' })
+        }
+        if (user.tipo === 2) {
+            const comprador = await prisma.compradores.findUnique({ where: { usuarioid: user.usuarioid } });
+            if (comprador?.estado === false)
+                return res.status(404).json({ status: 404, message: 'El usuario no tiene permisos para ingresar' })
         }
 
         const token = await jwt.signToken(user)
