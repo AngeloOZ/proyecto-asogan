@@ -22,6 +22,11 @@ export const MainMonitor = ({ datos, banners }: { datos: LoteMonitor, banners: i
     const valorFinal = Number(lote?.puja_final) || 0;
     const valorFinal2 = valorFinal + valorPuja;
     const valorFinalTotal = valorFinal * pesoTotal;
+    let horaPesaje = moment(lote?.fecha_pesaje || '').format('H:mm');
+
+    if (horaPesaje === 'Invalid date') {
+        horaPesaje = '-';
+    }
 
     return (
         <Grid container height="100%" width="100%">
@@ -64,7 +69,7 @@ export const MainMonitor = ({ datos, banners }: { datos: LoteMonitor, banners: i
 
                 <CardInfo
                     title='Hora de pesaje'
-                    value={moment(lote?.fecha_pesaje).format('HH:mm')}
+                    value={horaPesaje}
                     className={css.hora_pesaje}
                     fontSizeCustom='60px'
                     bgColorCustom='#6bb73b'

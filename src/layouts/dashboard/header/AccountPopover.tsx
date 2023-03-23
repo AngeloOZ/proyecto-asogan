@@ -8,7 +8,7 @@ import { Box, Divider, Typography, MenuItem } from '@mui/material';
 import { AuthContext } from 'src/auth';
 
 // routes
-import { PATH_AUTH,PATH_DASHBOARD } from '../../../routes/paths';
+import { PATH_AUTH, PATH_DASHBOARD } from '../../../routes/paths';
 // auth
 // components
 import { CustomAvatar } from '../../../components/custom-avatar';
@@ -91,6 +91,13 @@ export default function AccountPopover() {
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
             {user?.identificacion}
           </Typography>
+
+          {user?.comprador?.codigo_paleta &&
+            <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
+              Mi Paleta: {user?.comprador?.codigo_paleta}
+            </Typography>
+          }
+
         </Box>
 
         <Divider sx={{ borderStyle: 'dashed' }} />
@@ -104,7 +111,7 @@ export default function AccountPopover() {
             </MenuItem>
           )
         }
-        
+
 
         <MenuItem onClick={handleLogout} sx={{ m: 1 }}>
           Cerrar Sesión

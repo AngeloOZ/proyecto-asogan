@@ -27,6 +27,11 @@ export const MainAdminMartillador = ({ datos, uuid }: { datos: LoteMonitor, uuid
     const valorFinal = Number(lote?.puja_final) || 0;
     const valorFinal2 = valorFinal + valorPuja;
     const valorFinalTotal = valorFinal * pesoTotal;
+    let horaPesaje = moment(lote?.fecha_pesaje || '').format('H:mm');
+
+    if (horaPesaje === 'Invalid date') {
+        horaPesaje = '-';
+    }
 
     return (
         <Grid height="100%" className={css.container}>
@@ -96,7 +101,7 @@ export const MainAdminMartillador = ({ datos, uuid }: { datos: LoteMonitor, uuid
 
             <CardInfo
                 title='Hora de pesaje'
-                value={moment(lote?.fecha_pesaje).format('HH:mm')}
+                value={horaPesaje}
                 className={css.hora_pesaje}
                 fontSizeCustom='60px'
                 bgColorCustom='#6bb73b'

@@ -1,18 +1,16 @@
-import { Button, Card, CardContent, Grid, Typography, useTheme } from '@mui/material'
+import { Card, CardContent, Grid, Typography, useTheme } from '@mui/material'
 import { LoteMonitor } from '@types'
 import css from '../../styles/martillador.module.css';
 import { CardInfo } from '../Monitor';
 import moment from 'moment-timezone';
 import { useSubastas, VideoPlayer } from '../Subastas';
 import { Box } from '@mui/system';
-import { Puja, PujasRequest } from "@types";
+import { PujasRequest } from "@types";
 import { subastaAPI } from "custom/api";
 import useSWR from "swr";
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
-import { useSnackbar } from 'notistack';
-import { handleErrorsAxios } from 'utils';
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -43,9 +41,11 @@ export const MainMartillador = ({ datos, uuid }: { datos: LoteMonitor, uuid: str
     const proxValorAnimal = pesoPromedio * valorFinal2;
     const valorTotal = valorAnimal * cantidadAnimales;
     const proxValorTotal = proxValorAnimal * cantidadAnimales;
-    const { enqueueSnackbar } = useSnackbar();
+    let horaPesaje = moment(lote?.fecha_pesaje || '').format('H:mm');
 
-
+    if (horaPesaje === 'Invalid date') {
+        horaPesaje = '-';
+    }
 
     return (
         <Grid item height="100%" className={css.container}>
@@ -110,7 +110,7 @@ export const MainMartillador = ({ datos, uuid }: { datos: LoteMonitor, uuid: str
             <CardInfo
                 title='Hora Pesaje'
                 fontSizeTitleCustom='20px'
-                value={moment(lote?.fecha_pesaje).format('HH:mm')}
+                value={horaPesaje}
                 className={css.hora_pesaje}
                 bgColorCustom='#6bb73b'
             />
