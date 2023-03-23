@@ -44,12 +44,12 @@ async function loginUser(req: NextApiRequest, res: NextApiResponse<Data>) {
         if (!comprobacion) {
             return res.status(404).json({ status: 404, message: 'El usuario o la contraseña no son válidos - CLAVE' })
         }
-        if (user.tipo = 2) {
+        if (user.tipo === 2) {
             const comprador = await prisma.compradores.findUnique({ where: { usuarioid: user.usuarioid } });
-            if (comprador?.estado == false)
+            if (comprador?.estado === false)
                 return res.status(404).json({ status: 404, message: 'El usuario no tiene permisos para ingresar' })
         }
-        
+
         const token = await jwt.signToken(user)
         return res.status(200).json({
             user: {
