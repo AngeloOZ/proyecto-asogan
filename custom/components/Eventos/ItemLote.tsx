@@ -175,7 +175,7 @@ export const ItemLote = ({ lote, expanded, setExpanded, isEventActive }: Props) 
                             </TableRow>
                             <TableRow>
                                 <TableCell>
-                                    <Typography variant="body2" fontWeight="bold" component="span">Puja Inicial: </Typography>
+                                    <Typography variant="body2" fontWeight="bold" component="span">Incremento: </Typography>
                                 </TableCell>
                                 <TableCell>
                                     <Typography variant="body2" component="span">{newLote.valorPuja.toFixed(2)}</Typography>

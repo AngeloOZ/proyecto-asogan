@@ -47,18 +47,15 @@ async function modificarLote(req: NextApiRequest, res: NextApiResponse) {
     try {
         const { id_lote, subastado, incremento, puja_inicial } = req.body;
 
+        const lotePrev = await prisma.lotes.findUnique({ where: { id_lote: Number(id_lote) } });
 
-        // await prisma.lotes.updateMany({
-        //     where: {
-        //         id_evento,
-        //         subastado: {
-        //             lt: 2
-        //         }
-        //     },
-        //     data: {
-        //         subastado: 0
-        //     }
-        // });
+        let puja_inicialBase = Number(lotePrev!.puja_inicial);
+        let puja_final = Number(lotePrev!.puja_final);
+
+        if (Number(puja_inicial) !== puja_inicialBase) {
+            puja_final = puja_inicial;
+            puja_inicialBase = puja_inicial;
+        }
 
         const lote = await prisma.lotes.update({
             where: {
@@ -67,7 +64,8 @@ async function modificarLote(req: NextApiRequest, res: NextApiResponse) {
             data: {
                 subastado: Number(subastado),
                 incremento: Number(incremento),
-                puja_inicial: Number(puja_inicial)
+                puja_inicial: puja_inicialBase,
+                puja_final
             }
         });
         return res.status(200).json(lote);
