@@ -33,8 +33,6 @@ export const VistaLoteCliente = ({ loteActual, banners, evento }: Props) => {
     const { user, rol: [rolLogged] } = useContext(AuthContext);
     const newLote = calcularSubasta(lote);
 
-    { console.log(evento.url_video) }
-
     const incremento = Number(lote?.puja_final || 0) + Number(lote?.incremento || 0);
 
     const registrarPujaComprador = async () => {

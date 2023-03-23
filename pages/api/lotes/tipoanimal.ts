@@ -23,7 +23,7 @@ async function listado(req: NextApiRequest, res: NextApiResponse) {
         const tipo = await prisma.tipo_animales.findMany();
         return res.status(200).json(tipo);
     } catch (error) {
-        return res.status(500).json(handleErrorsPrisma(error?.code));
+        return res.status(500).json(handleErrorsPrisma(error));
     }
 
 }
