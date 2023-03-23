@@ -25,9 +25,9 @@ async function enviarCredencial(req: NextApiRequest, res: NextApiResponse) {
         if (codigo_paleta === "" || codigo_paleta === 0 || estado === false) {
 
             return res.send("Verifique el número de paleta y/o el estado del usuario")
-        } else {
-            await sendMail([correo], plantillaCredencial(nombres, identificacion, new Date().getUTCFullYear().toString(), codigo_paleta), 'Perseo')
-        }
+        } 
+        await sendMail([correo], plantillaCredencial(nombres, identificacion, new Date().getUTCFullYear().toString(), codigo_paleta), 'Perseo')
+        
 
         return res.send(true)
     } catch (error) {
