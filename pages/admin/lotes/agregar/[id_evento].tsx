@@ -8,7 +8,6 @@ import { PATH_DASHBOARD } from 'src/routes/paths'
 import { FormLotes } from 'custom/components'
 
 import prisma from 'database/prismaClient'
-import { eventos } from '@prisma/client'
 
 
 

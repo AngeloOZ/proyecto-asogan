@@ -1,8 +1,7 @@
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import Link from 'next/link'
 
-import { Button, Container } from '@mui/material'
+import { Container } from '@mui/material'
 
 import DashboardLayout from 'src/layouts/dashboard/DashboardLayout'
 import { PATH_DASHBOARD } from 'src/routes/paths'
@@ -45,11 +44,7 @@ export default function PageAdminProveedores() {
                         { name: 'Lista de lotes', href: PATH_DASHBOARD.lotes.root },
                     ]}
                 />
-                {/* <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "-25px", marginBottom: 10 }}>
-                    <Link href={PATH_DASHBOARD.lotes.agregar} passHref legacyBehavior>
-                        <Button variant='contained'>Agregar lote</Button>
-                    </Link>
-                </div> */}
+                
                 <TableCustom
                     headers={[
                         { label: "ID", name: "id_lote", type: 'number', serchable: false },

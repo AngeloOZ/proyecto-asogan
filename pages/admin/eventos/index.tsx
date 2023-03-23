@@ -1,5 +1,3 @@
-import { useContext } from 'react'
-
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 import Link from 'next/link'
@@ -13,14 +11,12 @@ import CustomBreadcrumbs from 'src/components/custom-breadcrumbs/CustomBreadcrum
 
 import { TableCustom, useEventos, useObtenerEventos } from 'custom/components'
 import { PATH_DASHBOARD } from 'src/routes/paths'
-import { AuthContext } from 'src/auth'
 import { handleErrorsAxios } from '../../../utils';
 
 PageAdminEventos.getLayout = (page: React.ReactElement) => <DashboardLayout roles={['admin']}>{page}</DashboardLayout>
 
 export default function PageAdminEventos() {
     const router = useRouter();
-    const { rol: [rolLogged] } = useContext(AuthContext);
     const { eliminarEvento } = useEventos();
     const { enqueueSnackbar } = useSnackbar();
     const { eventos, isLoading } = useObtenerEventos();
