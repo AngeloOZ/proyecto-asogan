@@ -35,7 +35,7 @@ export const MainAdminMartillador = ({ datos, uuid }: { datos: LoteMonitor, uuid
                 <Card sx={{ height: "100%", boxShadow: '0 0 4px rgba(0,0,0,0.3)' }}>
                     <CardContent component='div' style={{ padding: 0, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'stretch' }} >
                         <Box component='div' width="100%" height="100%" style={{ backgroundColor: '#e7ebf0', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                            <LoteAdminMartillador loteActual={loteActual} setLoteActual={setLoteActual} listadoLotes={lotes} />
+                            <LoteAdminMartillador listadoLotes={lotes} />
                         </Box>
                     </CardContent>
                 </Card>

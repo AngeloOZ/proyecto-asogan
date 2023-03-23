@@ -305,14 +305,21 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
                                 {tipoAnimales.map((tipoA) => <MenuItem value={tipoA.codigoanimal}>{tipoA.descripcionanimal}</MenuItem>)}
                             </RHFSelect>
 
-                            <RHFTextField
+                            <RHFSelect
                                 name="calidad_animales"
                                 label="Calidad de animales"
                                 size='small'
                                 inputProps={{
                                     readOnly: soloVer,
                                 }}
-                            />
+                            >
+                                <MenuItem value="Excelente">Excelente</MenuItem>
+                                <MenuItem value="Muy Buena">Muy Buena</MenuItem>
+                                <MenuItem value="Buena">Buena</MenuItem>
+                                <MenuItem value="Regular">Regular</MenuItem>
+                                <MenuItem value="Mala">Mala</MenuItem>
+                            
+                            </RHFSelect>
 
                             <RHFSelect name='sexo' label='Sexo' size='small'
                                 inputProps={{
