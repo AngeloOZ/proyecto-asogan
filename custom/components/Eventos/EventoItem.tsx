@@ -78,7 +78,7 @@ export const EventoItem = ({ eventos }: Props) => {
 
 					{
 						eventos.abierto && (rolLogged === 'comprador' || rolLogged === 'martillador') && (
-							<Link href={`${PATH_DASHBOARD.subastas}/${eventos.uuid}`} passHref legacyBehavior>
+							<Link href={`${PATH_DASHBOARD.subastas.root}/${eventos.uuid}`} passHref legacyBehavior>
 								<a target='_blank' style={{ textDecoration: 'none' }}>
 									<Button
 										fullWidth

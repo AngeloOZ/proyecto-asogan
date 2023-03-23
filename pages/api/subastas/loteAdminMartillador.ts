@@ -45,7 +45,7 @@ async function obtenerLoteActivo(req: NextApiRequest, res: NextApiResponse) {
 
 async function modificarLote(req: NextApiRequest, res: NextApiResponse) {
     try {
-        const { id_evento, id_lote, subastado, incremento, puja_inicial } = req.body;
+        const { id_lote, subastado, incremento, puja_inicial } = req.body;
 
 
         // await prisma.lotes.updateMany({

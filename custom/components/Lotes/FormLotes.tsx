@@ -45,7 +45,7 @@ type Props = {
 }
 
 export function FormLotes({ esEditar = false, loteEditar, soloVer = false, evento }: Props) {
-    const { push, back } = useRouter();
+    const { push } = useRouter();
     const { enqueueSnackbar } = useSnackbar();
     const [lotesAnteriores, setLotesAnteriores] = useState<lotes[]>([]);
     const { eventos, isLoading: isLoadingEventos } = useObtenerEventos();
@@ -152,7 +152,6 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
     const onSubmit = async (data: FormValuesProps) => {
         try {
             if (!esEditar) {
-                // data.codigo_lote = data.id_evento + '-' + data.codigo_lote;
                 await agregarLote(data);
                 setCodigoLote(generateUniqueNumber());
                 enqueueSnackbar('Lote agregado correctamente', { variant: 'success' });
@@ -318,7 +317,7 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
                                 <MenuItem value="Buena">Buena</MenuItem>
                                 <MenuItem value="Regular">Regular</MenuItem>
                                 <MenuItem value="Mala">Mala</MenuItem>
-                            
+
                             </RHFSelect>
 
                             <RHFSelect name='sexo' label='Sexo' size='small'
@@ -454,15 +453,16 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
 
                         {!soloVer && (
                             <Stack direction="row" spacing={1.5} maxWidth={400} margin="auto" mt={2}>
-                                <Button
-                                    fullWidth
-                                    color="inherit"
-                                    variant="outlined"
-                                    size="medium"
-                                    onClick={() => back()}
-                                >
-                                    Cancelar
-                                </Button>
+                                <Link legacyBehavior href={PATH_DASHBOARD.lotes.root}>
+                                    <Button
+                                        fullWidth
+                                        color="inherit"
+                                        variant="outlined"
+                                        size="medium"
+                                    >
+                                        Cancelar
+                                    </Button>
+                                </Link>
 
 
                                 <LoadingButton
