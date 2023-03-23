@@ -4,7 +4,7 @@ import css from '../../styles/admin_martillador.module.css';
 import { CardInfo } from '../Monitor';
 import moment from 'moment-timezone';
 import { Box } from '@mui/system';
-import { ChatInput, PujaMartillador, useLotesSubasta, useSubastas, VideoPlayer } from '../Subastas';
+import { PujaMartillador, useLotesSubasta, useSubastas, VideoPlayer } from '../Subastas';
 import { LoteAdminMartillador } from '../Subastas/LoteAdminMartillador';
 import { useState } from 'react';
 import { lotes } from '@prisma/client'
@@ -30,17 +30,12 @@ export const MainAdminMartillador = ({ datos, uuid }: { datos: LoteMonitor, uuid
 
     return (
         <Grid height="100%" className={css.container}>
-
             <Box component="div" className={css.lote}>
-                <Card sx={{ height: "100%", }}>
-                    <CardContent 
-                        component='div' 
-                        style={{ padding: 0, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'stretch' }}
-                    >
-                        <Box component='div' width="100%" height="100%" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                            <LoteAdminMartillador listadoLotes={lotes} />
-                        </Box>
-                    </CardContent>
+                <Card sx={{ height: "100%", p: 2 }}>
+                    <Box component='div' width="100%" height="100%" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                        <LoteAdminMartillador listadoLotes={lotes} />
+                    </Box>
+
                 </Card>
             </Box>
 

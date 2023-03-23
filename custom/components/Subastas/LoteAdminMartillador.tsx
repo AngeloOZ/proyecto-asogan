@@ -3,18 +3,18 @@ import { lotes } from "@prisma/client";
 import { Dispatch, SetStateAction, useContext, useEffect, useMemo, useState } from "react";
 import { subastaAPI } from 'custom/api'
 import FormProvider, {
-    RHFSelect,
+    RHFSelect, RHFTextField,
 } from 'src/components/hook-form';
 import { useForm } from "react-hook-form";
 import { useSnackbar } from "notistack";
 
 
 interface Lote {
-    id_lote?: number | string;
-    id_evento?: number;
-    puja_inicial?: number | string;
-    incremento?: number | string;
-    subastado?: string | number;
+    id_lote: string;
+    id_evento: number;
+    puja_inicial: string;
+    incremento: string;
+    subastado: string;
 }
 
 interface LoteMartillador {
@@ -25,13 +25,14 @@ type FormProps = Lote;
 export const LoteAdminMartillador = ({ listadoLotes = [] }: LoteMartillador) => {
 
     const { enqueueSnackbar } = useSnackbar();
-    const [loteActual, setLoteActual] = useState<Lote>()
+    const [loteActual, setLoteActual] = useState<lotes>()
 
     const defaultValues = useMemo<FormProps>(() => ({
-        id_lote: loteActual?.id_lote || "",
-        subastado: loteActual?.subastado || "",
-        puja_inicial: Number(loteActual?.puja_inicial) || 0,
-        incremento: Number(loteActual?.incremento) || 0,
+        id_lote: loteActual?.id_lote.toString() || "",
+        id_evento: loteActual?.id_evento || 0,
+        puja_inicial: Number(loteActual?.puja_inicial || 0).toFixed(2),
+        incremento: Number(loteActual?.incremento || 0).toFixed(2),
+        subastado: loteActual?.subastado?.toString() || "",
     }), [loteActual]);
 
     const methods = useForm<FormProps>({
@@ -60,6 +61,7 @@ export const LoteAdminMartillador = ({ listadoLotes = [] }: LoteMartillador) => 
         if (values.id_lote) {
             cargarDatosLote();
         }
+
     }, [values.id_lote])
 
     useEffect(() => {
@@ -70,14 +72,15 @@ export const LoteAdminMartillador = ({ listadoLotes = [] }: LoteMartillador) => 
 
     const guardarLote = async (data: FormProps) => {
         try {
+
             const loteModificado = {
-                id_lote: data.id_lote,
-                id_evento: loteActual?.id_evento,
+                id_lote: Number(data.id_lote),
+                id_evento: Number(data.id_evento),
                 puja_inicial: data.puja_inicial,
                 incremento: data.incremento,
                 subastado: data.subastado,
-            };
-            console.log(loteModificado)
+            }
+
             await subastaAPI.post(`/subastas/loteAdminMartillador`, loteModificado);
 
             // Restablece los valores del formulario a sus valores predeterminados
@@ -85,14 +88,11 @@ export const LoteAdminMartillador = ({ listadoLotes = [] }: LoteMartillador) => 
             enqueueSnackbar("Lote modificado correctamente", { variant: 'success' });
         } catch (error) {
             console.error(error);
-
-            // Aquí puedes agregar el código para mostrar una notificación de error
         }
     };
 
 
     return (
-
         <FormProvider methods={methods} onSubmit={handleSubmit(guardarLote)}>
             <Box
                 gap={1.5}
@@ -101,7 +101,6 @@ export const LoteAdminMartillador = ({ listadoLotes = [] }: LoteMartillador) => 
             >
 
                 <RHFSelect
-
                     name='id_lote'
                     label='Listado de lotes'
                     placeholder="Lotes"
@@ -128,12 +127,12 @@ export const LoteAdminMartillador = ({ listadoLotes = [] }: LoteMartillador) => 
                     <MenuItem value='3'>Subastado</MenuItem>
                 </RHFSelect>
 
-                <TextField
+                <RHFTextField
                     name="puja_inicial"
                     label="Valor base"
                     size='small'
-                    //type='number'
                     fullWidth
+                    defaultValue={values.puja_inicial}
                     InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
                         style: { fontSize: 15 }
@@ -141,11 +140,10 @@ export const LoteAdminMartillador = ({ listadoLotes = [] }: LoteMartillador) => 
                     InputLabelProps={{ style: { fontSize: 18, color: 'black', fontWeight: "500" }, shrink: true }}
                 />
 
-                <TextField
+                <RHFTextField
                     name="incremento"
                     label="Puja"
                     size='small'
-                    // type='number'
                     fullWidth
                     InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,

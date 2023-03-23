@@ -15,6 +15,8 @@ export default function Index() {
         if (id_evento) {
             switch (rol[0]) {
                 case 'comprador':
+                    console.log(PATH_DASHBOARD_CLEINTE.subastas);
+                    
                     router.push(`${PATH_DASHBOARD_CLEINTE.subastas}/otra/${id_evento}`);
                     break;
                 default:
