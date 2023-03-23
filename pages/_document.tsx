@@ -14,7 +14,7 @@ import { primaryFont } from '../src/theme/typography';
 export default class MyDocument extends Document {
   render() {
     return (
-      <Html lang="en" className={primaryFont.className}>
+      <Html lang="es" className={primaryFont.className}>
         <Head>
           <meta charSet="utf-8" />
           <link rel="manifest" href="/manifest.json" />
