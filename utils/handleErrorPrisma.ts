@@ -23,7 +23,7 @@ export function handleErrorsPrisma(error: any) {
             break;
 
         case "P2028":
-            mensaje = "No se pudo eliminar el registro porque está siendo utilizado por otra parte de la aplicación.";
+            mensaje = "Api Transaccion Error.";
             break;
 
         default:

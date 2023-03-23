@@ -63,6 +63,7 @@ async function obtenerCompradores(req: NextApiRequest, res: NextApiResponse) {
 
 async function crearComprador(req: NextApiRequest, res: NextApiResponse) {
 
+   
     let identificacionC = ""
     let nombresC = ""
     let correoC = ""
