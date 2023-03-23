@@ -12,7 +12,7 @@ import { eventos } from '@prisma/client'
 
 
 
-PageAdminProveedores.getLayout = (page: React.ReactElement) => <DashboardLayout roles={['admin','digitador']}>{page}</DashboardLayout>
+PageAdminProveedores.getLayout = (page: React.ReactElement) => <DashboardLayout roles={['admin', 'digitador']}>{page}</DashboardLayout>
 
 type Props = {
     evento: {
@@ -23,7 +23,6 @@ type Props = {
 }
 
 export default function PageAdminProveedores({ evento }: Props) {
-    console.log(evento);
 
     return (
         <>
@@ -39,7 +38,7 @@ export default function PageAdminProveedores({ evento }: Props) {
                     ]}
                 />
 
-                <FormLotes />
+                <FormLotes evento={evento} />
 
             </Container>
         </>

@@ -31,14 +31,21 @@ import { subastaAPI } from 'custom/api';
 
 type FormValuesProps = LoteForm;
 
+type Evento = {
+    id_evento: number;
+    descripcion: string;
+    uuid: string;
+}
+
 type Props = {
     esEditar?: boolean;
     loteEditar?: LoteEditar;
     soloVer?: boolean;
+    evento?: Evento;
 }
 
-export function FormLotes({ esEditar = false, loteEditar, soloVer = false }: Props) {
-    const { push } = useRouter();
+export function FormLotes({ esEditar = false, loteEditar, soloVer = false, evento }: Props) {
+    const { push, back } = useRouter();
     const { enqueueSnackbar } = useSnackbar();
     const [lotesAnteriores, setLotesAnteriores] = useState<lotes[]>([]);
     const { eventos, isLoading: isLoadingEventos } = useObtenerEventos();
@@ -120,7 +127,7 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false }: Pro
         crias_machos: loteEditar?.crias_machos || 0,
         peso_total: Number(loteEditar?.peso_total) || 0,
         observaciones: loteEditar?.observaciones || '',
-        id_evento: loteEditar?.id_evento || '',
+        id_evento: loteEditar?.id_evento || evento!.id_evento.toString() || '',
         id_proveedor: loteEditar?.id_proveedor || '',
         puja_inicial: Number(loteEditar?.puja_inicial) || 0,
         incremento: Number(loteEditar?.incremento) || 0,
@@ -147,12 +154,13 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false }: Pro
             if (!esEditar) {
                 // data.codigo_lote = data.id_evento + '-' + data.codigo_lote;
                 await agregarLote(data);
+                setCodigoLote(generateUniqueNumber());
                 enqueueSnackbar('Lote agregado correctamente', { variant: 'success' });
             } else {
                 await actualizarLote(data);
                 enqueueSnackbar('Lote actualizado correctamente', { variant: 'success' });
+                push(PATH_DASHBOARD.lotes.root);
             }
-            push(PATH_DASHBOARD.lotes.root);
             reset();
         } catch (error) {
             console.error(error);
@@ -244,7 +252,25 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false }: Pro
             <Grid container spacing={2}>
                 <Grid item xs={12} md={7}>
                     <Card sx={{ p: 2, boxShadow: "0 0 2px rgba(0,0,0,0.2)" }}>
+                        <Stack spacing={2} mb={2}>
+                            <Typography variant='subtitle1'>Evento</Typography>
+                            <RHFSelect name='id_evento' label='' size='small'
+                                inputProps={{
+                                    readOnly: true,
+                                }}>
+                                {eventos.map((evento) => <MenuItem key={evento.id_evento} value={evento.id_evento}>{evento.descripcion}</MenuItem>)}
+                            </RHFSelect>
+                        </Stack>
                         <Stack spacing={2}>
+                            <Typography variant='subtitle1'>Datos del lote</Typography>
+
+                            <RHFSelect name='id_proveedor' label='Proveedores' size='small'
+                                inputProps={{
+                                    readOnly: soloVer,
+                                }}>
+                                {proveedores.map((provedor) => <MenuItem key={provedor.id_proveedor} value={provedor.id_proveedor}>{provedor.nombres}</MenuItem>)}
+                            </RHFSelect>
+
                             <RHFTextField
                                 name="codigo_lote"
                                 label="Código de lote"
@@ -296,14 +322,6 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false }: Pro
                                 <MenuItem value="0">Hembra</MenuItem>
                             </RHFSelect>
 
-                            <RHFTextField
-                                name="procedencia"
-                                label="Procedencia"
-                                size='small'
-                                inputProps={{
-                                    readOnly: soloVer,
-                                }}
-                            />
                             {
                                 watch('sexo') === '0' && (<>
                                     <RHFTextField
@@ -326,6 +344,16 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false }: Pro
                                     />
                                 </>)
                             }
+
+                            <RHFTextField
+                                name="procedencia"
+                                label="Procedencia"
+                                size='small'
+                                inputProps={{
+                                    readOnly: soloVer,
+                                }}
+                            />
+
                             <RHFTextField
                                 name="peso_total"
                                 label="Peso total"
@@ -351,17 +379,6 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false }: Pro
                                 }}
                             />
 
-                            <RHFTextField
-                                name="url_video"
-                                label="Url del video"
-                                size='small'
-                                multiline
-                                maxRows={3}
-                                inputProps={{
-                                    readOnly: soloVer,
-                                }}
-                            />
-
                         </Stack>
                     </Card>
                 </Grid>
@@ -374,19 +391,16 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false }: Pro
                     <Card sx={{ p: 2, boxShadow: "0 0 2px rgba(0,0,0,0.2)" }}>
                         <Stack spacing={2}>
 
-                            <RHFSelect name='id_evento' label='Eventos' size='small'
+                            <RHFTextField
+                                name="url_video"
+                                label="Url del video"
+                                size='small'
+                                multiline
+                                maxRows={3}
                                 inputProps={{
                                     readOnly: soloVer,
-                                }}>
-                                {eventos.map((evento) => <MenuItem key={evento.id_evento} value={evento.id_evento}>{evento.descripcion}</MenuItem>)}
-                            </RHFSelect>
-
-                            <RHFSelect name='id_proveedor' label='Proveedores' size='small'
-                                inputProps={{
-                                    readOnly: soloVer,
-                                }}>
-                                {proveedores.map((provedor) => <MenuItem key={provedor.id_proveedor} value={provedor.id_proveedor}>{provedor.nombres}</MenuItem>)}
-                            </RHFSelect>
+                                }}
+                            />
 
                             <RHFTextField
                                 name="puja_inicial"
@@ -433,16 +447,16 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false }: Pro
 
                         {!soloVer && (
                             <Stack direction="row" spacing={1.5} maxWidth={400} margin="auto" mt={2}>
-                                <Link href={PATH_DASHBOARD.lotes.root} passHref legacyBehavior>
-                                    <Button
-                                        fullWidth
-                                        color="inherit"
-                                        variant="outlined"
-                                        size="medium"
-                                    >
-                                        Cancelar
-                                    </Button>
-                                </Link>
+                                <Button
+                                    fullWidth
+                                    color="inherit"
+                                    variant="outlined"
+                                    size="medium"
+                                    onClick={() => back()}
+                                >
+                                    Cancelar
+                                </Button>
+
 
                                 <LoadingButton
                                     fullWidth

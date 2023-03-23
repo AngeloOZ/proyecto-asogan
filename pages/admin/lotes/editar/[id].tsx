@@ -13,7 +13,7 @@ import { lotes } from '@prisma/client'
 import { LoteEditar } from '@types'
 
 
-PageAdmin.getLayout = (page: React.ReactElement) => <DashboardLayout roles={['admin']}>{page}</DashboardLayout>
+PageAdmin.getLayout = (page: React.ReactElement) => <DashboardLayout roles={['admin', 'digitador']}>{page}</DashboardLayout>
 
 export default function PageAdmin() {
     const { query } = useRouter();
