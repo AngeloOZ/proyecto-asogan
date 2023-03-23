@@ -6,7 +6,6 @@ const PageRegistro = () => {
     return (
       <div>
           <Registro />
-
       </div>
         
     )

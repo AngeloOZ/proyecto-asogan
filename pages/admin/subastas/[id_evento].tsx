@@ -7,24 +7,23 @@ import { AuthContext } from 'src/auth';
 // ----------------------------------------------------------------------
 
 export default function Index() {
-    const { rol } = useContext(AuthContext)
+    const { rol: [rolLogged] } = useContext(AuthContext)
     const router = useRouter();
 
     useEffect(() => {
         const { id_evento } = router.query as { id_evento: string };
-        if (id_evento) {
-            switch (rol[0]) {
+        if (id_evento && rolLogged?.length > 0) {
+            switch (rolLogged) {
                 case 'comprador':
-                    console.log(PATH_DASHBOARD_CLEINTE.subastas);
-                    
                     router.push(`${PATH_DASHBOARD_CLEINTE.subastas}/otra/${id_evento}`);
                     break;
                 default:
                     router.push(`${PATH_DASHBOARD.subastas.root}/martillador/${id_evento}`);
             }
         }
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [router.query]);
+    }, [router.query, rolLogged]);
 
     return <LoadingScreen />;
 }

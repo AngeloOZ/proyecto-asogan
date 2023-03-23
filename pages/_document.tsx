@@ -18,7 +18,7 @@ export default class MyDocument extends Document {
         <Head>
           <meta charSet="utf-8" />
           <link rel="manifest" href="/manifest.json" />
-
+          
           {/* PWA primary color */}
           <meta name="theme-color" content={palette('light').primary.main} />
 
