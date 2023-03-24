@@ -1,13 +1,18 @@
-import * as Yup from 'yup';
 import { useEffect, useMemo, useState } from 'react';
+
 // next
+import Link from 'next/link';
 import { useRouter } from 'next/router';
+
 // form
+import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
+
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Grid, Card, Stack, Button, MenuItem, InputAdornment, Typography, TextField } from '@mui/material';
+import { Grid, Card, Stack, Button, MenuItem, InputAdornment, Typography } from '@mui/material';
+import moment from 'moment-timezone';
 
 // components
 import { useSnackbar } from '../../../src/components/snackbar';
@@ -16,18 +21,17 @@ import FormProvider, {
     RHFSelect,
 } from '../../../src/components/hook-form';
 
-import { useObtenerProveedores } from '../Proveedores';
 import { PATH_DASHBOARD } from 'src/routes/paths';
-import { LinearProgressBar } from '../LinearProgressBar';
-import Link from 'next/link';
 import { LoteForm, LoteEditar } from '@types';
 import { lotes, tipo_animales } from '@prisma/client';
+import { subastaAPI } from 'custom/api';
+import { handleErrorsAxios } from 'utils';
+
+import { useObtenerProveedores } from '../Proveedores';
+import { LinearProgressBar } from '../LinearProgressBar';
 import { useObtenerEventos } from '../Eventos';
 import { useLotes } from './hooks';
-import { handleErrorsAxios } from 'utils';
 import { IconPeso } from '../Subastas';
-import moment from 'moment-timezone';
-import { subastaAPI } from 'custom/api';
 
 type FormValuesProps = LoteForm;
 
@@ -45,14 +49,21 @@ type Props = {
 }
 
 export function FormLotes({ esEditar = false, loteEditar, soloVer = false, evento }: Props) {
-    const { push } = useRouter();
+    const router = useRouter();
     const { enqueueSnackbar } = useSnackbar();
-    const [lotesAnteriores, setLotesAnteriores] = useState<lotes[]>([]);
+    
     const { eventos, isLoading: isLoadingEventos } = useObtenerEventos();
     const { proveedores, isLoading: isLoadingProve } = useObtenerProveedores();
     const [codigoLote, setCodigoLote] = useState(generateUniqueNumber());
+    const [lotesAnteriores, setLotesAnteriores] = useState<lotes[]>([]);
     const [tipoAnimales, setTipoAnimales] = useState<tipo_animales[]>([]);
+
     const { agregarLote, actualizarLote } = useLotes();
+
+    useEffect(() => {
+        obtenerLotesTotales();
+        obtenerTipoAnimales();
+    }, []);
 
     useEffect(() => {
         if (esEditar && loteEditar) {
@@ -66,17 +77,6 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [esEditar, loteEditar]);
 
-    useEffect(() => {
-        obtenerLotesTotales();
-        obtenerTipoAnimales();
-    }, []);
-
-    useEffect(() => {
-        if (lotesAnteriores.length > 0 && esEditar) {
-            const filter = lotesAnteriores.filter((lote) => lote.id_lote !== loteEditar?.id_lote);
-            setLotesAnteriores(filter);
-        }
-    }, [lotesAnteriores]);
 
     function generateUniqueNumber(): string {
         const min = 1000;
@@ -85,16 +85,18 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
         return uniqueNumber.toString().slice(-6);
     }
 
-
     // Validaciones de los campos
     const ProveedorEsquema = Yup.object().shape({
         fecha_pesaje: Yup.string().required('La fecha es requerida'),
         codigo_lote: Yup.string()
             .required('El código es requerido')
             .test('unique', 'El número de paleta ya está ocupado', function (value) {
-
+                let lotes = lotesAnteriores;
+                if (esEditar && loteEditar) {
+                    lotes = lotesAnteriores.filter((lote) => lote.id_lote !== loteEditar.id_lote);
+                }
                 const evento = watch('id_evento');
-                const result = lotesAnteriores.some((lote) => (
+                const result = lotes.some((lote) => (
                     lote.codigo_lote === value && lote.id_evento === evento));
                 return !result;
             }),
@@ -127,7 +129,7 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
         crias_machos: loteEditar?.crias_machos || 0,
         peso_total: Number(loteEditar?.peso_total) || 0,
         observaciones: loteEditar?.observaciones || '',
-        id_evento: loteEditar?.id_evento || evento!.id_evento.toString() || '',
+        id_evento: loteEditar?.id_evento || evento?.id_evento || '',
         id_proveedor: loteEditar?.id_proveedor || '',
         puja_inicial: Number(loteEditar?.puja_inicial) || 0,
         incremento: Number(loteEditar?.incremento) || 0,
@@ -151,6 +153,8 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
     // Funcion para enviar el formulario
     const onSubmit = async (data: FormValuesProps) => {
         try {
+            console.log(data);
+
             if (!esEditar) {
                 await agregarLote(data);
                 setCodigoLote(generateUniqueNumber());
@@ -158,7 +162,7 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
             } else {
                 await actualizarLote(data);
                 enqueueSnackbar('Lote actualizado correctamente', { variant: 'success' });
-                push(PATH_DASHBOARD.lotes.root);
+                router.push(PATH_DASHBOARD.lotes.root);
             }
             reset();
         } catch (error) {
@@ -174,7 +178,13 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
 
     async function obtenerTipoAnimales() {
         const { data } = await subastaAPI.get('/lotes/tipoanimal');
-        setTipoAnimales(data);
+        let dataFiltered = data;
+
+        if(loteEditar){
+            const filter = lotesAnteriores.filter((lote) => lote.id_lote !== loteEditar?.id_lote);
+            dataFiltered = filter;
+        }
+        setTipoAnimales(dataFiltered);
     }
 
     if (isLoadingEventos || isLoadingProve) return <LinearProgressBar />
@@ -301,7 +311,7 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
                                 inputProps={{
                                     readOnly: soloVer,
                                 }}>
-                                {tipoAnimales.map((tipoA) => <MenuItem value={tipoA.codigoanimal}>{tipoA.descripcionanimal}</MenuItem>)}
+                                {tipoAnimales.map((tipoA) => <MenuItem key={tipoA.codigoanimal} value={tipoA.codigoanimal}>{tipoA.descripcionanimal}</MenuItem>)}
                             </RHFSelect>
 
                             <RHFSelect
@@ -453,12 +463,13 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
 
                         {!soloVer && (
                             <Stack direction="row" spacing={1.5} maxWidth={400} margin="auto" mt={2}>
-                                <Link legacyBehavior href={PATH_DASHBOARD.lotes.root}>
+                                <Link href={PATH_DASHBOARD.lotes.root} passHref legacyBehavior>
                                     <Button
                                         fullWidth
                                         color="inherit"
                                         variant="outlined"
                                         size="medium"
+                                        type='button'
                                     >
                                         Cancelar
                                     </Button>

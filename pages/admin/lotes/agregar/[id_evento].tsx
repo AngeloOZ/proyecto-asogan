@@ -36,7 +36,7 @@ export default function PageAdminProveedores({ evento }: Props) {
                         { name: 'Agregar lote' },
                     ]}
                 />
-
+                
                 <FormLotes evento={evento} />
 
             </Container>
