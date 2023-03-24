@@ -57,10 +57,17 @@ export function PujaMartillador({ lote }: Props) {
         }
     }
 
+    function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
+        if (event.key === 'Enter') {
+            event.preventDefault(); // Evita que el formulario se envíe
+            handleClickButton(incremento); // Llama al controlador de eventos onClick del botón "Pujar"
+        }
+    }
+
     return (
         <>
-            <Stack direction='row' justifyContent='center' spacing={2} p={1}>
-                <InputBase
+            {/* <Stack direction='row' justifyContent='center' spacing={2} p={1}> */}
+            {/* <InputBase
                     sx={{ backgroundColor: "white", borderRadius: "10px", flexGrow: 1 }}
                     onChange={(event) => setPaleta(event.target.value)}
                     value={paleta}
@@ -73,23 +80,33 @@ export function PujaMartillador({ lote }: Props) {
                             </IconButton>
                         </InputAdornment>
                     }
-                />
+                    onKeyDown={handleKeyDown}
+                /> */}
+
+            {/* </Stack> */}
+            <Box style={{ display: 'flex', justifyContent: 'center', height: "100%" }} p={1}>
                 <Button
                     variant='contained'
                     onClick={() => handleClickButton(incremento)}
-                    color='success'
-                    disabled={paleta.length === 0}
+                    color='secondary'
+                    // disabled={paleta.length === 0}
                     startIcon={<IoHandRight />}
+                    style={{ flex: 1, marginRight: 8, width: "100%", height: "100%", fontSize: "20px" }}
                 >
                     Pujar
                 </Button>
-            </Stack>
-
-            <Box style={{ display: 'flex', justifyContent: 'center' }} p={1}>
-                <Button onClick={() => handleClickButtons('subastado')} variant="contained" color="success" style={{ flex: 1, marginRight: 8 }}>
+                <Button
+                    onClick={() => handleClickButtons('subastado')}
+                    variant="contained"
+                    color="success"
+                    style={{ flex: 1, marginRight: 8, width: '100%', height: '100%', fontSize: "20px" }}>
                     Vendido
                 </Button>
-                <Button onClick={() => handleClickButtons('rechazado')} variant="contained" color="error" style={{ flex: 1, marginLeft: 8 }}>
+                <Button
+                    onClick={() => handleClickButtons('rechazado')}
+                    variant="contained"
+                    color="error"
+                    style={{ flex: 1, marginRight: 8, width: '100%', height: '100%', fontSize: "20px" }}>
                     Pendiente
                 </Button>
             </Box>
