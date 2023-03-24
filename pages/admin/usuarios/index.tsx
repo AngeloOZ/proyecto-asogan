@@ -42,7 +42,7 @@ export default function PageAdminUsuarios() {
     return (<>
 
         <Head>
-            Listado de Usuarios
+        <title>Listado de Usuarios</title>
         </Head>
         <Container maxWidth={false}>
             <CustomBreadcrumbs

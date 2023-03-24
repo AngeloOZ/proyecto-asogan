@@ -1,12 +1,12 @@
 
 import * as Yup from 'yup';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 
 import Head from "next/head"
 import { Box, Typography, Stack, Card } from "@mui/material"
 import { LoadingButton } from '@mui/lab';
-
+import Image from "src/components/image/Image";
 // import { AuthContext } from ".";
 
 import FormProvider, {
@@ -129,6 +129,21 @@ export const Registro = () => {
                 <title>Registro</title>
             </Head>
             <Box component="div" >
+
+                <Box
+                    component='div'
+                    display={{ xs: 'flex', md: 'none' }}
+                    justifyContent='center'
+                    mb={2}
+                >
+                    <Image
+                        disabledEffect
+                        visibleByDefault
+                        alt="auth"
+                        src='/logo/logo.webp'
+                        sx={{ maxWidth: 250, width: '100%' }}
+                    />
+                </Box>
 
                 <Typography component="h1" variant="h4" mb={4} align="center">Registro de Compradores</Typography>
 
