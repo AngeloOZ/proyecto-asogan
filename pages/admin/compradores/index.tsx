@@ -40,7 +40,7 @@ export default function PageAdminCompradores() {
     }
     return (<>
         <Head>
-            Listado de Compradores
+            <title>Listado de Compradores</title>
         </Head>
         <Container maxWidth={false}>
             <CustomBreadcrumbs
