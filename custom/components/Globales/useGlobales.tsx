@@ -72,7 +72,7 @@ export const useGlobales = () => {
     }
 
     const enviarCorreoClave = async (datos:any) =>{
-
+   
         const { data } = await subastaAPI.post('/correo', datos);
         return data
     }    

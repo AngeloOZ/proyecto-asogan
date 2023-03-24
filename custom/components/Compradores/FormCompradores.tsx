@@ -29,9 +29,7 @@ import { ICompradores } from '../../../interfaces';
 import { useGlobales } from '../Globales';
 
 import { handleErrorsAxios } from 'utils';
-import { sendMail } from '../Globales/sendEmail';
-import { plantillaCredencial } from '../Globales/plantillaCredenciales';
-import moment from 'moment-timezone';
+
 type FormValuesProps = IComprador;
 type Props = {
     esEditar?: boolean;
@@ -158,17 +156,15 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
     }
 
     const enviarCorreo = async (data:any) =>{
-        data.nombres = nombresV?.trim()
-        const correo = await enviarCorreoClave(data)
-
-        if (correo === true) {
-            enqueueSnackbar("Se ha enviado correctamente el correo electronico");
-        }else if(correo === false){
-
-            enqueueSnackbar("Ocurrió un error, volver a intentar", { variant: 'error' });
-        }else {
-            enqueueSnackbar(`${correo}`, { variant: 'error' });
+        try {
+          
+            data.nombres = nombresV?.trim()
+            const correo = await enviarCorreoClave(data)
+            enqueueSnackbar(`${correo.message}`);
+        }catch(error){
+            enqueueSnackbar(`Oops... ${handleErrorsAxios(error)}`, { variant: 'error' });
         }
+       
     }
 
     return (<FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} >
