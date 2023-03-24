@@ -4,7 +4,8 @@ import Head from "next/head"
 import { ErrorOutline, Visibility, VisibilityOff } from "@mui/icons-material"
 import { Box, Button, Chip, IconButton, InputAdornment, TextField, Typography } from "@mui/material"
 import { useForm } from "react-hook-form"
-
+import Link from 'next/link';
+import { PATH_REGISTRO } from 'src/routes/paths';
 // import { AuthContext } from ".";
 import LoginLayout from "src/layouts/login/LoginLayout"
 import Image from "src/components/image/Image";
@@ -105,6 +106,12 @@ export const Login = () => {
                         helperText={errors.clave?.message}
                     />
                     <Button type="submit" size="large" variant="contained" color="secondary">Iniciar Sesión</Button>
+
+                    <Link href={PATH_REGISTRO.registro} passHref legacyBehavior>
+                        <Button type="button" size="large"   variant="outlined" color="secondary" >Registrarse</Button>
+                    </Link>
+
+
                 </Box>
             </Box>
         </LoginLayout>

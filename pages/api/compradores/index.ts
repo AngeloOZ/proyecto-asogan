@@ -168,7 +168,7 @@ async function actualizarComprador(req: NextApiRequest, res: NextApiResponse) {
 
             const { id_comprador, codigo_paleta, antecedentes_penales, procesos_judiciales, calificacion_bancaria, estado, correo, celular }: compradores = req.body;
             const { nombres, identificacion }: usuario = req.body
-
+          
             if (codigo_paleta !== "") {
                 const verificaCompradorPaleta = await prisma.compradores.findMany({ where: { codigo_paleta, id_comprador: { not: id_comprador } }, take: 1 });
 
@@ -207,6 +207,7 @@ async function actualizarComprador(req: NextApiRequest, res: NextApiResponse) {
         });
 
     } catch (error) {
+        
         return res.status(500).json({ message: handleErrorsPrisma(error) });
     }
 

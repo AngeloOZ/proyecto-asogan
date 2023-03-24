@@ -11,6 +11,9 @@ function path(root: string, sublink: string) {
 export const PATH_AUTH = {
   login: '/login',
 };
+export const PATH_REGISTRO = {
+  registro: '/registro',
+};
 
 export const DEFAULT_VENDEDOR = 1;
 
