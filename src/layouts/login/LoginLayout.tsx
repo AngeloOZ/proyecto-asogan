@@ -17,7 +17,7 @@ export default function LoginLayout({ children, illustration, title }: Props) {
           disabledEffect
           visibleByDefault
           alt="auth"
-          src={illustration || '/assets/illustrations/illustration_dashboard.png'}
+          src={illustration || ''}
           sx={{ maxWidth: 720 }}
         />
         <StyledSectionBg />

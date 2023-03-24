@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form"
 
 // import { AuthContext } from ".";
 import LoginLayout from "src/layouts/login/LoginLayout"
+import Image from "src/components/image/Image";
 import { AuthContext } from "./context";
 
 type FormValues = {
@@ -42,7 +43,21 @@ export const Login = () => {
             <Head>
                 <title>Inicio de sesión</title>
             </Head>
-            <Box component="div" >
+            <Box component="div">
+                <Box
+                    component='div'
+                    display={{ xs: 'flex', md: 'none' }}
+                    justifyContent='center'
+                    mb={2}
+                >
+                    <Image
+                        disabledEffect
+                        visibleByDefault
+                        alt="auth"
+                        src='/logo/logo.webp'
+                        sx={{ maxWidth: 250, width: '100%' }}
+                    />
+                </Box>
                 <Typography component="h1" variant="h4">Iniciar Sesión</Typography>
                 <Chip
                     label="El usuario o la contraseña son incorrectos"
