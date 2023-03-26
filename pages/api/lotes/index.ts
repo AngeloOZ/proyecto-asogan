@@ -1,8 +1,13 @@
-import { LoteForm } from '@types';
-import prisma from 'database/prismaClient'
-import moment from 'moment-timezone';
 import type { NextApiRequest, NextApiResponse } from 'next'
+
+import moment from 'moment-timezone';
+
+import prisma from 'database/prismaClient'
+import { LoteForm } from '@types';
+
 import { handleErrorsPrisma } from 'utils';
+
+moment.tz.setDefault('America/Guayaquil');
 
 // eslint-disable-next-line
 export default function (req: NextApiRequest, res: NextApiResponse) {
@@ -90,7 +95,7 @@ async function actualizarLote(req: NextApiRequest, res: NextApiResponse) {
     try {
         const { id_lote, id_evento, id_proveedor, fecha_pesaje, codigo_lote, cantidad_animales, tipo_animales, calidad_animales, peso_total, sexo, crias_hembras, crias_machos, procedencia, observaciones, puja_inicial, incremento, url_video, subastado } = req.body as LoteForm;
 
-        const formattedDate = moment(fecha_pesaje, 'YYYY/MM/DD H:mm:ss').toDate();
+        const formattedDate = moment(fecha_pesaje, 'H:mm').toDate();
 
         const lotePrev = await prisma.lotes.findUnique({ where: { id_lote: Number(id_lote) } });
 
