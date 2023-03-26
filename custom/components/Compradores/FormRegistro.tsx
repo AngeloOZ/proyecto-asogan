@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 
 
 import Head from "next/head"
-import { Box, Typography, Stack, Card } from "@mui/material"
+import { Box, Typography, Stack, Card,Button } from "@mui/material"
 import { LoadingButton } from '@mui/lab';
 import Image from "src/components/image/Image";
 // import { AuthContext } from ".";
@@ -21,11 +21,11 @@ import { useForm } from 'react-hook-form';
 import { compradores as IComprador } from '@prisma/client';
 import RegistroLayout from './Hooks/RegistroLayout';
 import { useGlobales } from '../Globales';
-import { watch } from 'fs';
 import { useCompradores } from './Hooks';
 import { handleErrorsAxios } from 'utils';
+import Link from 'next/link';
 
-
+import { PATH_AUTH} from 'src/routes/paths';
 
 type FormValuesProps = IComprador;
 
@@ -154,7 +154,7 @@ export const Registro = () => {
 
                             <RHFTextField
                                 name="identificacion"
-                                label="Identificación"
+                                label="Cédula o RUC"
                                 size='small'
                                 value={identificacionV}
                                 onChange={(e) => { setIdentificacionV(e.target.value); ((e.target.value).length == 10 || (e.target.value).length == 13) ? verificarIdentificacion(e.target.value) : setValidacionI(false); }}
@@ -191,12 +191,21 @@ export const Registro = () => {
                                 fullWidth
                                 type="submit"
                                 variant="contained"
-                                size="medium"
+                                size="large"
+                               color="secondary"
                                 loading={isSubmitting}
                             >
                                 Registrarse
                             </LoadingButton>
+                           
+                        </Stack>
+                        <Stack direction="row"  justifyContent="right" mt={3} >
+                        <Link color="yellow"  href={PATH_AUTH.login} passHref legacyBehavior  >
+                            <Button type='button' color='secondary'>
+                              Regresar al login
 
+                            </Button>
+                            </Link>
                         </Stack>
 
                     </Card>

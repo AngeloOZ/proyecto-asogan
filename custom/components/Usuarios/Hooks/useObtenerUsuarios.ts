@@ -17,3 +17,4 @@ export const useObtenerUsuarios = (): Data => {
         error
     }
 }
+

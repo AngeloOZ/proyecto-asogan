@@ -72,15 +72,9 @@ export const useGlobales = () => {
 
     }
 
-    const actualizarComprador = async (comprador: any) => {
-        const { data } = await subastaAPI.put('/compradores', comprador);
-        mutate('/compradores');
-        return data
-
-    }
     const enviarCorreoClave = async (datos: any) => {
         
-            await actualizarComprador(datos);
+            
             const { data } = await subastaAPI.post('/correo', datos);
             
             return data

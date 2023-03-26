@@ -123,7 +123,7 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
                     push(PATH_DASHBOARD.compradores.root);
                     reset();
                 } else {
-                    await actualizarComprador({ ...data, nombres: nombresV });
+                    await actualizarComprador({ ...data, nombres: nombresV?.trim() });
                     enqueueSnackbar('Comprador actualizado correctamente', { variant: 'success' });
 
                 }
@@ -158,13 +158,13 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
 
     const enviarCorreo = async (data: any) => {
         try {
-
             data.nombres = nombresV?.trim()
+            await actualizarComprador(data)
             const correo = await enviarCorreoClave(data)
-                
-            enqueueSnackbar(`${correo}`);
+          
+            enqueueSnackbar(`${correo.message}`);
         } catch (error) {
-            console.log(error+'ssss')
+        
             enqueueSnackbar(`Oops... ${handleErrorsAxios(error)}`, { variant: 'error' });
         }
 

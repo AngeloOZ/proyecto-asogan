@@ -2,14 +2,15 @@ import { useContext, useState } from "react"
 import { useRouter } from "next/router";
 import Head from "next/head"
 import { ErrorOutline, Visibility, VisibilityOff } from "@mui/icons-material"
-import { Box, Button, Chip, IconButton, InputAdornment, TextField, Typography } from "@mui/material"
+import { Box, Button, Chip, IconButton, InputAdornment, TextField, Typography, Stack } from "@mui/material"
 import { useForm } from "react-hook-form"
+import { PATH_AUTH} from 'src/routes/paths';
 import Link from 'next/link';
-import { PATH_REGISTRO } from 'src/routes/paths';
-// import { AuthContext } from ".";
+
 import LoginLayout from "src/layouts/login/LoginLayout"
 import Image from "src/components/image/Image";
 import { AuthContext } from "./context";
+import { ClaveModal } from "../../custom/components/Usuarios";
 
 type FormValues = {
     identificacion: string
@@ -19,9 +20,13 @@ type FormValues = {
 export const Login = () => {
     const router = useRouter();
     const { loginUser } = useContext(AuthContext);
-    const { register, formState: { errors }, handleSubmit } = useForm<FormValues>();
+    const { register, formState: { errors }, handleSubmit, reset} = useForm<FormValues>();
     const [showPassword, setShowPassword] = useState(false);
     const [showError, setShowError] = useState(false);
+    const [open, setOpen] = useState(false);
+
+
+
 
     const handleClick = () => {
         setShowPassword((show) => !show);
@@ -38,6 +43,19 @@ export const Login = () => {
         }
         router.replace('/admin');
     }
+    
+   
+  const handleOpenModal = () => {
+    
+      setOpen(true);
+      reset();
+  };
+
+  const handleCloseModal =  () => {
+    setOpen(false);
+  };
+
+    
 
     return (
         <LoginLayout illustration="/logo/logo.webp">
@@ -71,7 +89,7 @@ export const Login = () => {
                 <Box component="form" onSubmit={handleSubmit(handleSubmitLogin)} marginTop={2} display="grid" gap={2}>
                     <TextField
                         fullWidth
-                        label="Identificación"
+                        label="Cédula o RUC"
                         type="number"
                         variant="outlined"
                         margin="dense"
@@ -107,10 +125,18 @@ export const Login = () => {
                     />
                     <Button type="submit" size="large" variant="contained" color="secondary">Iniciar Sesión</Button>
 
-                    <Link href={PATH_REGISTRO.registro} passHref legacyBehavior>
+                    <Link href={PATH_AUTH.registro} passHref legacyBehavior>
                         <Button type="button" size="large"   variant="outlined" color="secondary" >Registrarse</Button>
                     </Link>
+                    <Stack direction="row" justifyContent="right">
+                    
+                        <Button type="button" color="secondary"  onClick={handleOpenModal}>
+                            ¿Olvidé mi contraseña?
+                        </Button>
 
+                        <ClaveModal abrirM={open} onClose={handleCloseModal}/>
+
+                    </Stack>
 
                 </Box>
             </Box>
