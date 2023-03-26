@@ -2,7 +2,7 @@ import Head from 'next/head'
 
 import DashboardLayout from 'src/layouts/dashboard/DashboardLayout'
 
-import { VistaLoteCliente, useLoteMonitor } from 'custom/components'
+import { VistaLoteCliente, useLoteMonitor2, useUltimaPuja } from 'custom/components'
 import { eventos, imagenes } from '@prisma/client'
 
 import { GetServerSideProps } from 'next'
@@ -23,16 +23,17 @@ type Props = {
 
 export default function PageAdminProveedores({ uuid, evento, banners }: Props) {
 
-    const { loteActual, isLoading } = useLoteMonitor(uuid);
+    const { loteActual, isLoading } = useLoteMonitor2(evento.id_evento);
+    const { ultimaPuja } = useUltimaPuja(loteActual?.id_lote || 0);
 
     if (isLoading) return <LoadingScreen />
 
     return (
         <>
             <Head>
-                <title>Subasta Lote #{loteActual?.lote?.codigo_lote}</title>
+                <title>Subasta Lote #{loteActual?.codigo_lote || 'SN'}</title>
             </Head>
-            <VistaLoteCliente loteActual={loteActual} banners={banners} evento={evento} />
+            <VistaLoteCliente lote={loteActual} ultimaPuja={ultimaPuja} banners={banners} evento={evento} />
         </>
     )
 }
