@@ -58,7 +58,7 @@ async function listado(req: NextApiRequest, res: NextApiResponse) {
             const lote2 = {
                 ...lote,
                 eventos: lote.eventos.descripcion,
-                cantidad_animales: Number(lote.cantidad_animales) + ' ' + lote.tipo_animales,
+                cantidad_animales: `${Number(lote.cantidad_animales)} ${lote.tipo_animales}`,
             }
             return lote2;
         })

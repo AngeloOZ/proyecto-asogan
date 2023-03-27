@@ -5,7 +5,6 @@ import { MainAdminMartillador, useLoteMonitor2, useUltimaPuja } from 'custom/com
 import prisma from 'database/prismaClient';
 import moment from 'moment-timezone';
 import { eventos } from '@prisma/client';
-import evento from 'pages/api/subastas/evento';
 
 type Props = {
     uuid: string;
