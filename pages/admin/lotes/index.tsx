@@ -48,9 +48,9 @@ export default function PageAdminProveedores() {
                 <TableCustom
                     headers={[
                         { label: "ID", name: "id_lote", type: 'number', serchable: false },
+                        { label: 'Evento', name: 'eventos' },
                         { label: 'Código de Lote', name: 'codigo_lote' },
                         { label: 'Cantidad de animales', name: 'cantidad_animales', },
-                        { label: 'Tipo animales', name: 'tipo_animales' },
                         { label: 'Calidad de animales', name: 'calidad_animales' },
                         { label: 'Peso total', name: 'peso_total' },
                         { label: 'Procedencia', name: 'procedencia' },

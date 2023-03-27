@@ -48,9 +48,22 @@ async function listado(req: NextApiRequest, res: NextApiResponse) {
         const lotes = await prisma.lotes.findMany({
             orderBy: {
                 id_lote: 'desc'
+            },
+            include: {
+                eventos: true,
             }
         });
-        return res.status(200).json(lotes);
+
+        const lotes2 = lotes.map(lote => {
+            const lote2 = {
+                ...lote,
+                eventos: lote.eventos.descripcion,
+                cantidad_animales: Number(lote.cantidad_animales) + ' ' + lote.tipo_animales,
+            }
+            return lote2;
+        })
+
+        return res.status(200).json(lotes2);
     } catch (error) {
         return res.status(500).json({ message: error.message });
     } finally {
