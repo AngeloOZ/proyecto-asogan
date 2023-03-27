@@ -45,7 +45,11 @@ async function listado(req: NextApiRequest, res: NextApiResponse) {
             return res.status(200).json(lote);
         }
 
-        const lotes = await prisma.lotes.findMany();
+        const lotes = await prisma.lotes.findMany({
+            orderBy: {
+                id_lote: 'desc'
+            }
+        });
         return res.status(200).json(lotes);
     } catch (error) {
         return res.status(500).json({ message: error.message });
@@ -75,9 +79,9 @@ async function crearLote(req: NextApiRequest, res: NextApiResponse) {
                 crias_machos,
                 procedencia,
                 observaciones,
-                puja_inicial,
-                puja_final: puja_inicial,
-                incremento,
+                puja_inicial: 0.20,
+                puja_final: 0.20,
+                incremento: 0.01,
                 url_video,
                 subastado: 0,
             }

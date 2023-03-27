@@ -44,7 +44,11 @@ async function obtenerEventos(req: NextApiRequest, res: NextApiResponse) {
             return res.status(200).json(evento);
         }
 
-        const eventos = await prisma.eventos.findMany();
+        const eventos = await prisma.eventos.findMany({
+            orderBy: {
+                id_evento: 'desc'
+            }
+        });
 
         const eventosFormateados = eventos.map(evento => {
             const fechaFormateada = moment(evento.fecha).format('DD-MM-YYYY HH:mm');
