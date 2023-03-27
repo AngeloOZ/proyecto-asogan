@@ -107,7 +107,7 @@ async function actualizarEvento(req: NextApiRequest, res: NextApiResponse) {
             }
         });
 
-        if(evento.abierto === 3){
+        if (evento.abierto === 3) {
             await prisma.lotes.updateMany({
                 where: {
                     id_evento: evento.id_evento
