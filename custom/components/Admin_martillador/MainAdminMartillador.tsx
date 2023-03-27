@@ -1,5 +1,5 @@
 import { Card, CardContent, Grid, Typography, useTheme } from '@mui/material'
-import { LoteMonitor } from '@types'
+import { LoteMonitor, UltimaPuja } from '@types'
 import css from '../../styles/admin_martillador.module.css';
 import { CardInfo } from '../Monitor';
 import moment from 'moment-timezone';
@@ -7,31 +7,20 @@ import { Box } from '@mui/system';
 import { PujaMartillador, useLotesSubasta, useSubastas, VideoPlayer } from '../Subastas';
 import { LoteAdminMartillador } from '../Subastas/LoteAdminMartillador';
 import { useState } from 'react';
-import { lotes } from '@prisma/client'
+import { eventos, lotes } from '@prisma/client'
+import { calcularSubasta } from 'utils';
 
-export const MainAdminMartillador = ({ datos, uuid }: { datos: LoteMonitor, uuid: string }) => {
+type Props = {
+    lote: lotes,
+    ultimaPuja: UltimaPuja | null,
+    evento: eventos
+}
+
+export const MainAdminMartillador = ({ evento, lote, ultimaPuja }: Props) => {
     const theme = useTheme();
-    const { evento } = useSubastas(uuid);
-    const { lotes } = useLotesSubasta(evento?.id_evento || -1);
-    const [loteActual, setLoteActual] = useState<lotes>()
-    const { lote, ultimaPuja } = datos;
+    const { lotes } = useLotesSubasta(evento.id_evento);
+    const newLote = calcularSubasta(lote, ultimaPuja);
 
-    const cantidadAnimales = lote?.cantidad_animales || 0;
-    const pesoTotal = Number(lote?.peso_total || 0);
-    const pesoPromedio = pesoTotal / cantidadAnimales || 0;
-    const tipoAnimales = lote?.tipo_animales || '';
-    const cantidadAnimalesText = `${cantidadAnimales} ${tipoAnimales.toUpperCase()}`
-
-    const valorBase = Number(lote?.puja_inicial) || 0;
-    const valorPuja = Number(lote?.incremento) || 0;
-    const valorFinal = Number(lote?.puja_final) || 0;
-    const valorFinal2 = valorFinal + valorPuja;
-    const valorFinalTotal = valorFinal * pesoTotal;
-    let horaPesaje = moment(lote?.fecha_pesaje || '').format('H:mm');
-
-    if (horaPesaje === 'Invalid date') {
-        horaPesaje = '-';
-    }
 
     return (
         <Grid height="100%" className={css.container}>
@@ -77,7 +66,7 @@ export const MainAdminMartillador = ({ datos, uuid }: { datos: LoteMonitor, uuid
 
             <CardInfo
                 title='Cantidad'
-                value={cantidadAnimalesText}
+                value={newLote.cantidadAnimalesText}
                 className={css.cantidad}
                 bgColorCustom='#6bb73b'
                 fontSizeCustom='60px'
@@ -93,7 +82,7 @@ export const MainAdminMartillador = ({ datos, uuid }: { datos: LoteMonitor, uuid
 
             <CardInfo
                 title='Peso prom (Lbs)'
-                value={pesoPromedio.toFixed(2)}
+                value={newLote.pesoPromedio.toFixed(2)}
                 className={css.peso_promedio}
                 bgColorCustom='#6bb73b'
                 fontSizeCustom='60px'
@@ -101,7 +90,7 @@ export const MainAdminMartillador = ({ datos, uuid }: { datos: LoteMonitor, uuid
 
             <CardInfo
                 title='Hora de pesaje'
-                value={horaPesaje}
+                value={newLote.horaPesaje}
                 className={css.hora_pesaje}
                 fontSizeCustom='60px'
                 bgColorCustom='#6bb73b'
@@ -109,7 +98,7 @@ export const MainAdminMartillador = ({ datos, uuid }: { datos: LoteMonitor, uuid
 
             <CardInfo
                 title='Incremento'
-                value={'$ ' + valorPuja.toFixed(2)}
+                value={'$ ' + newLote.valorPuja.toFixed(2)}
                 className={css.incremento}
                 bgColorCustom='#ebeb3d'
                 fontSizeCustom='60px'
@@ -117,7 +106,7 @@ export const MainAdminMartillador = ({ datos, uuid }: { datos: LoteMonitor, uuid
 
             <CardInfo
                 title='valor base'
-                value={'$ ' + valorBase.toFixed(2)}
+                value={'$ ' + newLote.valorBase.toFixed(2)}
                 className={css.valor_base}
                 fontSizeCustom='68px'
                 bgColorCustom='#ebeb3d'
@@ -125,7 +114,7 @@ export const MainAdminMartillador = ({ datos, uuid }: { datos: LoteMonitor, uuid
 
             <CardInfo
                 title='Puja Actual'
-                value={'$' + valorFinal.toFixed(2)}
+                value={'$' + newLote.valorFinal.toFixed(2)}
                 className={css.puja_actual}
                 fontSizeCustom='68px'
                 bgColorCustom='#ef440c'
@@ -134,7 +123,7 @@ export const MainAdminMartillador = ({ datos, uuid }: { datos: LoteMonitor, uuid
 
             <CardInfo
                 title='Valor Promedio animal'
-                value={'$' + (pesoPromedio * valorFinal2).toFixed(2)}
+                value={'$' + (newLote.pesoPromedio * newLote.valorFinal2).toFixed(2)}
                 className={css.valor_promedio_animal}
                 fontSizeCustom='68px'
                 bgColorCustom='#ebeb3d'
@@ -142,7 +131,7 @@ export const MainAdminMartillador = ({ datos, uuid }: { datos: LoteMonitor, uuid
 
             <CardInfo
                 title='Valor Total'
-                value={'$' + valorFinalTotal.toFixed(2)}
+                value={'$' + newLote.valorFinalTotal.toFixed(2)}
                 className={css.valor_total}
                 fontSizeCustom='68px'
                 bgColorCustom='#fabf25'
@@ -160,15 +149,11 @@ export const MainAdminMartillador = ({ datos, uuid }: { datos: LoteMonitor, uuid
             <Box component="div" className={css.video}>
                 <VideoPlayer
                     playerProps={{
-                        url: evento?.url_video || '',
+                        url: evento.url_video || '',
                         muted: true,
                     }}
                 />
             </Box>
-
-
-
-
         </Grid>
     )
 }

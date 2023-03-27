@@ -14,7 +14,7 @@ import { useSnackbar } from '../../../src/components/snackbar';
 
 
 
-PageAdminProveedores.getLayout = (page: React.ReactElement) => <DashboardLayout roles={['admin']}>{page}</DashboardLayout>
+PageAdminProveedores.getLayout = (page: React.ReactElement) => <DashboardLayout roles={['admin', 'digitador']}>{page}</DashboardLayout>
 
 export default function PageAdminProveedores() {
     const router = useRouter();

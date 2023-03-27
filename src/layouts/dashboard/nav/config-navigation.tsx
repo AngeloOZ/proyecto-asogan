@@ -23,7 +23,7 @@ const navConfig = [
         title: 'Proveedores',
         path: PATH_DASHBOARD.proveedores.root,
         icon: <FaTruckLoading size={20} />,
-        roles: ['admin',],
+        roles: ['admin','digitador'],
       },
       {
         title: 'Compradores',
@@ -41,7 +41,7 @@ const navConfig = [
         title: 'Subastas',
         path: PATH_DASHBOARD.eventos.listado,
         icon: <FaHandHoldingUsd size={20} />,
-        roles: ['admin',],
+        roles: ['admin','admin-martillador'],
       },
       {
         title: 'Banner',
@@ -55,16 +55,16 @@ const navConfig = [
     subheader: '',
     items: [
       {
-        title: 'Listado de eventos',
+        title: 'Agregar lote',
         path: PATH_DASHBOARD.digitador.root,
         icon: <FaCalendarAlt size={20} />,
-        roles: ['digitador',],
+        roles: ['digitador','admin'],
       },
       {
         title: 'Lotes',
         path: PATH_DASHBOARD.lotes.root,
         icon: <FaCubes size={20} />,
-        roles: ['admin','digitador'],
+        roles: ['admin','digitador','admin-martillador',]
       },
     ],
   },

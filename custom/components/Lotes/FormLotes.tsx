@@ -52,7 +52,7 @@ type Props = {
 export function FormLotes({ esEditar = false, loteEditar, soloVer = false, evento }: Props) {
     const router = useRouter();
     const { enqueueSnackbar } = useSnackbar();
-    
+
     const { eventos, isLoading: isLoadingEventos } = useObtenerEventos();
     const { proveedores, isLoading: isLoadingProve } = useObtenerProveedores();
     const [codigoLote, setCodigoLote] = useState(generateUniqueNumber());
@@ -60,7 +60,8 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
     const [tipoAnimales, setTipoAnimales] = useState<tipo_animales[]>([]);
 
     const { agregarLote, actualizarLote } = useLotes();
-
+    const { user } = useContext(AuthContext);
+    
     useEffect(() => {
         obtenerLotesTotales();
         obtenerTipoAnimales();
@@ -117,9 +118,9 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
         peso_total: Yup.number().required('El peso total es requerido').min(1, 'El peso total debe ser mayor a 0').typeError('El peso total debe ser un valor numérico'),
         id_evento: Yup.string().required('El evento es requerido'),
         id_proveedor: Yup.string().required('El proveedor es requerido'),
-       /*  puja_inicial: Yup.number().min(0.0001, 'La puja inicial debe ser mayor a 0').typeError('La puja debe ser un valor numérico'),
-        incremento: Yup.number().min(0.0001, 'La puja inicial debe ser mayor a 0').typeError('La puja debe ser un valor numérico'), */
-  
+        /*  puja_inicial: Yup.number().min(0.0001, 'La puja inicial debe ser mayor a 0').typeError('La puja debe ser un valor numérico'),
+         incremento: Yup.number().min(0.0001, 'La puja inicial debe ser mayor a 0').typeError('La puja debe ser un valor numérico'), */
+
     });
 
     // Se carga los valores en caso de que sea editar
@@ -187,7 +188,7 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
         const { data } = await subastaAPI.get('/lotes/tipoanimal');
         let dataFiltered = data;
 
-        if(loteEditar){
+        if (loteEditar) {
             const filter = lotesAnteriores.filter((lote) => lote.id_lote !== loteEditar?.id_lote);
             dataFiltered = filter;
         }

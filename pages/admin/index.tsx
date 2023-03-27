@@ -25,6 +25,9 @@ export default function Index() {
         case 'digitador':
           router.push(PATH_DASHBOARD.digitador.root);
           break;
+        case 'admin-martillador':
+          router.push(PATH_DASHBOARD.eventos.listado);
+          break;
         default:
           router.push('/404');
       }

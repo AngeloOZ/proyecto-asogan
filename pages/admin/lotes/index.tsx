@@ -12,7 +12,7 @@ import { lotes as ILote } from '@prisma/client'
 import { useSnackbar } from 'notistack'
 import { useLotes } from 'custom/components/Lotes/hooks';
 
-PageAdminProveedores.getLayout = (page: React.ReactElement) => <DashboardLayout roles={['admin','digitador']}>{page}</DashboardLayout>
+PageAdminProveedores.getLayout = (page: React.ReactElement) => <DashboardLayout roles={['admin', 'digitador', 'admin-martillador']}>{page}</DashboardLayout>
 
 export default function PageAdminProveedores() {
     const router = useRouter();
@@ -44,7 +44,7 @@ export default function PageAdminProveedores() {
                         { name: 'Lista de lotes', href: PATH_DASHBOARD.lotes.root },
                     ]}
                 />
-                
+
                 <TableCustom
                     headers={[
                         { label: "ID", name: "id_lote", type: 'number', serchable: false },

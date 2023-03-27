@@ -7,12 +7,10 @@ import { TbEditCircle } from 'react-icons/tb';
 import { subastaAPI } from 'custom/api';
 import { handleErrorsAxios } from 'utils';
 import { Box } from '@mui/system';
-import { LoteA } from '@types'
-import { useForm } from 'react-hook-form';
-import { RHFTextField } from 'src/components/hook-form';
+import { lotes } from '@prisma/client';
 
 type Props = {
-    lote: LoteA;
+    lote: lotes;
 }
 export function PujaMartillador({ lote }: Props) {
     const { enqueueSnackbar } = useSnackbar();
@@ -76,24 +74,6 @@ export function PujaMartillador({ lote }: Props) {
 
     return (
         <>
-            {/* <Stack direction='row' justifyContent='center' spacing={2} p={1}> */}
-            {/* <InputBase
-                    sx={{ backgroundColor: "white", borderRadius: "10px", flexGrow: 1 }}
-                    onChange={(event) => setPaleta(event.target.value)}
-                    value={paleta}
-                    placeholder="Número de paleta"
-                    type='number'
-                    startAdornment={
-                        <InputAdornment position="start">
-                            <IconButton size="medium" disabled >
-                                <TbEditCircle />
-                            </IconButton>
-                        </InputAdornment>
-                    }
-                    onKeyDown={handleKeyDown}
-                /> */}
-
-            {/* </Stack> */}
             <Box style={{ display: 'flex', justifyContent: 'center', height: "100%" }} p={1}>
                 <Button
                     variant='contained'
