@@ -11,6 +11,9 @@ import useSWR from "swr";
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
+import { eventos, lotes } from '@prisma/client';
+import { UltimaPuja } from '@types';
+import { calcularSubasta } from 'utils';
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -22,36 +25,25 @@ const Item = styled(Paper)(({ theme }) => ({
 
 const fetcher = (url: string) => subastaAPI.get(url).then(r => r.data)
 
-export const MainMartillador = ({ datos, uuid }: { datos: LoteMonitor, uuid: string }) => {
+type Props = {
+    lote: lotes,
+    ultimaPuja: UltimaPuja | null,
+    evento: eventos,
+}
 
-    const { lote, ultimaPuja } = datos;
+export const MainMartillador = ({ lote, ultimaPuja, evento }: Props) => {
+
     const { data } = useSWR(`/subastas/pujas?lote=${lote?.id_lote}`, fetcher, { refreshInterval: 1500 }) as { data: PujasRequest };
-    const { evento } = useSubastas(uuid);
+    const newLote = calcularSubasta(lote, ultimaPuja);
 
-    const cantidadAnimales = lote?.cantidad_animales || 0;
-    const pesoTotal = Number(lote?.peso_total || 0);
-    const pesoPromedio = pesoTotal / cantidadAnimales || 0;
-    const tipoAnimales = lote?.tipo_animales || '';
-    const cantidadAnimalesText = `${cantidadAnimales} ${tipoAnimales.toUpperCase()}`
-    const valorBase = Number(lote?.puja_inicial) || 0;
-    const valorPuja = Number(lote?.incremento) || 0;
-    const valorFinal = Number(lote?.puja_final) || 0;
-    const valorFinal2 = valorFinal + valorPuja;
-    const valorAnimal = pesoPromedio * valorFinal;
-    const proxValorAnimal = pesoPromedio * valorFinal2;
-    const valorTotal = valorAnimal * cantidadAnimales;
-    const proxValorTotal = proxValorAnimal * cantidadAnimales;
-    let horaPesaje = moment(lote?.fecha_pesaje || '').format('H:mm');
-
-    if (horaPesaje === 'Invalid date') {
-        horaPesaje = '-';
-    }
+    const proxValorAnimal = newLote.pesoPromedio * newLote.valorFinal2;
+    const proxValorTotal = proxValorAnimal * newLote.cantidadAnimales;
 
     return (
         <Grid item height="100%" className={css.container}>
             <CardInfo
                 title='#lote'
-                value={lote?.codigo_lote || ''}
+                value={lote?.codigo_lote || '-'}
                 className={css.lote}
                 bgColorCustom='#6bb73b'
                 fontSizeTitleCustom='20px'
@@ -60,7 +52,7 @@ export const MainMartillador = ({ datos, uuid }: { datos: LoteMonitor, uuid: str
             <CardInfo
                 title='Cantidad'
                 fontSizeTitleCustom='20px'
-                value={cantidadAnimalesText}
+                value={newLote.cantidadAnimalesText}
                 className={css.cantidad}
                 bgColorCustom='#6bb73b'
                 fontSizeCustom='60px'
@@ -68,7 +60,7 @@ export const MainMartillador = ({ datos, uuid }: { datos: LoteMonitor, uuid: str
             <CardInfo
                 title='Procedencia'
                 fontSizeTitleCustom='20px'
-                value={lote?.procedencia || ''}
+                value={lote?.procedencia || '-'}
                 className={css.procedencia}
                 bgColorCustom='#6bb73b'
                 fontSizeCustom='25px'
@@ -76,7 +68,7 @@ export const MainMartillador = ({ datos, uuid }: { datos: LoteMonitor, uuid: str
             <CardInfo
                 title='Nombre'
                 fontSizeTitleCustom='20px'
-                value={ultimaPuja?.usuario?.nombres || ''}
+                value={ultimaPuja?.usuario?.nombres || '-'}
                 className={css.nombre}
                 bgColorCustom='#278ac6'
                 fontSizeCustom='25px'
@@ -84,7 +76,7 @@ export const MainMartillador = ({ datos, uuid }: { datos: LoteMonitor, uuid: str
             <CardInfo
                 title='Paleta'
                 fontSizeTitleCustom='20px'
-                value={ultimaPuja?.codigo_paleta || ''}
+                value={ultimaPuja?.codigo_paleta || '-'}
                 className={css.numero_paleta}
                 bgColorCustom='#278ac6'
                 fontSizeCustom='80px'
@@ -103,21 +95,21 @@ export const MainMartillador = ({ datos, uuid }: { datos: LoteMonitor, uuid: str
             <CardInfo
                 title='Peso Prom (Lbs)'
                 fontSizeTitleCustom='20px'
-                value={pesoPromedio.toFixed(2)}
+                value={newLote.pesoPromedio.toFixed(2)}
                 className={css.peso_promedio}
                 bgColorCustom='#6bb73b'
             />
             <CardInfo
                 title='Hora Pesaje'
                 fontSizeTitleCustom='20px'
-                value={horaPesaje}
+                value={newLote.horaPesaje}
                 className={css.hora_pesaje}
                 bgColorCustom='#6bb73b'
             />
             <CardInfo
                 title='Incremento'
                 fontSizeTitleCustom='20px'
-                value={'$ ' + valorPuja.toFixed(2)}
+                value={'$' + newLote.valorPuja.toFixed(2)}
                 className={css.incremento}
                 bgColorCustom='#ebeb3d'
                 fontSizeCustom='50px'
@@ -125,15 +117,15 @@ export const MainMartillador = ({ datos, uuid }: { datos: LoteMonitor, uuid: str
             <CardInfo
                 title='Valor base'
                 fontSizeTitleCustom='20px'
-                value={'$ ' + valorBase.toFixed(2)}
+                value={'$' + newLote.valorBase.toFixed(2)}
                 className={css.valor_base}
                 bgColorCustom='#ebeb3d'
                 fontSizeCustom='50px'
             />
             <CardInfo
-                title='Valor Final'
+                title='Puja Actual'
                 fontSizeTitleCustom='20px'
-                value={'$' + valorFinal.toFixed(2)}
+                value={'$' + newLote.valorFinal.toFixed(2)}
                 className={css.valor_final}
                 bgColorCustom='#ef440c'
                 textColorCustom='#fff'
@@ -142,7 +134,7 @@ export const MainMartillador = ({ datos, uuid }: { datos: LoteMonitor, uuid: str
             <CardInfo
                 title='Proxima Puja'
                 fontSizeTitleCustom='20px'
-                value={'$ ' + valorFinal2.toFixed(2)}
+                value={'$ ' + newLote.valorFinal2.toFixed(2)}
                 className={css.proxima_puja}
                 bgColorCustom='#fabf25'
                 fontSizeCustom='50px'
@@ -150,22 +142,22 @@ export const MainMartillador = ({ datos, uuid }: { datos: LoteMonitor, uuid: str
             <CardInfo
                 title='Observaciones'
                 fontSizeTitleCustom='20px'
-                value={lote?.observaciones || ''}
+                value={lote?.observaciones || 'S/N'}
                 className={css.observaciones}
                 bgColorCustom='#e7ebf0'
                 fontSizeCustom='25px'
             />
             <CardInfo
-                title='Valor Por Animal'
+                title='Valor Promedio Animal'
                 fontSizeTitleCustom='20px'
-                value={'$' + (valorAnimal).toFixed(2)}
+                value={'$' + (newLote.pesoPromedio * newLote.valorFinal).toFixed(2)}
                 className={css.valor_por_animal}
                 bgColorCustom='#ef440c'
                 textColorCustom='#fff'
                 fontSizeCustom='50px'
             />
             <CardInfo
-                title='Proximo Valor Por Animal'
+                title='Proximo Valor Promedio Animal'
                 fontSizeTitleCustom='20px'
                 value={'$' + (proxValorAnimal).toFixed(2)}
                 className={css.proximo_valor_por_animal}
@@ -208,7 +200,7 @@ export const MainMartillador = ({ datos, uuid }: { datos: LoteMonitor, uuid: str
             <CardInfo
                 title='Valor Total'
                 fontSizeTitleCustom='20px'
-                value={'$' + valorTotal.toFixed(2)}
+                value={'$' + (newLote.pesoTotal * newLote.valorFinal).toFixed(2)}
                 className={css.valor_total}
                 bgColorCustom='#ef440c'
                 textColorCustom='#fff'
