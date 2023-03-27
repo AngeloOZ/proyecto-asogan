@@ -77,6 +77,13 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [esEditar, loteEditar]);
 
+<<<<<<< HEAD
+=======
+    useEffect(() => {
+        obtenerLotesTotales();
+        obtenerTipoAnimales();
+    }, []);
+>>>>>>> 80703268e6bfd6c5173a9165839278dd7b6dbf06
 
     function generateUniqueNumber(): string {
         const min = 1000;
@@ -91,12 +98,14 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
         codigo_lote: Yup.string()
             .required('El código es requerido')
             .test('unique', 'El número de paleta ya está ocupado', function (value) {
-                let lotes = lotesAnteriores;
-                if (esEditar && loteEditar) {
-                    lotes = lotesAnteriores.filter((lote) => lote.id_lote !== loteEditar.id_lote);
-                }
                 const evento = watch('id_evento');
-                const result = lotes.some((lote) => (
+
+                let filter = lotesAnteriores;
+                if (esEditar) {
+                    filter = lotesAnteriores.filter((lote) => lote.id_lote !== loteEditar?.id_lote);
+                }
+
+                const result = filter.some((lote) => (
                     lote.codigo_lote === value && lote.id_evento === evento));
                 return !result;
             }),
@@ -122,7 +131,7 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
         codigo_lote: loteEditar?.codigo_lote || codigoLote,
         cantidad_animales: loteEditar?.cantidad_animales || 0,
         tipo_animales: loteEditar?.tipo_animales || '',
-        calidad_animales: loteEditar?.calidad_animales || '',
+        calidad_animales: loteEditar?.calidad_animales || "Excelente",
         sexo: loteEditar?.sexo || '',
         procedencia: loteEditar?.procedencia || '',
         crias_hembras: loteEditar?.crias_hembras || 0,

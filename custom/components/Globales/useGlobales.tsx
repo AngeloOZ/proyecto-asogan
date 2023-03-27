@@ -1,4 +1,5 @@
 import { consultaAPI, subastaAPI } from "custom/api"
+import { mutate } from "swr";
 
 
 
@@ -50,7 +51,7 @@ export const useGlobales = () => {
 
             } else
                 if (cad !== "") {
-                 
+
                     return false
                 }
     }
@@ -71,11 +72,17 @@ export const useGlobales = () => {
 
     }
 
-    const enviarCorreoClave = async (datos:any) =>{
-   
-        const { data } = await subastaAPI.post('/correo', datos);
-        return data
-    }    
+    const enviarCorreoClave = async (datos: any) => {
+        
+            
+            const { data } = await subastaAPI.post('/correo', datos);
+            
+            return data
+           
+        
+      
+
+    }
 
     return { validarIdentificacion, consultarIdentificacion, enviarCorreoClave }
 }

@@ -1,5 +1,5 @@
 import { lotes } from "@prisma/client";
-import { Lote, LoteA } from "@types";
+import { Lote, LoteA, UltimaPuja } from "@types";
 import moment from "moment-timezone";
 
 
@@ -8,7 +8,7 @@ interface CalculosSubasta {
     cantidadAnimales: number;
     pesoTotal: number;
     pesoPromedio: number;
-    tipoAniilaes: string;
+    tipoAnimales: string;
     cantidadAnimalesText: string;
     valorBase: number;
     valorPuja: number;
@@ -17,9 +17,16 @@ interface CalculosSubasta {
     valorFinalTotal: number;
 }
 
-export function calcularSubasta(lote: lotes | Lote | LoteA | null) : CalculosSubasta {
+export function calcularSubasta(lote: lotes | Lote | null, ultimaPuja: UltimaPuja | null = null): CalculosSubasta {
+
+    let PujaFinalCal = Number(lote?.puja_final || 0);
+
+    if (ultimaPuja) {
+        PujaFinalCal = Number(ultimaPuja?.puja || 0);
+    }
+
     let horaPesaje = moment(lote?.fecha_pesaje || '').format('H:mm');
-    
+
     if (horaPesaje === 'Invalid date') {
         horaPesaje = '-';
     }
@@ -27,12 +34,12 @@ export function calcularSubasta(lote: lotes | Lote | LoteA | null) : CalculosSub
     const cantidadAnimales = lote?.cantidad_animales || 0;
     const pesoTotal = Number(lote?.peso_total || 0);
     const pesoPromedio = pesoTotal / cantidadAnimales || 0;
-    const tipoAniilaes = lote?.tipo_animales || '';
-    const cantidadAnimalesText = `${cantidadAnimales} ${tipoAniilaes.toUpperCase()}`
+    const tipoAnimales = lote?.tipo_animales || '';
+    const cantidadAnimalesText = `${cantidadAnimales} ${tipoAnimales.toUpperCase()}`
 
-    const valorBase = Number(lote?.puja_inicial) || 0;
-    const valorPuja = Number(lote?.incremento) || 0;
-    const valorFinal = Number(lote?.puja_final) || 0;
+    const valorBase = Number(lote?.puja_inicial || 0);
+    const valorPuja = Number(lote?.incremento || 0);
+    const valorFinal = PujaFinalCal;
     const valorFinal2 = valorFinal + valorPuja;
     const valorFinalTotal = valorFinal * pesoTotal;
 
@@ -41,7 +48,7 @@ export function calcularSubasta(lote: lotes | Lote | LoteA | null) : CalculosSub
         cantidadAnimales,
         pesoTotal,
         pesoPromedio,
-        tipoAniilaes,
+        tipoAnimales,
         cantidadAnimalesText,
         valorBase,
         valorPuja,

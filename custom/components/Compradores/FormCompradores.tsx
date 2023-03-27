@@ -20,7 +20,7 @@ import FormProvider, {
     RHFTextField,
 } from '../../../src/components/hook-form';
 
-import { compradores as IComprador} from '@prisma/client';
+import { compradores as IComprador } from '@prisma/client';
 import { useCompradores } from './Hooks';
 import Link from 'next/link';
 
@@ -69,7 +69,7 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
         correo: Yup.string().required('El correo es requerido').email('El correo ingresado es invalido'),
         celular: Yup.string().required('El celular es requerido').length(10, 'El número de celular no puede tener mas de 10 digitos'),
 
-        codigo_paleta: Yup.string().max(5, 'El numero de paleta no puede tener mas de 5 caracteres'),
+        codigo_paleta: Yup.string().max(3, 'El numero de paleta no puede tener mas de 5 caracteres'),
         calificacion_bancaria: Yup.string().required('La calificacion bancaria es requerida').max(5, 'La calificacion bancaria no puede tener mas de 5 caracteres'),
     });
 
@@ -118,15 +118,16 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
             if (validacionI == true) {
                 if (!esEditar) {
 
-                    await agregarComprador({ ...data, nombres: nombresV?.trim(), registro:0 });
+                    await agregarComprador({ ...data, nombres: nombresV?.trim(), registro: 0 });
                     enqueueSnackbar('Comprador agregado correctamente', { variant: 'success' });
                     push(PATH_DASHBOARD.compradores.root);
+                    reset();
                 } else {
-                    await actualizarComprador({ ...data, nombres: nombresV });
+                    await actualizarComprador({ ...data, nombres: nombresV?.trim() });
                     enqueueSnackbar('Comprador actualizado correctamente', { variant: 'success' });
-                    push(PATH_DASHBOARD.compradores.root);
+
                 }
-                reset();
+
             } else {
                 enqueueSnackbar("La identificacion ingresada es incorrecta", { variant: 'error' });
             }
@@ -155,16 +156,18 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
 
     }
 
-    const enviarCorreo = async (data:any) =>{
+    const enviarCorreo = async (data: any) => {
         try {
-          
             data.nombres = nombresV?.trim()
+            await actualizarComprador(data)
             const correo = await enviarCorreoClave(data)
+          
             enqueueSnackbar(`${correo.message}`);
-        }catch(error){
+        } catch (error) {
+        
             enqueueSnackbar(`Oops... ${handleErrorsAxios(error)}`, { variant: 'error' });
         }
-       
+
     }
 
     return (<FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} >
@@ -230,7 +233,7 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
 
                 />
             </Stack>
-            <Stack direction="row" spacing={1.5} maxWidth={400} margin="auto" mt={5}>
+            <Stack direction="row" spacing={1.5} maxWidth={750} margin="auto" mt={5}>
 
                 <Link href={PATH_DASHBOARD.compradores.root} passHref legacyBehavior>
                     <Button
@@ -252,24 +255,25 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
                 >
                     Guardar
                 </LoadingButton>
-                
+
                 {
 
-                  (esEditar) &&  <Button
-                  fullWidth
-                  color="inherit"
-                  variant="outlined"
-                  size="medium"
-                  onClick={() => enviarCorreo(methods.getValues())}
-                  >
-                      Enviar Correo
-              </Button>
+                    (esEditar) &&
+                    <Button
+                        fullWidth
+                        color="inherit"
+                        variant="outlined"
+                        size="medium"
+                        onClick={() => enviarCorreo(methods.getValues())}
+                    >
+                        Guardar y Enviar Correo
+                    </Button>
                 }
-              
-                   
-                
-            
-              
+
+
+
+
+
             </Stack>
 
         </Card>

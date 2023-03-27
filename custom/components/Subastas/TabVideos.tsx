@@ -16,7 +16,7 @@ function TabPanel(props: TabPanelProps) {
     return (
         <div
             role="tabpanel"
-            hidden={value !== index}
+            hidden={value !== index} 
             id={`simple-tabpanel-${index}`}
             aria-labelledby={`simple-tab-${index}`}
             {...other}
@@ -26,11 +26,11 @@ function TabPanel(props: TabPanelProps) {
                 height: '100%',
             }}
         >
-            {value === index && (
+            {/* {value === index && ( */}
                 <Box height='100%'>
                     {children}
                 </Box>
-            )}
+            {/* )} */}
         </div>
     );
 }
@@ -58,11 +58,26 @@ export function TabVideos({ urlTransmisionEnVivo = '', urlVideoDemostracion = ''
         <Box sx={{ width: '100%', padding: 0, height: 'calc(100% - 60px)' }} >
             <Box sx={{ borderBottom: 1, borderColor: 'divider', py: 0, my: 0 }} height={60} paddingX={2}>
                 <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-                    <Tab label="Video demostración" {...a11yProps(0)} />
-                    <Tab label="Transmisión en vivo" {...a11yProps(1)} />
+                    <Tab label="Transmisión en vivo" {...a11yProps(0)} />
+                    <Tab label="Video demostración" {...a11yProps(1)} />
                 </Tabs>
             </Box>
             <TabPanel value={value} index={0}>
+                {
+                    urlTransmisionEnVivo === '' ?
+                        <Skeleton variant="rectangular" width="100%" style={{ minHeight: 150, height: '100%' }} />
+                        :
+                        <VideoPlayer
+                            playerProps={{
+                                url: urlTransmisionEnVivo,
+                                muted: false,
+                                controls: true,
+                            }}
+                        />
+
+                }
+            </TabPanel>
+            <TabPanel value={value} index={1}>
                 {
                     urlVideoDemostracion === '' ?
                         <Skeleton variant="rectangular" width="100%" style={{ minHeight: 150, height: '100%' }} />
@@ -72,21 +87,7 @@ export function TabVideos({ urlTransmisionEnVivo = '', urlVideoDemostracion = ''
                                 url: urlVideoDemostracion,
                                 muted: true,
                                 controls: true,
-                            }}
-                        />
-
-                }
-            </TabPanel>
-            <TabPanel value={value} index={1}>
-                {
-                    urlTransmisionEnVivo === '' ?
-                        <Skeleton variant="rectangular" width="100%" style={{ minHeight: 150, height: '100%' }} />
-                        :
-                        <VideoPlayer
-                            playerProps={{
-                                url: urlTransmisionEnVivo,
-                                muted: true,
-                                controls: true,
+                                loop: true,
                             }}
                         />
 

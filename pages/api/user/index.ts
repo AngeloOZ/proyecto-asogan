@@ -31,7 +31,9 @@ async function obtenerUsuarios(req: NextApiRequest, res: NextApiResponse) {
             return res.status(200).json(usuario);
         }
 
-        const usuarios = await prisma.usuario.findMany({ where: { tipo: 1 } });
+        const usuarios = await prisma.usuario.findMany({ where: { tipo: 1 ,  usuarioid: {not: Number(1)} } , orderBy: {
+            usuarioid: 'desc'
+          } });
        
         const usuariosRol = usuarios.map((usuario) => ({ ...usuario, rol: (JSON.parse(usuario.rol)[0]).charAt(0).toUpperCase() + (JSON.parse(usuario.rol)[0]).slice(1) }));
 
@@ -81,7 +83,7 @@ async function crearUsuario(req: NextApiRequest, res: NextApiResponse) {
 
 async function actualizarUsuario(req: NextApiRequest, res: NextApiResponse) {
     try {
-
+      
         const { usuarioid, identificacion, nombres, rol, clave,celular,correo }: usuario = req.body
         if (clave === "") {
             const usuario = await prisma.usuario.update({
@@ -110,10 +112,11 @@ async function actualizarUsuario(req: NextApiRequest, res: NextApiResponse) {
                 rol: `["${rol}"]`,
             }
         });
-
+      
 
         return res.status(200).json(usuario);
     } catch (error) {
+  
         return res.status(500).json({ message: handleErrorsPrisma(error) });
     }
     finally {

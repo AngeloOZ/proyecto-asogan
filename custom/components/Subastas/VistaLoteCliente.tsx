@@ -9,8 +9,8 @@ import css from '../../styles/cliente.module.css';
 import { useSnackbar } from 'src/components/snackbar';
 
 
-import { LoteMonitor } from '@types';
-import { eventos, imagenes } from '@prisma/client';
+import { LoteMonitor, UltimaPuja } from '@types';
+import { eventos, imagenes, lotes } from '@prisma/client';
 
 import { subastaAPI } from 'custom/api';
 import { calcularSubasta, handleErrorsAxios } from 'utils';
@@ -21,19 +21,20 @@ import { CardInfo } from '../Monitor';
 import { SliderAds } from '../Monitor/SliderAds';
 
 type Props = {
-    loteActual: LoteMonitor
+    lote: lotes,
+    ultimaPuja: UltimaPuja | null,
     banners: imagenes[]
     evento: eventos
 }
 
-export const VistaLoteCliente = ({ loteActual, banners, evento }: Props) => {
+export const VistaLoteCliente = ({ lote, ultimaPuja, banners, evento }: Props) => {
     const { enqueueSnackbar } = useSnackbar();
-    const { lote, ultimaPuja } = loteActual;
     const { mutate } = useSWRConfig();
-    const { user, rol: [rolLogged] } = useContext(AuthContext);
-    const newLote = calcularSubasta(lote);
+    const { user } = useContext(AuthContext);
 
-    const incremento = Number(lote?.puja_final || 0) + Number(lote?.incremento || 0);
+    const newLote = calcularSubasta(lote, ultimaPuja);
+
+    const incremento = Number(ultimaPuja?.puja || 0) + Number(lote?.incremento || 0);
 
     const registrarPujaComprador = async () => {
         try {

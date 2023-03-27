@@ -139,7 +139,7 @@ export const LoteAdminMartillador = ({ listadoLotes = [] }: LoteMartillador) => 
 
                 <RHFTextField
                     name="incremento"
-                    label="Puja"
+                    label="Incremento"
                     size='small'
                     fullWidth
                     InputProps={{

@@ -14,6 +14,7 @@ export const useUsuario = () => {
     const actualizarUsuario = async (usuario: any) => {
 
         const { data } = await subastaAPI.put('/user', usuario);
+     
         mutate('/usuarios');
     }
 
@@ -23,7 +24,14 @@ export const useUsuario = () => {
         mutate('/usuarios');
     }
 
+    const obtenerUsuariosClave = async(identificacionC: string, correoC:string) => {
+
+    
+        const { data } = await subastaAPI.get(`/user/clave?identificacion= ${identificacionC}&correo=${correoC}`);
+       return data
+        
+    }
 
 
-    return { agregarUsuario, actualizarUsuario, eliminarUsuario }
+    return { agregarUsuario, actualizarUsuario, eliminarUsuario,obtenerUsuariosClave }
 }

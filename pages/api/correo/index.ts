@@ -18,28 +18,47 @@ export default function (req: NextApiRequest, res: NextApiResponse) {
 }
 
 async function enviarCredencial(req: NextApiRequest, res: NextApiResponse) {
+    let codigo_paletaN 
+    let estadoN 
+    let id_compradorN
     try {
 
-        const { nombres, identificacion, correo, codigo_paleta, estado, id_comprador } = req.body
+        const { nombres, identificacion, correo,usuarioid ,codigo_paleta, estado, id_comprador} = req.body
+            codigo_paletaN = codigo_paleta
+            estadoN = estado
+            id_compradorN = id_comprador
+        if (id_comprador === undefined) {
 
-        if (codigo_paleta === "" || codigo_paleta === 0 || estado === false) {
+            const compradores = await prisma.compradores.findFirst({
+                where: { usuarioid }
+             
+            });
+            if (compradores){
+                codigo_paletaN = compradores.codigo_paleta
+                estadoN = compradores.estado
+                id_compradorN = compradores.id_comprador
+            }
+            
+        }
+    
+        if (codigo_paletaN === "" || codigo_paletaN === 0 || estadoN === false) {
 
             return res.status(500).json({ message: 'Verifique el número de paleta y/o el estado del usuario' });
         
 
         }
-
-        const verificaCompradorPaleta = await prisma.compradores.findMany({ where: { codigo_paleta, id_comprador: { not: id_comprador } }, take: 1 });
+      
+        const verificaCompradorPaleta = await prisma.compradores.findMany({ where: { codigo_paleta: codigo_paletaN, id_comprador: { not: id_compradorN } }, take: 1 });
      
         if (verificaCompradorPaleta.length > 0) {
 
             return res.status(500).json({ message: 'El codigo de la paleta ya existe' });
         }
         
-        await sendMail([correo], plantillaCredencial(nombres, identificacion, new Date().getUTCFullYear().toString(), codigo_paleta), 'Perseo')
+        await sendMail([correo], plantillaCredencial(nombres, identificacion, new Date().getUTCFullYear().toString(), codigo_paletaN), 'Perseo')
         
 
-        return res.status(200).json({ message: 'Se ha enviado correctamente el correo electrónico' });
+        return res.status(200).json({ message: 'Se ha enviado correctamente el correo electrónico', status:200 });
     } catch (error) {
         
         return res.status(500).json({ message: handleErrorsPrisma(error) });
