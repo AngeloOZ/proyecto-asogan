@@ -1,5 +1,6 @@
 import * as Yup from 'yup';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useContext } from 'react';
+import { AuthContext } from 'src/auth';
 // next
 import { useRouter } from 'next/router';
 // form
@@ -53,7 +54,7 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
     const [codigoLote, setCodigoLote] = useState(generateUniqueNumber());
     const [tipoAnimales, setTipoAnimales] = useState<tipo_animales[]>([]);
     const { agregarLote, actualizarLote } = useLotes();
-
+    const { user, logoutUser } = useContext(AuthContext);
     useEffect(() => {
         if (esEditar && loteEditar) {
             reset(defaultValues);
@@ -106,9 +107,9 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
         peso_total: Yup.number().required('El peso total es requerido').min(1, 'El peso total debe ser mayor a 0').typeError('El peso total debe ser un valor numérico'),
         id_evento: Yup.string().required('El evento es requerido'),
         id_proveedor: Yup.string().required('El proveedor es requerido'),
-        puja_inicial: Yup.number().required('La puja inicial es requerida').min(0.0001, 'La puja inicial debe ser mayor a 0').typeError('La puja debe ser un valor numérico'),
-        incremento: Yup.number().required('La puja inicial es requerida').min(0.0001, 'La puja inicial debe ser mayor a 0').typeError('La puja debe ser un valor numérico'),
-        url_video: Yup.string().required('La url del video es requerida').url('La url del video debe ser válida'),
+       /*  puja_inicial: Yup.number().min(0.0001, 'La puja inicial debe ser mayor a 0').typeError('La puja debe ser un valor numérico'),
+        incremento: Yup.number().min(0.0001, 'La puja inicial debe ser mayor a 0').typeError('La puja debe ser un valor numérico'), */
+  
     });
 
     // Se carga los valores en caso de que sea editar
@@ -372,16 +373,7 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
                                 }}
                             />
 
-                            <RHFTextField
-                                name="observaciones"
-                                label="Observaciones"
-                                size='small'
-                                multiline
-                                maxRows={3}
-                                inputProps={{
-                                    readOnly: soloVer,
-                                }}
-                            />
+
 
                         </Stack>
                     </Card>
@@ -394,45 +386,66 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
 
                     <Card sx={{ p: 2, boxShadow: "0 0 2px rgba(0,0,0,0.2)" }}>
                         <Stack spacing={2}>
-
                             <RHFTextField
-                                name="url_video"
-                                label="Url del video"
+                                name="observaciones"
+                                label="Observaciones"
                                 size='small'
                                 multiline
+                                rows={3}
                                 maxRows={3}
                                 inputProps={{
                                     readOnly: soloVer,
                                 }}
                             />
 
-                            <RHFTextField
-                                name="puja_inicial"
-                                label="Puja inicial"
-                                size='small'
-                                type='number'
-                                InputProps={{
-                                    startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                                }}
-                                inputProps={{
-                                    step: "any",
-                                    readOnly: soloVer,
-                                }}
-                            />
 
-                            <RHFTextField
-                                name="incremento"
-                                label="Incremento"
-                                size='small'
-                                type='number'
-                                InputProps={{
-                                    startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                                }}
-                                inputProps={{
-                                    step: "any",
-                                    readOnly: soloVer,
-                                }}
-                            />
+                            {
+
+                                ((!esEditar && user!.rol[0] !== "digitador") || esEditar) &&
+                                <>
+                                    <RHFTextField
+                                        name="url_video"
+                                        label="Url del video"
+                                        size='small'
+                                        multiline
+                                        maxRows={3}
+                                        inputProps={{
+                                            readOnly: soloVer,
+                                        }}
+                                    />
+
+                                    <RHFTextField
+                                        name="puja_inicial"
+                                        label="Puja inicial"
+                                        size='small'
+                                        type='number'
+                                        InputProps={{
+                                            startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                                        }}
+                                        inputProps={{
+                                            step: "any",
+                                            readOnly: soloVer,
+                                        }}
+                                    />
+
+                                    <RHFTextField
+                                        name="incremento"
+                                        label="Incremento"
+                                        size='small'
+                                        type='number'
+                                        InputProps={{
+                                            startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                                        }}
+                                        inputProps={{
+                                            step: "any",
+                                            readOnly: soloVer,
+                                        }}
+                                    />
+                                </>
+
+
+                            }
+
 
                             {
                                 esEditar && (
