@@ -17,7 +17,7 @@ export default function Index() {
           router.push(PATH_DASHBOARD.eventos.root);
           break;
         case 'martillador':
-          router.push(PATH_DASHBOARD.subastas.root);
+          router.push(PATH_DASHBOARD.eventos.listado);
           break;
         case 'comprador':
           router.push(PATH_DASHBOARD_CLEINTE.root);

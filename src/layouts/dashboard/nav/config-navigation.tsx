@@ -41,7 +41,7 @@ const navConfig = [
         title: 'Subastas',
         path: PATH_DASHBOARD.eventos.listado,
         icon: <FaHandHoldingUsd size={20} />,
-        roles: ['admin','admin-martillador'],
+        roles: ['admin','admin-martillador','martillador'],
       },
       {
         title: 'Banner',

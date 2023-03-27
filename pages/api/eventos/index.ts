@@ -106,6 +106,18 @@ async function actualizarEvento(req: NextApiRequest, res: NextApiResponse) {
                 url_video
             }
         });
+
+        if(evento.abierto === 3){
+            await prisma.lotes.updateMany({
+                where: {
+                    id_evento: evento.id_evento
+                },
+                data: {
+                    subastado: 2,
+                }
+            });
+        }
+
         return res.status(200).json(evento);
     } catch (error) {
         return res.status(500).json({ message: error.message });
