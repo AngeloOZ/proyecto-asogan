@@ -118,7 +118,7 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
         codigo_lote: loteEditar?.codigo_lote || codigoLote,
         cantidad_animales: loteEditar?.cantidad_animales || 0,
         tipo_animales: loteEditar?.tipo_animales || '',
-        calidad_animales: loteEditar?.calidad_animales || '',
+        calidad_animales: loteEditar?.calidad_animales || "Excelente",
         sexo: loteEditar?.sexo || '',
         procedencia: loteEditar?.procedencia || '',
         crias_hembras: loteEditar?.crias_hembras || 0,

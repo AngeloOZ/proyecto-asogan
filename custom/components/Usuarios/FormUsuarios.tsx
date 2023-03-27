@@ -206,7 +206,7 @@ export function FormUsuarios({ esEditar = false, usuariosEditar }: Props) {
                     <MenuItem value="martillador">Martillador</MenuItem>
                     <MenuItem value="contabilidad">Contabilidad</MenuItem>
                     <MenuItem value="digitador">Digitador</MenuItem>
-                    <MenuItem value="admin-martillador">Admin-Martillador</MenuItem>
+                    <MenuItem value="admin-martillador">Auxiliar-Martillador</MenuItem>
                 </RHFSelect>
             </Stack>
 
