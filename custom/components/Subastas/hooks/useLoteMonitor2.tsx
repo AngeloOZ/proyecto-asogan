@@ -14,7 +14,7 @@ type Data = {
 
 export const useLoteMonitor2 = (id_evento: number): Data => {
 
-    const { data, isLoading, error } = useSWR(`/subastas/monitor/id?uuid=${id_evento}`, fetcher, { refreshInterval: 1373 });
+    const { data, isLoading, error } = useSWR(`/subastas/monitor/id?uuid=${id_evento}`, fetcher, { refreshInterval: 1275 });
 
     return {
         loteActual: data,

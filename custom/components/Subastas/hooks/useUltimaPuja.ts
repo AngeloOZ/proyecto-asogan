@@ -14,7 +14,7 @@ type Data = {
 
 export const useUltimaPuja = (id_lote: number): Data => {
 
-    const { data, isLoading, error } = useSWR(`/subastas/ultima-puja?id=${id_lote}`, fetcher, { refreshInterval: 750 });
+    const { data, isLoading, error } = useSWR(`/subastas/ultima-puja?id=${id_lote}`, fetcher, { refreshInterval: 533 });
 
     return {
         ultimaPuja: data,
