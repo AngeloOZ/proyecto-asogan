@@ -77,13 +77,10 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [esEditar, loteEditar]);
 
-<<<<<<< HEAD
-=======
     useEffect(() => {
         obtenerLotesTotales();
         obtenerTipoAnimales();
     }, []);
->>>>>>> 80703268e6bfd6c5173a9165839278dd7b6dbf06
 
     function generateUniqueNumber(): string {
         const min = 1000;
