@@ -31,7 +31,7 @@ async function obtenerUsuarios(req: NextApiRequest, res: NextApiResponse) {
             return res.status(200).json(usuario);
         }
 
-        const usuarios = await prisma.usuario.findMany({ where: { tipo: 1 } , orderBy: {
+        const usuarios = await prisma.usuario.findMany({ where: { tipo: 1 ,  usuarioid: {not: Number(1)} } , orderBy: {
             usuarioid: 'desc'
           } });
        

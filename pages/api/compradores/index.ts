@@ -40,7 +40,7 @@ async function obtenerCompradores(req: NextApiRequest, res: NextApiResponse) {
 
         const compradores = await prisma.compradores.findMany({ include: { usuario: true },   orderBy: {
             id_comprador: 'desc'
-          } });
+          }, where: { id_comprador: {not: 1}  }});
 
         const compradoresConAntecedentes = compradores.map(comprador => (
             {
