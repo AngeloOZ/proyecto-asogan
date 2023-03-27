@@ -48,7 +48,7 @@ export const MainAdminMartillador = ({ evento, lote, ultimaPuja }: Props) => {
                         </Box>
                         <Box component='div' width="100%" height="100%" style={{ backgroundColor: '#e7ebf0', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                             {lote && (
-                                <PujaMartillador lote={lote!} />
+                                <PujaMartillador lote={lote!} ultimaPuja={ultimaPuja} />
                             )
                             }
                         </Box>
