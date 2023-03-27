@@ -11,6 +11,8 @@ export default function (req: NextApiRequest, res: NextApiResponse) {
             return obtenerLoteActivo(req, res);
         case 'POST':
             return modificarLote(req, res);
+        case 'PUT':
+            return modificarPaleta(req, res);
         default:
             return res.status(405).json({ message: 'Method not allowed' })
 
@@ -77,4 +79,45 @@ async function modificarLote(req: NextApiRequest, res: NextApiResponse) {
     finally {
         await prisma.$disconnect();
     }
+}
+
+async function modificarPaleta(req: NextApiRequest, res: NextApiResponse) {
+    const { id_lote, codigo_paleta } = req.body;
+
+    const usuario = await prisma.compradores.findFirst({
+        where: { codigo_paleta },
+    });
+
+    if (!usuario) {
+        res.status(404).json({ message: `La paleta: ${codigo_paleta} no existe` });
+        return;
+    }
+
+    const puja = await prisma.pujas.findFirst({
+        where: {
+            id_lote: Number(id_lote),
+        },
+        include: {
+            usuario: {
+                select: { nombres: true, identificacion: true }
+            }
+        },
+        orderBy: [
+            {
+                puja: 'desc',
+            },
+            {
+                id_puja: 'asc',
+            }
+        ],
+        take: 1,
+    });
+
+    await prisma.pujas.update({
+        where: { id_puja: puja?.id_puja },
+        data: { codigo_paleta: usuario.codigo_paleta as string }
+    });
+
+
+    res.status(200).json({ message: 'Paleta Actualizada' });
 }
