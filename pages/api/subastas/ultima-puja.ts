@@ -2,7 +2,7 @@ import prisma from 'database/prismaClient';
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { handleErrorsPrisma } from 'utils';
 
-
+// eslint-disable-next-line
 export default async function (req: NextApiRequest, res: NextApiResponse) {
     try {
         if (req.method !== 'GET') {
