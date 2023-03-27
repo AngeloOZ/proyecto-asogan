@@ -22,7 +22,7 @@ export default function (req: NextApiRequest, res: NextApiResponse) {
 async function obtenerProveedores(req: NextApiRequest, res: NextApiResponse) {
     try {
         const { id } = req.query;
-        
+
         if (id) {
             const proveedor = await prisma.proveedores.findUnique({
                 where: { id_proveedor: Number(id) }
@@ -30,7 +30,11 @@ async function obtenerProveedores(req: NextApiRequest, res: NextApiResponse) {
             return res.status(200).json(proveedor);
         }
 
-        const proveedores = await prisma.proveedores.findMany();
+        const proveedores = await prisma.proveedores.findMany({
+            orderBy: {
+                nombres: 'asc'
+            }
+        });
         return res.status(200).json(proveedores);
     } catch (error) {
         return res.status(500).json(handleErrorsPrisma(error));
@@ -87,7 +91,7 @@ async function actualizarProveedor(req: NextApiRequest, res: NextApiResponse) {
 
 async function eliminarProveedor(req: NextApiRequest, res: NextApiResponse) {
     try {
-       
+
         const { id } = req.query;
 
         const proveedor = await prisma.proveedores.delete({
