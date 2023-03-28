@@ -127,6 +127,23 @@ export const EventoItem = ({ eventos }: Props) => {
 							</a>
 						</Link>
 					}
+					{
+						(rolLogged !== 'comprador') && (
+							<Link href={`${PATH_DASHBOARD.subastas.root}/martillador/${eventos.uuid}`} passHref legacyBehavior>
+								<a target='_blank' style={{ textDecoration: 'none' }}>
+									<Button
+										fullWidth
+										color="primary"
+										variant='contained'
+										size="medium"
+									>
+										ver martillador
+									</Button>
+								</a>
+							</Link>
+						)
+
+					}
 
 				</CardContent>
 			</Card >
