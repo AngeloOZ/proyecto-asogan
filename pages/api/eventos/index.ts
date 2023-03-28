@@ -77,7 +77,7 @@ async function crearEvento(req: NextApiRequest, res: NextApiResponse) {
                 fecha: formattedDate,
                 lugar,
                 tipo,
-                abierto,
+                abierto: Number(abierto),
                 url_video
             }
         });
