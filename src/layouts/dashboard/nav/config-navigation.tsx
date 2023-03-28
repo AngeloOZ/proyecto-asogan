@@ -62,7 +62,7 @@ const navConfig = [
         children: [
           {
             title: 'Listado',
-            path: PATH_DASHBOARD.digitador.root
+            path: PATH_DASHBOARD.lotes.root
           },
           {
             title: 'Agregar',
