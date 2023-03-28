@@ -133,9 +133,10 @@ export const EventoItem = ({ eventos }: Props) => {
 								<a target='_blank' style={{ textDecoration: 'none' }}>
 									<Button
 										fullWidth
-										color="primary"
+										color="info"
 										variant='contained'
 										size="medium"
+										style={{ marginTop: 10 }}
 									>
 										ver martillador
 									</Button>
