@@ -34,7 +34,12 @@ export const VistaLoteCliente = ({ lote, ultimaPuja, banners, evento }: Props) =
 
     const newLote = calcularSubasta(lote, ultimaPuja);
 
-    const incremento = Number(ultimaPuja?.puja || 0) + Number(lote?.incremento || 0);
+    let incremento = Number(lote?.puja_final || 0);
+
+    if (ultimaPuja) {
+        incremento = Number(ultimaPuja?.puja || 0);
+    }
+    incremento = incremento + Number(lote.incremento);
 
     const registrarPujaComprador = async () => {
         try {
