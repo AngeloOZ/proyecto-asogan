@@ -92,9 +92,9 @@ async function crearLote(req: NextApiRequest, res: NextApiResponse) {
                 crias_machos,
                 procedencia,
                 observaciones,
-                puja_inicial: 0.20,
-                puja_final: 0.20,
-                incremento: 0.01,
+                puja_inicial,
+                puja_final: puja_inicial,
+                incremento,
                 url_video,
                 subastado: 0,
             }

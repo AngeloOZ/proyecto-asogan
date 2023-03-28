@@ -139,8 +139,8 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
         observaciones: loteEditar?.observaciones || '',
         id_evento: loteEditar?.id_evento || evento?.id_evento || '',
         id_proveedor: loteEditar?.id_proveedor || '',
-        puja_inicial: Number(loteEditar?.puja_inicial) || 0,
-        incremento: Number(loteEditar?.incremento) || 0,
+        puja_inicial: Number(loteEditar?.puja_inicial) || 0.20,
+        incremento: Number(loteEditar?.incremento) || 0.01,
         url_video: loteEditar?.url_video || '',
         subastado: loteEditar?.subastado?.toString() || '0',
     }), [loteEditar]);
