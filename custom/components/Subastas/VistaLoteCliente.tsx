@@ -39,7 +39,7 @@ export const VistaLoteCliente = ({ lote, ultimaPuja, banners, evento }: Props) =
     if (ultimaPuja) {
         incremento = Number(ultimaPuja?.puja || 0);
     }
-    incremento = incremento + Number(lote.incremento);
+    incremento = incremento + Number(lote?.incremento || 0);
 
     const registrarPujaComprador = async () => {
         try {

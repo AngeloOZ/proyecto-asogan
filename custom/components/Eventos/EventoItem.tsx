@@ -77,8 +77,8 @@ export const EventoItem = ({ eventos }: Props) => {
 					<ContenedorLotes lotes={eventos.lotes} isEventOpen={eventos.abierto} />
 
 					{
-						eventos.abierto && (rolLogged === 'comprador' || rolLogged === 'martillador') && (
-							<Link href={`${PATH_DASHBOARD.subastas.root}/${eventos.uuid}`} passHref legacyBehavior>
+						eventos.abierto && (rolLogged === 'comprador') && (
+							<Link href={`${PATH_DASHBOARD_CLEINTE.subastas}/otra/${eventos.uuid}`} passHref legacyBehavior>
 								<a target='_blank' style={{ textDecoration: 'none' }}>
 									<Button
 										fullWidth
@@ -94,58 +94,52 @@ export const EventoItem = ({ eventos }: Props) => {
 					}
 
 					{
-						(rolLogged === 'admin' || rolLogged === 'admin-martillador') &&
-						<Link href={`${PATH_DASHBOARD.subastas.admin_martillador}/${eventos.uuid}`} target='_blank' passHref legacyBehavior>
-							<a target='_blank' style={{ textDecoration: 'none' }}>
-								<Button
-									fullWidth
-									color="primary"
-									variant='contained'
-									size="medium"
-									style={{ marginTop: 10 }}
-								>
-									Ver Admin Martillador
-								</Button>
-							</a>
-						</Link>
-					}
+						(rolLogged === 'admin' || rolLogged === 'admin-martillador') && (
+							<>
+								<Link href={`${PATH_DASHBOARD.subastas.admin_martillador}/${eventos.uuid}`} target='_blank' passHref legacyBehavior>
+									<a target='_blank' style={{ textDecoration: 'none' }}>
+										<Button
+											fullWidth
+											color="primary"
+											variant='contained'
+											size="medium"
+											style={{ marginTop: 10 }}
+										>
+											Ver Admin Martillador
+										</Button>
+									</a>
+								</Link>
 
-					{
-						(rolLogged === 'admin' || rolLogged === 'admin-martillador') &&
+								<Link href={`${PATH_DASHBOARD.subastas.monitor}/${eventos.uuid}`} target='_blank' passHref legacyBehavior>
+									<a target='_blank' style={{ textDecoration: 'none' }}>
+										<Button
+											fullWidth
+											color="secondary"
+											variant='contained'
+											size="medium"
+											style={{ marginTop: 10 }}
+										>
+											Ver en monitor
+										</Button>
+									</a>
+								</Link>
 
-						<Link href={`${PATH_DASHBOARD.subastas.monitor}/${eventos.uuid}`} target='_blank' passHref legacyBehavior>
-							<a target='_blank' style={{ textDecoration: 'none' }}>
-								<Button
-									fullWidth
-									color="secondary"
-									variant='contained'
-									size="medium"
-									style={{ marginTop: 10 }}
-								>
-									Ver en monitor
-								</Button>
-							</a>
-						</Link>
-					}
-					{
-						(rolLogged !== 'comprador') && (
-							<Link href={`${PATH_DASHBOARD.subastas.root}/martillador/${eventos.uuid}`} passHref legacyBehavior>
-								<a target='_blank' style={{ textDecoration: 'none' }}>
-									<Button
-										fullWidth
-										color="info"
-										variant='contained'
-										size="medium"
-										style={{ marginTop: 10 }}
-									>
-										ver martillador
-									</Button>
-								</a>
-							</Link>
+								<Link href={`${PATH_DASHBOARD.subastas.root}/martillador/${eventos.uuid}`} passHref legacyBehavior>
+									<a target='_blank' style={{ textDecoration: 'none' }}>
+										<Button
+											fullWidth
+											color="info"
+											variant='contained'
+											size="medium"
+											style={{ marginTop: 10 }}
+										>
+											ver martillador
+										</Button>
+									</a>
+								</Link>
+							</>
 						)
-
 					}
-
 				</CardContent>
 			</Card >
 		</>
