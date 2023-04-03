@@ -87,12 +87,12 @@ async function eliminarPuja(req: NextApiRequest, res: NextApiResponse) {
         const lote = await prisma.lotes.findUnique({ where: { id_lote: ultima.id_lote } });
 
         // Eliminar la ultima puja
-        const aux = await prisma.pujas.delete({ where: { id_puja: ultima.id_puja } });
+        await prisma.pujas.delete({ where: { id_puja: ultima.id_puja } });
 
         const nuevaPujaFinal = penultima ? penultima.puja : lote!.puja_inicial;
 
         // Actualizar el lote con la nueva puja final
-        const aux2 = await prisma.lotes.update({
+        await prisma.lotes.update({
             where: { id_lote: ultima.id_lote },
             data: { puja_final: nuevaPujaFinal },
         });
