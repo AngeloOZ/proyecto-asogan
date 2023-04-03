@@ -55,7 +55,7 @@ export default function NavVertical({ openNav, onCloseNav }: Props) {
           flexShrink: 0,
         }}
       >
-        <Logo />
+        <Logo image='/logo/logo_full.png' sx={{ width: '100%', height: 40 }} bgcolor='crimson' />
 
         <NavAccount />
       </Stack>

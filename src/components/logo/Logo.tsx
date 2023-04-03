@@ -12,10 +12,11 @@ import Image from '../image/Image';
 
 export interface LogoProps extends BoxProps {
   disabledLink?: boolean;
+  image?: string;
 }
 
 const Logo = forwardRef<HTMLDivElement, LogoProps>(
-  ({ disabledLink = false, sx, ...other }, ref) => {
+  ({ disabledLink = false, image = '/favicon/logo.png', sx, ...other }, ref) => {
 
     const logo = (
       <Box
@@ -31,7 +32,7 @@ const Logo = forwardRef<HTMLDivElement, LogoProps>(
       >
         <Image
           alt="logo"
-          src="https://tienda.socio-perseo.com/assets/media/perseologo.png"
+          src={image}
           sx={{ width: "100%", height: "100%" }}
         />
 
