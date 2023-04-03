@@ -18,7 +18,7 @@ export const useLotesSubasta = (id: number): Data => {
         error: null
     }
 
-    const { data, isLoading, error } = useSWR(`/lotes/${id}`, fetcher, { refreshInterval : 1000 });
+    const { data, isLoading, error } = useSWR(`/lotes/${id}`, fetcher, { refreshInterval: 1000 });
 
     return {
         lotes: data || [],

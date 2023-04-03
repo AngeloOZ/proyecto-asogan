@@ -44,25 +44,34 @@ export function PujaMartillador({ lote, ultimaPuja }: Props) {
             mutate(`/lotes/${lote.id_evento}`)
             mutate(`/subastas/pujas?lote=${lote.id_lote}`)
             mutate(`/subastas/lotes?id=${lote.id_evento}`)
+            mutate(`/subastas/ultima-puja?id=${lote.id_evento}`)
+
         } catch (error) {
             enqueueSnackbar(`Oops... ${handleErrorsAxios(error)}`, { variant: 'error' });
         }
     }
 
-    const registrarPujaMartillador = async (incremento: number) => {
+    const registrarPujaMartillador = (incremento: number) => {
         try {
             const body = {
                 id_lote: lote.id_lote,
                 puja: incremento,
                 codigo_paleta: 'P',
             }
-            await subastaAPI.put('subastas/registrar/martillador', body);
-            enqueueSnackbar('Oferta registrada', { variant: 'success' });
+            
+            subastaAPI.put('subastas/registrar/martillador', body)
+                .then(() => {
+                    enqueueSnackbar('Oferta registrada', { variant: 'success' });
+                })
+                .catch((error) => {
+                    enqueueSnackbar(`Oops... ${handleErrorsAxios(error)}`, { variant: 'error' });
+                });
+
             mutate(`/lotes/${lote.id_evento}`)
+            mutate(`/subastas/ultima-puja?id=${lote.id_evento}`)
             mutate(`/subastas/pujas?lote=${lote.id_lote}`)
             mutate(`/subastas/lotes?id=${lote.id_evento}`)
         } catch (error) {
-            enqueueSnackbar(`Oops... ${handleErrorsAxios(error)}`, { variant: 'error' });
         } finally {
             setPaleta("");
         }

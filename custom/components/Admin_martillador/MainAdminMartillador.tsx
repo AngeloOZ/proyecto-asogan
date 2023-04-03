@@ -1,14 +1,15 @@
-import { Card, CardContent, Grid, Typography, useTheme } from '@mui/material'
-import { LoteMonitor, UltimaPuja } from '@types'
-import css from '../../styles/admin_martillador.module.css';
-import { CardInfo } from '../Monitor';
-import moment from 'moment-timezone';
-import { Box } from '@mui/system';
-import { PujaMartillador, useLotesSubasta, useSubastas, VideoPlayer } from '../Subastas';
-import { LoteAdminMartillador } from '../Subastas/LoteAdminMartillador';
-import { useState } from 'react';
+import { Box, Card, CardContent, Grid, Typography, useTheme } from '@mui/material'
+
+import { UltimaPuja } from '@types'
 import { eventos, lotes } from '@prisma/client'
+
+import css from '../../styles/admin_martillador.module.css';
+
 import { calcularSubasta } from 'utils';
+
+import { CardInfo } from '../Monitor';
+import { PujaMartillador, useLotesSubasta, VideoPlayer } from '../Subastas';
+import { LoteAdminMartillador } from '../Subastas/LoteAdminMartillador';
 
 type Props = {
     lote: lotes,
@@ -27,9 +28,8 @@ export const MainAdminMartillador = ({ evento, lote, ultimaPuja }: Props) => {
             <Box component="div" className={css.lote}>
                 <Card sx={{ height: "100%", p: 2 }}>
                     <Box component='div' width="100%" height="100%" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                        <LoteAdminMartillador listadoLotes={lotes} />
+                        <LoteAdminMartillador listadoLotes={lotes} loteEnSubasta={lote} />
                     </Box>
-
                 </Card>
             </Box>
 
@@ -86,6 +86,7 @@ export const MainAdminMartillador = ({ evento, lote, ultimaPuja }: Props) => {
                 className={css.peso_promedio}
                 bgColorCustom='#6bb73b'
                 fontSizeCustom='60px'
+                fontSizeTitleCustom='25px'
             />
 
             <CardInfo
@@ -94,14 +95,16 @@ export const MainAdminMartillador = ({ evento, lote, ultimaPuja }: Props) => {
                 className={css.hora_pesaje}
                 fontSizeCustom='60px'
                 bgColorCustom='#6bb73b'
+                fontSizeTitleCustom='25px'
             />
 
             <CardInfo
                 title='Incremento'
-                value={'$ ' + newLote.valorPuja.toFixed(2)}
+                value={'$ ' + newLote.valorPuja}
                 className={css.incremento}
                 bgColorCustom='#ebeb3d'
                 fontSizeCustom='60px'
+                fontSizeTitleCustom='25px'
             />
 
             <CardInfo
@@ -114,7 +117,7 @@ export const MainAdminMartillador = ({ evento, lote, ultimaPuja }: Props) => {
 
             <CardInfo
                 title='Puja Actual'
-                value={'$' + newLote.valorFinal.toFixed(2)}
+                value={'$' + newLote.pujaActualText}
                 className={css.puja_actual}
                 fontSizeCustom='68px'
                 bgColorCustom='#ef440c'
@@ -123,7 +126,7 @@ export const MainAdminMartillador = ({ evento, lote, ultimaPuja }: Props) => {
 
             <CardInfo
                 title='Valor Promedio animal'
-                value={'$' + (newLote.pesoPromedio * newLote.valorFinal2).toFixed(2)}
+                value={'$' + (newLote.pesoPromedio * newLote.valorFinal).toFixed(2)}
                 className={css.valor_promedio_animal}
                 fontSizeCustom='68px'
                 bgColorCustom='#ebeb3d'
