@@ -51,7 +51,7 @@ export function PujaMartillador({ lote, ultimaPuja }: Props) {
         }
     }
 
-    const registrarPujaMartillador = (incremento: number) => {
+    const registrarPujaMartillador = async (incremento: number) => {
         try {
             const body = {
                 id_lote: lote.id_lote,
@@ -59,19 +59,16 @@ export function PujaMartillador({ lote, ultimaPuja }: Props) {
                 codigo_paleta: 'P',
             }
             
-            subastaAPI.put('subastas/registrar/martillador', body)
-                .then(() => {
-                    enqueueSnackbar('Oferta registrada', { variant: 'success' });
-                })
-                .catch((error) => {
-                    enqueueSnackbar(`Oops... ${handleErrorsAxios(error)}`, { variant: 'error' });
-                });
+            await subastaAPI.put('subastas/registrar/martillador', body);
 
             mutate(`/lotes/${lote.id_evento}`)
-            mutate(`/subastas/ultima-puja?id=${lote.id_evento}`)
-            mutate(`/subastas/pujas?lote=${lote.id_lote}`)
             mutate(`/subastas/lotes?id=${lote.id_evento}`)
+            mutate(`/subastas/ultima-puja?id=${lote.id_evento}`)
+    
+            enqueueSnackbar('Oferta registrada', { variant: 'success' });
+
         } catch (error) {
+            enqueueSnackbar(`Oops... ${handleErrorsAxios(error)}`, { variant: 'error' });
         } finally {
             setPaleta("");
         }

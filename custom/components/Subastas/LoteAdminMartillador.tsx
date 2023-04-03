@@ -3,14 +3,16 @@ import { useEffect, useMemo, useState } from "react";
 import { Box, Button, InputAdornment, MenuItem, Stack } from "@mui/material"
 import { useForm } from "react-hook-form";
 import { useSnackbar } from "notistack";
+import { useSWRConfig } from "swr";
 
 import { lotes } from "@prisma/client";
-
 import { subastaAPI } from 'custom/api'
 
 import FormProvider, {
     RHFSelect, RHFTextField,
 } from 'src/components/hook-form';
+
+import { handleErrorsAxios } from "utils";
 
 interface Lote {
     id_lote: string;
@@ -28,7 +30,7 @@ interface LoteMartillador {
 type FormProps = Lote;
 
 export const LoteAdminMartillador = ({ listadoLotes = [], loteEnSubasta }: LoteMartillador) => {
-
+    const { mutate } = useSWRConfig();
     const { enqueueSnackbar } = useSnackbar();
     const [loteActual, setLoteActual] = useState<lotes>()
 
@@ -113,9 +115,20 @@ export const LoteAdminMartillador = ({ listadoLotes = [], loteEnSubasta }: LoteM
         handleSubmit(guardarLote)();
     }
 
-    const eliminarUltimaPuja = () => {
-        // TODO: eliminar la ultima puja
-        alert('eliminarUltimaPuja');
+    const eliminarUltimaPuja = async () => {
+        try{
+            await subastaAPI.delete(`/subastas/pujas?id_lote=${values.id_lote}`);
+
+            mutate(`/lotes/${loteActual?.id_lote}`)
+            mutate(`/subastas/lotes?id=${loteActual?.id_evento}`)
+            mutate(`/subastas/ultima-puja?id=${loteActual?.id_evento}`)
+
+            enqueueSnackbar("Última puja eliminada", { variant: 'success' });
+        }
+        catch(error){
+            console.error(error);
+            enqueueSnackbar(handleErrorsAxios(error), { variant: 'error' });
+        }
     }
 
     return (
