@@ -1,5 +1,5 @@
 export function handleErrorsPrisma(error: any) {
-    let mensaje: string = "Ha ocurrido un error";
+    let mensaje: string = error?.message || "Ha ocurrido un error";
 
     switch (error.code) {
         case "P2003":
