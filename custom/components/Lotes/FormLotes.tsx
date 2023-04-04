@@ -23,7 +23,7 @@ import FormProvider, {
 
 import { PATH_DASHBOARD } from 'src/routes/paths';
 import { LoteForm, LoteEditar } from '@types';
-import { lotes, tipo_animales } from '@prisma/client';
+import { lotes, tipo_animales, eventos } from '@prisma/client';
 import { subastaAPI } from 'custom/api';
 import { handleErrorsAxios } from 'utils';
 
@@ -53,20 +53,15 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
     const router = useRouter();
     const { enqueueSnackbar } = useSnackbar();
 
+    const { user } = useContext(AuthContext);
     const { eventos, isLoading: isLoadingEventos } = useObtenerEventos();
     const { proveedores, isLoading: isLoadingProve } = useObtenerProveedores();
-    const [codigoLote, setCodigoLote] = useState(generateUniqueNumber());
+    const [codigoLote, setCodigoLote] = useState("");
     const [lotesAnteriores, setLotesAnteriores] = useState<lotes[]>([]);
     const [tipoAnimales, setTipoAnimales] = useState<tipo_animales[]>([]);
-
     const { agregarLote, actualizarLote } = useLotes();
-    const { user } = useContext(AuthContext);
-    
-    useEffect(() => {
-        obtenerLotesTotales();
-        obtenerTipoAnimales();
-    }, []);
 
+    // Efectos
     useEffect(() => {
         if (esEditar && loteEditar) {
             reset(defaultValues);
@@ -75,21 +70,30 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
         if (!esEditar) {
             reset(defaultValues);
         }
-
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [esEditar, loteEditar]);
 
     useEffect(() => {
-        obtenerLotesTotales();
-        obtenerTipoAnimales();
-    }, []);
+        if (evento || loteEditar) {
+            obtenerLotesTotales();
+            obtenerTipoAnimales();
+        }
+    }, [evento, loteEditar]);
 
-    function generateUniqueNumber(): string {
-        const min = 1000;
-        const max = 9999;
-        const uniqueNumber = Math.floor(Math.random() * (max - min + 1) + min);
-        return uniqueNumber.toString().slice(-6);
-    }
+    useEffect(() => {
+        if (lotesAnteriores.length > 0) {
+            const aux = lotesAnteriores[lotesAnteriores.length - 1].codigo_lote!;
+            setCodigoLote((parseInt(aux) + 1).toString());
+        } else {
+            setCodigoLote("1");
+        }
+    }, [lotesAnteriores]);
+
+    useEffect(() => {
+        if (codigoLote !== "") {
+            setValue('codigo_lote', codigoLote);
+        }
+    }, [codigoLote]);
 
     // Validaciones de los campos
     const ProveedorEsquema = Yup.object().shape({
@@ -118,6 +122,7 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
         peso_total: Yup.number().required('El peso total es requerido').min(1, 'El peso total debe ser mayor a 0').typeError('El peso total debe ser un valor numérico'),
         id_evento: Yup.string().required('El evento es requerido'),
         id_proveedor: Yup.string().required('El proveedor es requerido'),
+        observaciones: Yup.string().required('La observación es requerida'),
         /*  puja_inicial: Yup.number().min(0.0001, 'La puja inicial debe ser mayor a 0').typeError('La puja debe ser un valor numérico'),
          incremento: Yup.number().min(0.0001, 'La puja inicial debe ser mayor a 0').typeError('La puja debe ser un valor numérico'), */
 
@@ -143,7 +148,7 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
         incremento: Number(loteEditar?.incremento) || 0.01,
         url_video: loteEditar?.url_video || '',
         subastado: loteEditar?.subastado?.toString() || '0',
-    }), [loteEditar]);
+    }), [loteEditar, codigoLote]);
 
     // funciones para el hook useForm
     const methods = useForm<FormValuesProps>({
@@ -155,17 +160,32 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
         reset,
         watch,
         handleSubmit,
+        setValue,
         formState: { isSubmitting },
     } = methods;
+
+    async function obtenerLotesTotales() {
+        const { data } = await subastaAPI.get('/lotes');
+
+        const idEvento = watch('id_evento');
+
+        const filter = data.filter((lote: lotes) => lote.id_evento === idEvento);
+
+        setLotesAnteriores(filter);
+    }
+
+    async function obtenerTipoAnimales() {
+        const { data } = await subastaAPI.get('/lotes/tipoanimal');
+        setTipoAnimales(data);
+    }
 
     // Funcion para enviar el formulario
     const onSubmit = async (data: FormValuesProps) => {
         try {
-            console.log(data);
-
             if (!esEditar) {
                 await agregarLote(data);
-                setCodigoLote(generateUniqueNumber());
+                setCodigoLote("");
+                obtenerLotesTotales();
                 enqueueSnackbar('Lote agregado correctamente', { variant: 'success' });
             } else {
                 await actualizarLote(data);
@@ -178,22 +198,6 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
             enqueueSnackbar(`Oops... ${handleErrorsAxios(error)}`, { variant: 'error' });
         }
     };
-
-    async function obtenerLotesTotales() {
-        const { data } = await subastaAPI.get('/lotes');
-        setLotesAnteriores(data);
-    }
-
-    async function obtenerTipoAnimales() {
-        const { data } = await subastaAPI.get('/lotes/tipoanimal');
-        let dataFiltered = data;
-
-        if (loteEditar) {
-            const filter = lotesAnteriores.filter((lote) => lote.id_lote !== loteEditar?.id_lote);
-            dataFiltered = filter;
-        }
-        setTipoAnimales(dataFiltered);
-    }
 
     if (isLoadingEventos || isLoadingProve) return <LinearProgressBar />
 
@@ -347,26 +351,29 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
                             </RHFSelect>
 
                             {
-                                watch('sexo') === '0' && (<>
-                                    <RHFTextField
-                                        name="crias_hembras"
-                                        label="Número de crías hembras"
-                                        size='small'
-                                        type='number'
-                                        inputProps={{
-                                            readOnly: soloVer,
-                                        }}
-                                    />
-                                    <RHFTextField
-                                        name="crias_machos"
-                                        label="Número de crías machos"
-                                        size='small'
-                                        type='number'
-                                        inputProps={{
-                                            readOnly: soloVer,
-                                        }}
-                                    />
-                                </>)
+                                watch('sexo') === '0' && (
+                                    <>
+                                        <RHFTextField
+                                            name="crias_hembras"
+                                            label="Número de crías hembras"
+                                            size='small'
+                                            type='number'
+                                            defaultValue={0}
+                                            inputProps={{
+                                                readOnly: soloVer,
+                                            }}
+                                        />
+                                        <RHFTextField
+                                            name="crias_machos"
+                                            label="Número de crías machos"
+                                            size='small'
+                                            type='number'
+                                            defaultValue={0}
+                                            inputProps={{
+                                                readOnly: soloVer,
+                                            }}
+                                        />
+                                    </>)
                             }
 
                             <RHFTextField
@@ -392,8 +399,6 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
                                 }}
                             />
 
-
-
                         </Stack>
                     </Card>
                 </Grid>
@@ -410,7 +415,7 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
                                 label="Observaciones"
                                 size='small'
                                 multiline
-                                rows={3}
+                                // rows={3}
                                 maxRows={3}
                                 inputProps={{
                                     readOnly: soloVer,

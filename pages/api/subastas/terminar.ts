@@ -64,14 +64,16 @@ async function terminarSubasta(req: NextApiRequest, res: NextApiResponse) {
         ],
         take: 1,
     });
+
     if (!ultimaPujaMasAlta) throw new Error('No se encontró pujas registradas para este lote');
 
     // 2. obtener comprador de la ultima puja más alta
     const comprador = await prisma.compradores.findFirst({
         where: {
-            usuarioid: ultimaPujaMasAlta.id_usuario,
+            usuarioid: ultimaPujaMasAlta.id_usuario || undefined,
         }
     });
+
     if (!comprador) throw new Error('No se encontró comprador para este lote');
 
     // 3. actualizar lote con comprador y paleta
