@@ -117,7 +117,7 @@ export const VistaLoteCliente = ({ lote, ultimaPuja, banners, evento }: Props) =
             />
             <CardInfo
                 title='incremento'
-                value={'$' + newLote.valorPuja.toFixed(2)}
+                value={'$' + newLote.valorPuja}
                 className={css.incremento}
                 bgColorCustom='#ebeb3d'
                 fontSizeTitleCustom='20px'
@@ -133,7 +133,7 @@ export const VistaLoteCliente = ({ lote, ultimaPuja, banners, evento }: Props) =
             />
             <CardInfo
                 title='Puja actual'
-                value={'$' + newLote.valorFinal.toFixed(2)}
+                value={'$' + newLote.pujaActualText}
                 className={css.valor_final}
                 bgColorCustom='#ef440c'
                 textColorCustom='#fff'

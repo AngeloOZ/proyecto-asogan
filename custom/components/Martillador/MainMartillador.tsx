@@ -109,7 +109,7 @@ export const MainMartillador = ({ lote, ultimaPuja, evento }: Props) => {
             <CardInfo
                 title='Incremento'
                 fontSizeTitleCustom='20px'
-                value={'$' + newLote.valorPuja.toFixed(2)}
+                value={'$' + newLote.valorPuja}
                 className={css.incremento}
                 bgColorCustom='#ebeb3d'
                 fontSizeCustom='50px'
@@ -125,7 +125,7 @@ export const MainMartillador = ({ lote, ultimaPuja, evento }: Props) => {
             <CardInfo
                 title='Puja Actual'
                 fontSizeTitleCustom='20px'
-                value={'$' + newLote.valorFinal.toFixed(2)}
+                value={'$' + newLote.pujaActualText}
                 className={css.valor_final}
                 bgColorCustom='#ef440c'
                 textColorCustom='#fff'

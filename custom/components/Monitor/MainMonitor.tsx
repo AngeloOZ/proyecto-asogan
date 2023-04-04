@@ -66,7 +66,7 @@ export const MainMonitor = ({ lote, ultimaPuja, banners, evento }: Props) => {
 
                 <CardInfo
                     title='Incremento'
-                    value={'$' + newLote.valorPuja.toFixed(2)}
+                    value={'$' + newLote.valorPuja}
                     className={css.puja}
                     bgColorCustom='#ebeb3d'
                     fontSizeCustom='60px'
@@ -82,7 +82,7 @@ export const MainMonitor = ({ lote, ultimaPuja, banners, evento }: Props) => {
 
                 <CardInfo
                     title='Puja Actual'
-                    value={'$' + newLote.valorFinal.toFixed(2)}
+                    value={'$' + newLote.pujaActualText}
                     className={css.valor_final}
                     fontSizeCustom='68px'
                     bgColorCustom='#ef440c'
