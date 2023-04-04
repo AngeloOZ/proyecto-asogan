@@ -17,7 +17,7 @@ export const sendMail = (mailRecipientList: string[], contentHTML: string, subje
     return new Promise(async (resolve, reject) => {
         try {
             const mailOptions = {
-                from: "noresponder@perseo.ec" ,
+                from: process.env.SMTP_FROM ,
                 to: mailRecipientList,
                 subject: subject,
                 html: contentHTML

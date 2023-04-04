@@ -156,8 +156,11 @@ async function crearComprador(req: NextApiRequest, res: NextApiResponse) {
     }
     finally {
 
-        if (registroC === 1)
-            await sendMail(["llucia01394@gmail.com", correoC], plantilla(identificacionC, nombresC, correoC, celularC, new Date().getUTCFullYear().toString()), 'Perseo');
+        if (registroC === 1){
+
+            await sendMail([correoC], plantilla(identificacionC, nombresC, correoC, celularC, new Date().getUTCFullYear().toString()), 'Perseo');
+            await sendMail([process.env.SMTP_CORREO!], plantilla(identificacionC, nombresC, correoC, celularC, new Date().getUTCFullYear().toString()), 'Perseo');
+        }
 
         prisma.$disconnect();
     }
