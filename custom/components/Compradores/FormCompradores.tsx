@@ -45,7 +45,7 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
     const { validarIdentificacion, consultarIdentificacion, enviarCorreoClave } = useGlobales();
     const [validacionI, setValidacionI] = useState(false);
     const [nombresV, setNombres] = useState<string>();
-
+    const [botonCorreo, setBotonCorreo] = useState(false);
     useEffect(() => {
         if (esEditar && compradorEditar) {
             reset(defaultValues);
@@ -83,7 +83,7 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
         return {
             id_comprador: compradorEditar?.id_comprador || 0,
             codigo_paleta: (esEditar == true) ?
-                (compradorEditar?.codigo_paleta || '') : (Math.floor(Math.random() * (100 - 999 + 1) + 999)).toString(),
+                (compradorEditar?.codigo_paleta || '') : (Math.floor(Math.random() * (Number(process.env.NEXT_PUBLIC_STMP_PALETA) - Number(process.env.NEXT_PUBLIC_STMP_PALETA_HASTA) + 1) +  Number(process.env.NEXT_PUBLIC_STMP_PALETA_HASTA))).toString(),
             calificacion_bancaria: compradorEditar?.calificacion_bancaria || "",
             antecedentes_penales: compradorEditar?.antecedentes_penales || false,
             procesos_judiciales: compradorEditar?.procesos_judiciales || false,
@@ -158,13 +158,14 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
 
     const enviarCorreo = async (data: any) => {
         try {
+            setBotonCorreo(true);
             data.nombres = nombresV?.trim()
             await actualizarComprador(data)
             const correo = await enviarCorreoClave(data)
-          
+            setBotonCorreo(false);
             enqueueSnackbar(`${correo.message}`);
         } catch (error) {
-        
+            setBotonCorreo(false);
             enqueueSnackbar(`Oops... ${handleErrorsAxios(error)}`, { variant: 'error' });
         }
 
@@ -264,6 +265,7 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
                         color="inherit"
                         variant="outlined"
                         size="medium"
+                        disabled = {botonCorreo}
                         onClick={() => enviarCorreo(methods.getValues())}
                     >
                         Guardar y Enviar Correo

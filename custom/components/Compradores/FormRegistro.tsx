@@ -122,6 +122,13 @@ export const Registro = () => {
 
 
     }
+
+    function soloDigitos(event: any ) {
+        const charCode = event.charCode;
+        if (charCode < 48 || charCode > 57) {
+          event.preventDefault();
+        }
+      }
     return (
 
         <RegistroLayout illustration="/logo/logo.webp">
@@ -171,10 +178,10 @@ export const Registro = () => {
                             <RHFTextField
                                 name="celular"
                                 label="Número de celular"
-                                size='small'
-
-                                type='tel'
-
+                                size="small"
+                                type='text'
+                                inputProps={{  pattern: "[0-9]*",inputMode: "numeric" }}
+                                onKeyPress={(e)=>{soloDigitos(e)} }
                             />
                             <RHFTextField
                                 name="correo"
