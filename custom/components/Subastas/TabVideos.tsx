@@ -72,6 +72,7 @@ export function TabVideos({ urlTransmisionEnVivo = '', urlVideoDemostracion = ''
                                 url: urlTransmisionEnVivo,
                                 muted: false,
                                 controls: true,
+                                playing: true,
                             }}
                         />
 
