@@ -41,7 +41,7 @@ export function FormUsuarios({ esEditar = false, usuariosEditar }: Props) {
     const { push } = useRouter();
     const { enqueueSnackbar } = useSnackbar();
     const { agregarUsuario, actualizarUsuario } = useUsuario();
-    const { validarIdentificacion, consultarIdentificacion } = useGlobales();
+    const { validarIdentificacion, consultarIdentificacion, soloDigitos, soloLetras } = useGlobales();
     const [validacionI, setValidacionI] = useState(false);
 
 
@@ -164,12 +164,14 @@ export function FormUsuarios({ esEditar = false, usuariosEditar }: Props) {
                     size='small'
                     disabled={esEditar}
                     onBlur={verificarIdentificacion}
+                    onKeyPress={(e)=>{soloDigitos(e)} }
 
                 />
                 <RHFTextField
                     name="nombres"
                     label="Nombres"
                     size='small'
+                    onKeyPress={(e)=>{soloLetras(e)} }
 
                 />
                   <RHFTextField
@@ -183,7 +185,7 @@ export function FormUsuarios({ esEditar = false, usuariosEditar }: Props) {
                     name="celular"
                     label="Celular"
                     size='small'
-
+                    onKeyPress={(e)=>{soloDigitos(e)} }
                 />
 
                 <RHFTextField

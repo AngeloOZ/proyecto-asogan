@@ -42,7 +42,7 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
     const { push } = useRouter();
     const { enqueueSnackbar } = useSnackbar();
     const { agregarComprador, actualizarComprador } = useCompradores();
-    const { validarIdentificacion, consultarIdentificacion, enviarCorreoClave } = useGlobales();
+    const { validarIdentificacion, consultarIdentificacion, enviarCorreoClave, soloDigitos, soloLetras } = useGlobales();
     const [validacionI, setValidacionI] = useState(false);
     const [nombresV, setNombres] = useState<string>();
     const [botonCorreo, setBotonCorreo] = useState(false);
@@ -181,6 +181,7 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
                     size='small'
                     disabled={esEditar}
                     onBlur={(e) => verificarIdentificacion(e.target.value)}
+                    onKeyPress={(e)=>{soloDigitos(e)} }
                 />
                 <RHFTextField
                     name="nombres"
@@ -188,6 +189,7 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
                     size='small'
                     value={nombresV}
                     onChange={(e) => { setNombres(e.target.value) }}
+                    onKeyPress={(e)=>{soloLetras(e)} }
                 />
                 <RHFTextField
                     name="correo"
@@ -199,11 +201,13 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
                     name="celular"
                     label="Celular"
                     size='small'
+                    onKeyPress={(e)=>{soloDigitos(e)} }
                 />
                 <RHFTextField
                     name="codigo_paleta"
                     label="Número de paleta"
                     size='small'
+                    onKeyPress={(e)=>{soloDigitos(e)} }
 
                 />
 
@@ -212,6 +216,7 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
                     name="calificacion_bancaria"
                     label="Calificación Bancaria"
                     size='small'
+                    onKeyPress={(e)=>{soloDigitos(e)} }
                 />
             </Stack>
             <Stack direction="row" spacing={2} mt={3}>

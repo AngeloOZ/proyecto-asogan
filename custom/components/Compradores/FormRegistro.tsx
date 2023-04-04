@@ -24,7 +24,6 @@ import { useGlobales } from '../Globales';
 import { useCompradores } from './Hooks';
 import { handleErrorsAxios } from 'utils';
 import Link from 'next/link';
-
 import { PATH_AUTH} from 'src/routes/paths';
 
 type FormValuesProps = IComprador;
@@ -32,7 +31,7 @@ type FormValuesProps = IComprador;
 
 export const Registro = () => {
 
-    const { validarIdentificacion, consultarIdentificacion } = useGlobales();
+    const { validarIdentificacion, consultarIdentificacion, soloDigitos, soloLetras } = useGlobales();
     const { enqueueSnackbar } = useSnackbar();
     const { agregarComprador } = useCompradores();
     const [validacionI, setValidacionI] = useState(false);
@@ -123,12 +122,7 @@ export const Registro = () => {
 
     }
 
-    function soloDigitos(event: any ) {
-        const charCode = event.charCode;
-        if (charCode < 48 || charCode > 57) {
-          event.preventDefault();
-        }
-      }
+
     return (
 
         <RegistroLayout illustration="/logo/logo.webp">
@@ -165,6 +159,7 @@ export const Registro = () => {
                                 size='small'
                                 value={identificacionV}
                                 onChange={(e) => { setIdentificacionV(e.target.value); ((e.target.value).length == 10 || (e.target.value).length == 13) ? verificarIdentificacion(e.target.value) : setValidacionI(false); }}
+                                onKeyPress={(e)=>{soloDigitos(e)} }
                             />
                             <RHFTextField
                                 name="nombres"
@@ -172,6 +167,7 @@ export const Registro = () => {
                                 size='small'
                                 value={nombresV}
                                 onChange={(e) => { setNombres(e.target.value) }}
+                                onKeyPress={(e)=>{soloLetras(e)} }
                             />
 
 
