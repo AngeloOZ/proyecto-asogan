@@ -304,7 +304,7 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
 
                             <RHFSelect name='id_proveedor' label='Proveedores' size='small'
                                 inputProps={{
-                                    readOnly: soloVer,
+                                    readOnly: soloVer || loteEditar?.id_comprador,
                                 }}>
                                 {proveedores.map((provedor) => <MenuItem key={provedor.id_proveedor} value={provedor.id_proveedor}>{provedor.nombres}</MenuItem>)}
                             </RHFSelect>
@@ -316,7 +316,7 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
                                 size='small'
                                 onChange={soloNumero}
                                 inputProps={{
-                                    readOnly: soloVer,
+                                    readOnly: soloVer || loteEditar?.id_comprador,
                                 }}
                             />
                             <RHFTextField
@@ -325,7 +325,7 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
                                 type='time'
                                 size='small'
                                 inputProps={{
-                                    readOnly: soloVer,
+                                    readOnly: soloVer || loteEditar?.id_comprador,
                                 }}
                             />
                             <RHFTextField
@@ -334,13 +334,13 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
                                 type='text'
                                 size='small'
                                 inputProps={{
-                                    readOnly: soloVer,
+                                    readOnly: soloVer || loteEditar?.id_comprador,
                                 }}
                                 onChange={soloNumero}
                             />
                             <RHFSelect name="tipo_animales" label="Tipo de animales" size='small'
                                 inputProps={{
-                                    readOnly: soloVer,
+                                    readOnly: soloVer || loteEditar?.id_comprador,
                                 }}>
                                 {tipoAnimales.map((tipoA) => <MenuItem key={tipoA.codigoanimal} value={tipoA.codigoanimal}>{tipoA.descripcionanimal}</MenuItem>)}
                             </RHFSelect>
@@ -350,7 +350,7 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
                                 label="Calidad de animales"
                                 size='small'
                                 inputProps={{
-                                    readOnly: soloVer,
+                                    readOnly: soloVer || loteEditar?.id_comprador,
                                 }}
                             >
                                 <MenuItem value="Excelente">Excelente</MenuItem>
@@ -363,7 +363,7 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
 
                             <RHFSelect name='sexo' label='Sexo' size='small'
                                 inputProps={{
-                                    readOnly: soloVer,
+                                    readOnly: soloVer || loteEditar?.id_comprador,
                                 }}>
                                 <MenuItem value="1">Macho</MenuItem>
                                 <MenuItem value="0">Hembra</MenuItem>
@@ -379,7 +379,7 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
                                             type='number'
                                             defaultValue={0}
                                             inputProps={{
-                                                readOnly: soloVer,
+                                                readOnly: soloVer || loteEditar?.id_comprador,
                                             }}
                                         />
                                         <RHFTextField
@@ -389,7 +389,7 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
                                             type='number'
                                             defaultValue={0}
                                             inputProps={{
-                                                readOnly: soloVer,
+                                                readOnly: soloVer || loteEditar?.id_comprador,
                                             }}
                                         />
                                     </>)
@@ -400,7 +400,7 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
                                 label="Procedencia"
                                 size='small'
                                 inputProps={{
-                                    readOnly: soloVer,
+                                    readOnly: soloVer || loteEditar?.id_comprador,
                                 }}
                             />
 
@@ -414,7 +414,7 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
                                 }}
                                 inputProps={{
                                     step: "any",
-                                    readOnly: soloVer,
+                                    readOnly: soloVer || loteEditar?.id_comprador,
                                 }}
                             />
 
@@ -437,7 +437,7 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
                                 // rows={3}
                                 maxRows={3}
                                 inputProps={{
-                                    readOnly: soloVer,
+                                    readOnly: soloVer || loteEditar?.id_comprador,
                                 }}
                             />
 
@@ -453,7 +453,7 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
                                         multiline
                                         maxRows={3}
                                         inputProps={{
-                                            readOnly: soloVer,
+                                            readOnly: soloVer || loteEditar?.id_comprador,
                                         }}
                                     />
 
@@ -467,7 +467,7 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
                                         }}
                                         inputProps={{
                                             step: "any",
-                                            readOnly: soloVer,
+                                            readOnly: soloVer || loteEditar?.id_comprador,
                                         }}
                                     />
 

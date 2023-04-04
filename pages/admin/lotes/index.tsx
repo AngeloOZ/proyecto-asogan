@@ -24,12 +24,12 @@ export default function PageAdminProveedores() {
     const handleClickEditRow = (item: ILote) => {
         router.push(`${PATH_DASHBOARD.lotes.editar}/${item.id_lote}`);
     }
-    const handleClickDeleteRow = (item: ILote) => {
+    const handleClickDeleteRow = async (item: ILote) => {
         try {
-            eliminarLote(item);
+            await eliminarLote(item);
             enqueueSnackbar('Lote eliminado correctamente', { variant: 'success' });
         }
-        catch (error) {
+        catch (error) {;
             enqueueSnackbar(`Oops... ${handleErrorsAxios(error)}`, { variant: 'error' });
         }
     }
@@ -50,6 +50,7 @@ export default function PageAdminProveedores() {
                     headers={[
                         { label: "ID", name: "id_lote", type: 'number', serchable: false },
                         { label: 'Evento', name: 'eventos' },
+                        { label: 'Estado', name: 'subastado' },
                         { label: 'Código de Lote', name: 'codigo_lote' },
                         { label: 'Cantidad de animales', name: 'cantidad_animales', },
                         { label: 'Calidad de animales', name: 'calidad_animales' },

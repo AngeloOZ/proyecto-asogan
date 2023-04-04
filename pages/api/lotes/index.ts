@@ -55,11 +55,22 @@ async function listado(req: NextApiRequest, res: NextApiResponse) {
         });
 
         const lotes2 = lotes.map(lote => {
+
+            let estado = 'No me acuerdo';
+            switch (lote.subastado) {
+                case 0: estado = 'No subastado'; break;
+                case 1: estado = 'En subasta'; break;
+                case 2: estado = 'Postergado'; break;
+                case 3: estado = 'Subastado'; break;
+            }
+            
             const lote2 = {
                 ...lote,
                 eventos: lote.eventos.descripcion,
                 cantidad_animales: `${Number(lote.cantidad_animales)} ${lote.tipo_animales}`,
+                subastado: estado,
             }
+
             return lote2;
         })
 
