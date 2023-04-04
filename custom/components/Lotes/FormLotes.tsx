@@ -81,6 +81,10 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
     }, [evento, loteEditar]);
 
     useEffect(() => {
+        if(esEditar && loteEditar) {
+            setCodigoLote(loteEditar.codigo_lote);
+            return;
+        }
         if (lotesAnteriores.length > 0) {
             const aux = lotesAnteriores[lotesAnteriores.length - 1].codigo_lote!;
             setCodigoLote((parseInt(aux) + 1).toString());

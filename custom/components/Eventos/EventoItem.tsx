@@ -92,12 +92,12 @@ export const EventoItem = ({ eventos }: Props) => {
 							<Typography variant='subtitle1' fontSize={18}>Listado de lotes</Typography>
 						</AccordionSummary>
 						<AccordionDetails sx={{ p: 0 }}>
-							<ContenedorLotes lotes={eventos.lotes} isEventOpen={eventos.abierto === 1 ? true : false} />
+							<ContenedorLotes lotes={eventos.lotes} isEventOpen={eventos.abierto === 2 ? true : false} />
 						</AccordionDetails>
 					</Accordion>
 
 					{
-						eventos.abierto === 1 && (rolLogged === 'comprador') && (
+						eventos.abierto === 2 && (rolLogged === 'comprador') && (
 							<Link href={`${PATH_DASHBOARD_CLEINTE.subastas}/otra/${eventos.uuid}`} passHref legacyBehavior>
 								<a target='_blank' style={{ textDecoration: 'none' }}>
 									<Button
