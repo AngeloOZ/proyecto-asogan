@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { ChangeEvent, useContext, useEffect, useMemo, useState } from 'react';
 
 // next
 import Link from 'next/link';
@@ -81,12 +81,14 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
     }, [evento, loteEditar]);
 
     useEffect(() => {
-        if(esEditar && loteEditar) {
+        if (esEditar && loteEditar) {
             setCodigoLote(loteEditar.codigo_lote);
             return;
         }
         if (lotesAnteriores.length > 0) {
-            const aux = lotesAnteriores[lotesAnteriores.length - 1].codigo_lote!;
+            console.log(lotesAnteriores);
+
+            const aux = lotesAnteriores[0].codigo_lote!;
             setCodigoLote((parseInt(aux) + 1).toString());
         } else {
             setCodigoLote("1");
@@ -104,7 +106,8 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
         fecha_pesaje: Yup.string().required('La fecha es requerida'),
         codigo_lote: Yup.string()
             .required('El código es requerido')
-            .test('unique', 'El número de paleta ya está ocupado', function (value) {
+            .matches(/^[0-9]+$/, 'Solo se admite valores numéricos')
+            .test('unique', 'El código de lote ya está ocupado', function (value) {
                 const evento = watch('id_evento');
 
                 let filter = lotesAnteriores;
@@ -113,10 +116,10 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
                 }
 
                 const result = filter.some((lote) => (
-                    lote.codigo_lote === value && lote.id_evento === evento));
+                    lote.codigo_lote === value?.toString() && lote.id_evento === evento));
                 return !result;
             }),
-        cantidad_animales: Yup.number().required('La cantidad es requerida').min(1, 'La cantidad debe ser mayor a 0'),
+        cantidad_animales: Yup.number().required('La cantidad es requerida').min(1, 'La cantidad debe ser mayor a 0').typeError('La cantidad debe ser un valor numérico'),
         tipo_animales: Yup.string().required('El tipo es requerido'),
         calidad_animales: Yup.string().required('La calidad es requerida'),
         sexo: Yup.string().required('El sexo es requerido'),
@@ -126,7 +129,7 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
         peso_total: Yup.number().required('El peso total es requerido').min(1, 'El peso total debe ser mayor a 0').typeError('El peso total debe ser un valor numérico'),
         id_evento: Yup.string().required('El evento es requerido'),
         id_proveedor: Yup.string().required('El proveedor es requerido'),
-        observaciones: Yup.string().required('La observación es requerida'),
+        // observaciones: Yup.string().required('Las observaciones son requeridas'),
         /*  puja_inicial: Yup.number().min(0.0001, 'La puja inicial debe ser mayor a 0').typeError('La puja debe ser un valor numérico'),
          incremento: Yup.number().min(0.0001, 'La puja inicial debe ser mayor a 0').typeError('La puja debe ser un valor numérico'), */
 
@@ -173,14 +176,24 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
 
         const idEvento = watch('id_evento');
 
-        const filter = data.filter((lote: lotes) => lote.id_evento === idEvento);
+        const sortedFilter = data.filter((lote: lotes) => lote.id_evento === idEvento)
+            .sort((a: lotes, b: lotes) => +b.codigo_lote! - +a.codigo_lote!);
 
-        setLotesAnteriores(filter);
+        setLotesAnteriores(sortedFilter);
     }
 
     async function obtenerTipoAnimales() {
         const { data } = await subastaAPI.get('/lotes/tipoanimal');
         setTipoAnimales(data);
+    }
+
+    function soloNumero(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+        const currentValue = event.target.value;
+        const newValue = currentValue.replace(/[^0-9]/g, '');
+
+        const name = event.target.name as keyof FormValuesProps;
+
+        setValue(name, newValue);
     }
 
     // Funcion para enviar el formulario
@@ -299,8 +312,9 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
                             <RHFTextField
                                 name="codigo_lote"
                                 label="Código de lote"
-                                type='number'
+                                type='text'
                                 size='small'
+                                onChange={soloNumero}
                                 inputProps={{
                                     readOnly: soloVer,
                                 }}

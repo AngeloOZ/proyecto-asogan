@@ -194,8 +194,8 @@ export const LoteAdminMartillador = ({ listadoLotes = [], loteEnSubasta }: LoteM
 
 
                 <Stack direction='row' spacing={1}>
-                    <Button type="button" variant="contained" fullWidth color="secondary" onClick={partirPuja}>Partir puja</Button>
                     <Button type="submit" variant="contained" fullWidth color="success">Guardar</Button>
+                    <Button type="button" variant="contained" fullWidth color="secondary" onClick={partirPuja}>Partir incremento</Button>
                 </Stack>
 
                 <Button type="button" variant="contained" fullWidth color="error" onClick={eliminarUltimaPuja}>Eliminar ultima puja</Button>

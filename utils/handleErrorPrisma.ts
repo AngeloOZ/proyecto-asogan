@@ -3,7 +3,7 @@ export function handleErrorsPrisma(error: any) {
 
     switch (error.code) {
         case "P2003":
-            mensaje = "Ha habido un error debido a una relación entre dos campos que no se cumple.";
+            mensaje = "Ha habido un error debido a que existe informacion relacionada con este registro.";
             break;
 
         case "P2016":
