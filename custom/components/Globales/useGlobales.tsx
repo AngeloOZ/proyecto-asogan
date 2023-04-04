@@ -13,7 +13,7 @@ export const useGlobales = () => {
       }
       const soloLetras = (event: any )=> {
         const charCode = event.charCode;
-        if ((charCode < 65 || charCode > 90) && (charCode < 97 || charCode > 122)) {
+        if ((charCode < 65 || charCode > 90) && (charCode < 97 || charCode > 122) && (charCode != 32 ) && (charCode != 241)) {
           event.preventDefault();
         }
       }
