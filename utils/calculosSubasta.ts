@@ -16,6 +16,7 @@ interface CalculosSubasta {
     valorFinal2: number;
     valorFinalTotal: number;
     pujaActualText: string;
+    pujaProximaText: string;
 }
 
 export function calcularSubasta(lote: lotes | Lote | null, ultimaPuja: UltimaPuja | null = null): CalculosSubasta {
@@ -45,6 +46,7 @@ export function calcularSubasta(lote: lotes | Lote | null, ultimaPuja: UltimaPuj
     const valorFinalTotal = valorFinal * pesoTotal;
 
     const pujaActualText = formatNumber(valorFinal);
+    const pujaProximaText = formatNumber(valorFinal2);
 
     return {
         horaPesaje,
@@ -59,6 +61,7 @@ export function calcularSubasta(lote: lotes | Lote | null, ultimaPuja: UltimaPuj
         valorFinal2,
         valorFinalTotal,
         pujaActualText,
+        pujaProximaText,
     }
 }
 

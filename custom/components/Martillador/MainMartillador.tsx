@@ -134,7 +134,7 @@ export const MainMartillador = ({ lote, ultimaPuja, evento }: Props) => {
             <CardInfo
                 title='Proxima Puja'
                 fontSizeTitleCustom='20px'
-                value={'$ ' + newLote.valorFinal2.toFixed(2)}
+                value={'$ ' + newLote.pujaProximaText}
                 className={css.proxima_puja}
                 bgColorCustom='#fabf25'
                 fontSizeCustom='50px'
