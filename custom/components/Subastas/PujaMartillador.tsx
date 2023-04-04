@@ -7,7 +7,7 @@ import { TbEditCircle } from 'react-icons/tb';
 import { subastaAPI } from 'custom/api';
 import { handleErrorsAxios } from 'utils';
 import { Box } from '@mui/system';
-import { lotes, eventos } from '@prisma/client';
+import { lotes } from '@prisma/client';
 import { UltimaPuja } from '@types';
 
 type Props = {
