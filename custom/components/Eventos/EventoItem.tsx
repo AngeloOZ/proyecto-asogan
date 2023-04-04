@@ -114,7 +114,7 @@ export const EventoItem = ({ eventos }: Props) => {
 					}
 
 					{
-						(rolLogged === 'admin' || rolLogged === 'admin-martillador') && (
+						(eventos.abierto === 2 && rolLogged === 'admin' || rolLogged === 'admin-martillador') && (
 							<>
 								<Link href={`${PATH_DASHBOARD.subastas.admin_martillador}/${eventos.uuid}`} target='_blank' passHref legacyBehavior>
 									<a target='_blank' style={{ textDecoration: 'none' }}>
