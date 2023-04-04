@@ -50,12 +50,12 @@ export default function PageAdminProveedores() {
                     headers={[
                         { label: "ID", name: "id_lote", type: 'number', serchable: false },
                         { label: 'Evento', name: 'eventos' },
-                        { label: 'Estado', name: 'subastado' },
                         { label: 'Código de Lote', name: 'codigo_lote' },
                         { label: 'Cantidad de animales', name: 'cantidad_animales', },
                         { label: 'Calidad de animales', name: 'calidad_animales' },
                         { label: 'Peso total', name: 'peso_total' },
                         { label: 'Procedencia', name: 'procedencia' },
+                        { label: 'Estado', name: 'subastado' },
                     ]}
                     isLoading={isLoading}
                     dataBody={lotes}

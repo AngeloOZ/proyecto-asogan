@@ -189,13 +189,14 @@ export const LoteAdminMartillador = ({ listadoLotes = [], loteEnSubasta }: LoteM
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
                         style: { fontSize: 15 }
                     }}
+
                     InputLabelProps={{ style: { fontSize: 18, color: 'black', fontWeight: "500" }, shrink: true }}
                 />
 
 
                 <Stack direction='row' spacing={1}>
-                    <Button type="submit" variant="contained" fullWidth color="success">Guardar</Button>
-                    <Button type="button" variant="contained" fullWidth color="secondary" onClick={partirPuja}>Partir incremento</Button>
+                    <Button type="submit" variant="contained" fullWidth color="success" disabled={values.incremento <= 0 || Number(values.puja_inicial) <= 0}>Guardar</Button>
+                    <Button type="button" variant="contained" fullWidth color="secondary" disabled={values.incremento <= 0} onClick={partirPuja}>Partir incremento</Button>
                 </Stack>
 
                 <Button type="button" variant="contained" fullWidth color="error" onClick={eliminarUltimaPuja}>Eliminar ultima puja</Button>
