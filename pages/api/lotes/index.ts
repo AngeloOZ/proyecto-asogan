@@ -56,12 +56,13 @@ async function listado(req: NextApiRequest, res: NextApiResponse) {
 
         const lotes2 = lotes.map(lote => {
 
-            let estado = 'No me acuerdo';
+            let estado = 'S/N';
             switch (lote.subastado) {
                 case 0: estado = 'No subastado'; break;
                 case 1: estado = 'En subasta'; break;
                 case 2: estado = 'Postergado'; break;
                 case 3: estado = 'Subastado'; break;
+                default: estado = 'S/N'; break;
             }
             
             const lote2 = {
