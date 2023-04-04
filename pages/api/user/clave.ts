@@ -23,7 +23,10 @@ async function obtenerUsuariosClave(req: NextApiRequest, res: NextApiResponse) {
             const usuario = await prisma.usuario.findFirst({
                 where: { identificacion: identificacionStr!.trim(), correo: correoStr!.trim()},
             });
-         
+            
+            if (!usuario) {
+                return res.status(500).json({ message: "No se encontró un usuario con la información proporcionada" });
+            }
 
             return res.status(200).json(usuario);
 
