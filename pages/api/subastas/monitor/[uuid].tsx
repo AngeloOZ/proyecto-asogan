@@ -13,7 +13,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
         await obtenerLoteMonitor(req, res);
 
     } catch (error) {
-        res.status(500).json(handleErrorsPrisma(error?.code));
+        res.status(500).json({ message: handleErrorsPrisma(error) });
     }
     finally {
         await prisma.$disconnect()

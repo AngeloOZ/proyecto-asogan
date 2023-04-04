@@ -59,7 +59,7 @@ async function obtenerEventos(req: NextApiRequest, res: NextApiResponse) {
         });
         return res.status(200).json(eventosFormateados);
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        return res.status(500).json({ message: handleErrorsPrisma(error) });
     }
     finally {
         await prisma.$disconnect();
@@ -83,7 +83,7 @@ async function crearEvento(req: NextApiRequest, res: NextApiResponse) {
         });
         return res.status(200).json(evento);
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        return res.status(500).json({ message: handleErrorsPrisma(error) });
     }
     finally {
         await prisma.$disconnect();
@@ -120,7 +120,7 @@ async function actualizarEvento(req: NextApiRequest, res: NextApiResponse) {
 
         return res.status(200).json(evento);
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        return res.status(500).json({ message: handleErrorsPrisma(error) });
     }
     finally {
         await prisma.$disconnect();

@@ -38,7 +38,7 @@ async function obtenerLoteActivo(req: NextApiRequest, res: NextApiResponse) {
     }
     catch (error) {
         console.log(error);
-        return res.status(500).json(handleErrorsPrisma(error?.code));
+        return res.status(500).json({ message: handleErrorsPrisma(error) });
     }
     finally {
         await prisma.$disconnect();

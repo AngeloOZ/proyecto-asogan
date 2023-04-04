@@ -9,6 +9,7 @@ import prisma from 'database/prismaClient'
 import { MainMonitor, useLoteMonitor2, useUltimaPuja } from 'custom/components'
 import moment from 'moment-timezone'
 import { PATH_DASHBOARD_CLEINTE } from 'src/routes/paths'
+// import { useMemo } from 'react'
 
 type Props = {
     uuid: string;
@@ -20,6 +21,13 @@ const PageMonitor = ({ uuid, evento, banners }: Props) => {
 
     const { loteActual, isLoading } = useLoteMonitor2(evento.id_evento);
     const { ultimaPuja } = useUltimaPuja(loteActual?.id_lote || 0);
+
+    // TODO: Mantener la ultima puja
+    // const ultimaPujaActiva = useMemo(() => {
+    //     if (loteActual) {
+    //         return ultimaPuja;
+    //     }
+    // }, [loteActual])
 
     return (
         <>

@@ -1,5 +1,5 @@
+import { ChangeEvent, useEffect, useMemo,useState } from 'react';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useMemo,useState } from 'react';
 // next
 import { useRouter } from 'next/router';
 // form
@@ -97,16 +97,13 @@ export function FormProveedores({ esEditar = false, proveedoraEditar }: Props) {
             }else{
                 enqueueSnackbar("La identificacion ingresada es incorrecta", { variant: 'warning' });
             }
-           
         } catch (error) {
             console.error(error);
             enqueueSnackbar(`Oops... ${handleErrorsAxios(error)}`, { variant: 'error' });
         }
     };
 
-    // if (isLoading) return <LinearProgressBar />
     const verificarIdentificacion = async () => {
-
         const validacion = validarIdentificacion(watch("identificacion"))
         
         if (validacion){
@@ -121,10 +118,18 @@ export function FormProveedores({ esEditar = false, proveedoraEditar }: Props) {
         }else {
             setValidacionI(false);
             enqueueSnackbar("La identificacion ingresada es incorrecta", { variant: 'warning' });
-        }
-
-      
+        }      
     }
+
+    function soloNumero(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+        const currentValue = event.target.value;
+        const newValue = currentValue.replace(/[^0-9]/g, '');
+
+        const name = event.target.name as keyof FormValuesProps;
+
+        setValue(name, newValue);
+    }
+
     return (
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
             <Card sx={{ p: 3, boxShadow: "0 0 2px rgba(0,0,0,0.2)" }}>
@@ -156,6 +161,7 @@ export function FormProveedores({ esEditar = false, proveedoraEditar }: Props) {
                         name="telefono"
                         type='tel'
                         label="WhatsApp"
+                        onChange={soloNumero}
                         size='small'
                     />
                 </Stack>

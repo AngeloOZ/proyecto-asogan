@@ -12,7 +12,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
         await obtenerUltimaPujaMasAlta(req, res);
     }
     catch (error) {
-        res.status(500).json(handleErrorsPrisma(error));
+        res.status(500).json({ message: handleErrorsPrisma(error) });
     }
     finally {
         prisma.$disconnect();
