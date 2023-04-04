@@ -22,21 +22,12 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 async function registrarPujaMartillador(req: NextApiRequest, res: NextApiResponse) {
     const { id_lote, codigo_paleta, puja } = req.body;
 
-    const usuario = await prisma.compradores.findFirst({
-        where: { codigo_paleta },
-    });
-
-    if (!usuario) {
-        res.status(404).json({ message: `La paleta: ${codigo_paleta} no existe` });
-        return;
-    }
-
     // await prisma.$transaction(async (prisma) => {
 
     await prisma.pujas.create({
         data: {
             id_lote,
-            id_usuario: usuario.usuarioid,
+            id_usuario: 1,
             codigo_paleta,
             puja
         }

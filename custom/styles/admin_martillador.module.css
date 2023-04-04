@@ -8,7 +8,7 @@
   grid-template-areas:
     "codigo_lote codigo_lote cantidad cantidad procedencia procedencia paleta paleta video video video video"
     "codigo_lote codigo_lote cantidad cantidad procedencia procedencia paleta paleta video video video video"
-    "peso_promedio peso_promedio hora_pesaje hora_pesaje incremento incremento paleta paleta video video video video"
+    "peso_promedio peso_promedio hora_pesaje hora_pesaje incremento incremento paleta paleta lote lote lote lote"
     "peso_promedio peso_promedio hora_pesaje hora_pesaje incremento incremento paleta paleta lote lote lote lote"
     "valor_base valor_base valor_base valor_base puja_actual puja_actual puja_actual puja_actual lote lote lote lote"
     "valor_base valor_base valor_base valor_base puja_actual puja_actual puja_actual puja_actual lote lote lote lote"

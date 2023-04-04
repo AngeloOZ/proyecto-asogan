@@ -4,7 +4,7 @@ export interface LotesEventos {
     fecha: string;
     lugar: string;
     tipo: string;
-    abierto: boolean;
+    abierto: number;
     uuid?: string;
     lotes: Lote[];
 }

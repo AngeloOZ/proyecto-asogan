@@ -13,7 +13,7 @@ import { PATH_DASHBOARD } from 'src/routes/paths'
 import moment from 'moment-timezone'
 import { EstadoLote } from 'custom/components'
 
-PageAdminEventos.getLayout = (page: React.ReactElement) => <DashboardLayout roles={['digitador']}>{page}</DashboardLayout>
+PageAdminEventos.getLayout = (page: React.ReactElement) => <DashboardLayout roles={['admin', 'digitador', 'admin-martillador']}>{page}</DashboardLayout>
 
 export default function PageAdminEventos({ eventos }: { eventos: eventos[] }) {
 

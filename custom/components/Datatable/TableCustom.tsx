@@ -47,7 +47,7 @@ export function TableCustom({
     isLoading,
     handleDelete = () => { },
     handeEdit = () => { },
-    handleShow = () => { } 
+    handleShow = () => { }
 }: Props) {
     // Filtros
     const [buscador, setBuscador] = useState('');
@@ -66,7 +66,11 @@ export function TableCustom({
         if (filter.length > 0) {
             const data = dataBody.filter((item: any) => {
                 for (let variable of filter) {
-                    if (item[variable].toLowerCase().includes(buscador.toLowerCase())) return item;
+                    if (typeof item[variable] === 'string') {
+                        if (item[variable].toLowerCase().includes(buscador.toLowerCase())) return item;
+                    } else {
+                        if (item[variable].toString().toLowerCase().includes(buscador.toLowerCase())) return item;
+                    }
                 }
             })
             return data;

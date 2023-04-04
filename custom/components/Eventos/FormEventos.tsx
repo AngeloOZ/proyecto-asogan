@@ -125,10 +125,8 @@ export function FormEventos({ esEditar = false, eventoEditar }: Props) {
 
                     <RHFSelect name='abierto' label='Estado' size='small'>
                         <MenuItem value='1'>Cerrado</MenuItem>
-                        {esEditar && <>
-                            <MenuItem value='2'>Abierto</MenuItem>
-                            <MenuItem value='3'>Finalizado</MenuItem>
-                        </>}
+                        <MenuItem value='2'>Abierto</MenuItem>
+                        <MenuItem value='3'>Finalizado</MenuItem>
                     </RHFSelect>
 
                 </Stack>

@@ -1,15 +1,14 @@
 import { useContext } from 'react';
-import { Box, Button, Card, Stack, Typography } from '@mui/material'
+import { Box, Button, Card, Typography } from '@mui/material'
 import { useSWRConfig } from 'swr';
 import { IoHandRight } from 'react-icons/io5';
-
 
 import css from '../../styles/cliente.module.css';
 
 import { useSnackbar } from 'src/components/snackbar';
 
 
-import { LoteMonitor, UltimaPuja } from '@types';
+import { UltimaPuja } from '@types';
 import { eventos, imagenes, lotes } from '@prisma/client';
 
 import { subastaAPI } from 'custom/api';
@@ -34,7 +33,12 @@ export const VistaLoteCliente = ({ lote, ultimaPuja, banners, evento }: Props) =
 
     const newLote = calcularSubasta(lote, ultimaPuja);
 
-    const incremento = Number(ultimaPuja?.puja || 0) + Number(lote?.incremento || 0);
+    let incremento = Number(lote?.puja_final || 0);
+
+    if (ultimaPuja) {
+        incremento = Number(ultimaPuja?.puja || 0);
+    }
+    incremento = incremento + Number(lote?.incremento || 0);
 
     const registrarPujaComprador = async () => {
         try {

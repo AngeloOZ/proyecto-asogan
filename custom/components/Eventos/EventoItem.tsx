@@ -20,6 +20,19 @@ type Props = {
 export const EventoItem = ({ eventos }: Props) => {
 	const { rol: [rolLogged] } = useContext(AuthContext)
 
+	const renderEstado = () => {
+		switch (eventos.abierto) {
+			case 1:
+				return <Typography variant="subtitle2" color="royalblue" component="span">Cerrado</Typography>
+			case 2:
+				return <Typography variant="subtitle2" color="green" component="span">Abierto</Typography>
+			case 3:
+				return <Typography variant="subtitle2" color="red" component="span">Finalizado</Typography>
+			default:
+				return <Typography variant="subtitle2" color="red" component="span">S/N</Typography>
+		}
+	}
+
 	return (
 		<>
 			<Card>
@@ -61,9 +74,7 @@ export const EventoItem = ({ eventos }: Props) => {
 										<Typography variant="body2" fontWeight="bold" component="span">Estado: </Typography>
 									</TableCell>
 									<TableCell>
-										{eventos.abierto ?
-											<Typography variant="body2" color="green" component="span">Abierto</Typography> :
-											<Typography variant="body2" color="red" component="span">Cerrado</Typography>}
+										{renderEstado()}
 									</TableCell>
 								</TableRow>
 							</TableBody>
@@ -72,13 +83,22 @@ export const EventoItem = ({ eventos }: Props) => {
 
 					<Divider sx={{ marginTop: 1 }} />
 
-					<Typography align="center" variant="h5" my={1} >Lotes</Typography>
-
-					<ContenedorLotes lotes={eventos.lotes} isEventOpen={eventos.abierto} />
+					<Accordion>
+						<AccordionSummary
+							expandIcon={<ExpandMoreIcon />}
+							aria-controls="panel1a-content"
+							id="panel1a-header"
+						>
+							<Typography variant='subtitle1' fontSize={18}>Listado de lotes</Typography>
+						</AccordionSummary>
+						<AccordionDetails sx={{ p: 0 }}>
+							<ContenedorLotes lotes={eventos.lotes} isEventOpen={eventos.abierto === 1 ? true : false} />
+						</AccordionDetails>
+					</Accordion>
 
 					{
-						eventos.abierto && (rolLogged === 'comprador' || rolLogged === 'martillador') && (
-							<Link href={`${PATH_DASHBOARD.subastas.root}/${eventos.uuid}`} passHref legacyBehavior>
+						eventos.abierto === 1 && (rolLogged === 'comprador') && (
+							<Link href={`${PATH_DASHBOARD_CLEINTE.subastas}/otra/${eventos.uuid}`} passHref legacyBehavior>
 								<a target='_blank' style={{ textDecoration: 'none' }}>
 									<Button
 										fullWidth
@@ -94,40 +114,52 @@ export const EventoItem = ({ eventos }: Props) => {
 					}
 
 					{
-						(rolLogged === 'admin' || rolLogged === 'admin-martillador') &&
-						<Link href={`${PATH_DASHBOARD.subastas.admin_martillador}/${eventos.uuid}`} target='_blank' passHref legacyBehavior>
-							<a target='_blank' style={{ textDecoration: 'none' }}>
-								<Button
-									fullWidth
-									color="primary"
-									variant='contained'
-									size="medium"
-									style={{ marginTop: 10 }}
-								>
-									Ver Admin Martillador
-								</Button>
-							</a>
-						</Link>
+						(rolLogged === 'admin' || rolLogged === 'admin-martillador') && (
+							<>
+								<Link href={`${PATH_DASHBOARD.subastas.admin_martillador}/${eventos.uuid}`} target='_blank' passHref legacyBehavior>
+									<a target='_blank' style={{ textDecoration: 'none' }}>
+										<Button
+											fullWidth
+											color="primary"
+											variant='contained'
+											size="medium"
+											style={{ marginTop: 10 }}
+										>
+											Ver auxiliar Martillador
+										</Button>
+									</a>
+								</Link>
+
+								<Link href={`${PATH_DASHBOARD.subastas.root}/martillador/${eventos.uuid}`} passHref legacyBehavior>
+									<a target='_blank' style={{ textDecoration: 'none' }}>
+										<Button
+											fullWidth
+											color="secondary"
+											variant='contained'
+											size="medium"
+											style={{ marginTop: 10 }}
+										>
+											ver martillador
+										</Button>
+									</a>
+								</Link>
+
+								<Link href={`${PATH_DASHBOARD.subastas.monitor}/${eventos.uuid}`} target='_blank' passHref legacyBehavior>
+									<a target='_blank' style={{ textDecoration: 'none' }}>
+										<Button
+											fullWidth
+											color="warning"
+											variant='contained'
+											size="medium"
+											style={{ marginTop: 10 }}
+										>
+											Ver en monitor
+										</Button>
+									</a>
+								</Link>
+							</>
+						)
 					}
-
-					{
-						(rolLogged === 'admin' || rolLogged === 'admin-martillador') &&
-
-						<Link href={`${PATH_DASHBOARD.subastas.monitor}/${eventos.uuid}`} target='_blank' passHref legacyBehavior>
-							<a target='_blank' style={{ textDecoration: 'none' }}>
-								<Button
-									fullWidth
-									color="secondary"
-									variant='contained'
-									size="medium"
-									style={{ marginTop: 10 }}
-								>
-									Ver en monitor
-								</Button>
-							</a>
-						</Link>
-					}
-
 				</CardContent>
 			</Card >
 		</>

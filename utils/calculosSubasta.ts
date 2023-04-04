@@ -15,6 +15,7 @@ interface CalculosSubasta {
     valorFinal: number;
     valorFinal2: number;
     valorFinalTotal: number;
+    pujaActualText: string;
 }
 
 export function calcularSubasta(lote: lotes | Lote | null, ultimaPuja: UltimaPuja | null = null): CalculosSubasta {
@@ -43,6 +44,8 @@ export function calcularSubasta(lote: lotes | Lote | null, ultimaPuja: UltimaPuj
     const valorFinal2 = valorFinal + valorPuja;
     const valorFinalTotal = valorFinal * pesoTotal;
 
+    const pujaActualText = formatNumber(valorFinal);
+
     return {
         horaPesaje,
         cantidadAnimales,
@@ -54,6 +57,21 @@ export function calcularSubasta(lote: lotes | Lote | null, ultimaPuja: UltimaPuj
         valorPuja,
         valorFinal,
         valorFinal2,
-        valorFinalTotal
+        valorFinalTotal,
+        pujaActualText,
     }
 }
+
+function formatNumber(number: number): string {
+    if (number % 1 === 0) {
+      // Si el número es entero, se muestra sin decimales
+      return number.toString();
+    } else if (number.toFixed(3).endsWith("0")) {
+      // Si el número tiene tres decimales y termina en 0, se muestran dos decimales
+      return number.toFixed(2);
+    } else {
+      // En cualquier otro caso, se muestran tres decimales
+      return number.toFixed(3);
+    }
+  }
+  

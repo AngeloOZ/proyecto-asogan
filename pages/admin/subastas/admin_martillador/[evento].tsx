@@ -33,25 +33,29 @@ export default PageMonitor
 // eslint-disable-next-line
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
-    const { uuid } = ctx.query as { uuid: string };
+    const { evento } = ctx.query as { evento: string };
 
     try {
-        const evento = await prisma.eventos.findUnique({ where: { uuid } });
-
-        if (!evento) {
+        const eventos = await prisma.eventos.findUnique({ where: { uuid: evento } });
+        
+        if (!eventos) {
             throw new Error('Evento no encontrado');
         }
 
+        await prisma.$disconnect();
+
         return {
             props: {
-                uuid,
+                uuid: evento,
                 evento: {
-                    ...evento,
-                    fecha: moment(evento.fecha).format('dd/MM/yyyy')
+                    ...eventos,
+                    fecha: moment(eventos.fecha).format('dd/MM/yyyy')
                 },
             }
         }
     } catch (error) {
+        console.log(error);
+        await prisma.$disconnect();
         return {
             notFound: true
         }

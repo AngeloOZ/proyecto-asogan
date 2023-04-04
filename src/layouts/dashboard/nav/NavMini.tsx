@@ -39,7 +39,7 @@ export default function NavMini() {
           ...hideScrollbarX,
         }}
       >
-        <Logo sx={{ mx: 'auto', my: 2 }} />
+        <Logo image='/logo/logo_full.png' sx={{ mx: 'auto', my: 2 }} />
 
         {/* eslint-disable-next-line */}
         <NavSectionMini data={navConfig} />

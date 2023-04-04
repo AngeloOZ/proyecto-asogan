@@ -1,29 +1,36 @@
-import { Box, Button, Card, Grid, InputAdornment, MenuItem, Stack, TextField } from "@mui/material"
+import { useEffect, useMemo, useState } from "react";
+
+import { Box, Button, InputAdornment, MenuItem, Stack } from "@mui/material"
+import { useForm } from "react-hook-form";
+import { useSnackbar } from "notistack";
+import { useSWRConfig } from "swr";
+
 import { lotes } from "@prisma/client";
-import { Dispatch, SetStateAction, useContext, useEffect, useMemo, useState } from "react";
 import { subastaAPI } from 'custom/api'
+
 import FormProvider, {
     RHFSelect, RHFTextField,
 } from 'src/components/hook-form';
-import { useForm } from "react-hook-form";
-import { useSnackbar } from "notistack";
 
+import { handleErrorsAxios } from "utils";
 
 interface Lote {
     id_lote: string;
     id_evento: number;
     puja_inicial: string;
-    incremento: string;
+    incremento: number;
     subastado: string;
 }
 
 interface LoteMartillador {
     listadoLotes?: lotes[];
+    loteEnSubasta?: lotes;
 }
 
 type FormProps = Lote;
-export const LoteAdminMartillador = ({ listadoLotes = [] }: LoteMartillador) => {
 
+export const LoteAdminMartillador = ({ listadoLotes = [], loteEnSubasta }: LoteMartillador) => {
+    const { mutate } = useSWRConfig();
     const { enqueueSnackbar } = useSnackbar();
     const [loteActual, setLoteActual] = useState<lotes>()
 
@@ -31,9 +38,16 @@ export const LoteAdminMartillador = ({ listadoLotes = [] }: LoteMartillador) => 
         id_lote: loteActual?.id_lote.toString() || "",
         id_evento: loteActual?.id_evento || 0,
         puja_inicial: Number(loteActual?.puja_inicial || 0).toFixed(2),
-        incremento: Number(loteActual?.incremento || 0).toFixed(2),
+        incremento: Number(loteActual?.incremento || 0),
         subastado: loteActual?.subastado?.toString() || "",
     }), [loteActual]);
+
+    const idLoteActual = useMemo(() => {
+        if (loteEnSubasta) {
+            return loteEnSubasta.id_lote.toString();
+        }
+        return "";
+    }, [loteEnSubasta])
 
     const methods = useForm<FormProps>({
         defaultValues
@@ -42,6 +56,7 @@ export const LoteAdminMartillador = ({ listadoLotes = [] }: LoteMartillador) => 
     const {
         reset,
         handleSubmit,
+        setValue,
         watch,
     } = methods;
 
@@ -70,6 +85,12 @@ export const LoteAdminMartillador = ({ listadoLotes = [] }: LoteMartillador) => 
         }
     }, [loteActual])
 
+    useEffect(() => {
+        if (idLoteActual !== "") {
+            setValue('id_lote', idLoteActual);
+        }
+    }, [idLoteActual])
+
     const guardarLote = async (data: FormProps) => {
         try {
 
@@ -88,15 +109,35 @@ export const LoteAdminMartillador = ({ listadoLotes = [] }: LoteMartillador) => 
         }
     };
 
+    const partirPuja = () => {
+        const mitad = Number(values.incremento) / 2;
+        setValue('incremento', mitad);
+        handleSubmit(guardarLote)();
+    }
+
+    const eliminarUltimaPuja = async () => {
+        try{
+            await subastaAPI.delete(`/subastas/pujas?id_lote=${values.id_lote}`);
+
+            mutate(`/lotes/${loteActual?.id_lote}`)
+            mutate(`/subastas/lotes?id=${loteActual?.id_evento}`)
+            mutate(`/subastas/ultima-puja?id=${loteActual?.id_evento}`)
+
+            enqueueSnackbar("Última puja eliminada", { variant: 'success' });
+        }
+        catch(error){
+            console.error(error);
+            enqueueSnackbar(handleErrorsAxios(error), { variant: 'error' });
+        }
+    }
 
     return (
         <FormProvider methods={methods} onSubmit={handleSubmit(guardarLote)}>
             <Box
-                gap={1.5}
+                gap={1.8}
                 display="grid"
-                padding={1}
+            // gridTemplateColumns="repeat(2, 1fr)"
             >
-
                 <RHFSelect
                     name='id_lote'
                     label='Listado de lotes'
@@ -132,7 +173,9 @@ export const LoteAdminMartillador = ({ listadoLotes = [] }: LoteMartillador) => 
                     defaultValue={values.puja_inicial}
                     InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                        style: { fontSize: 15 }
+                        style: { fontSize: 15 },
+                        // TODO: habilitar si se aprueba la funcionalidad
+                        // readOnly: idLoteActual === values.id_lote ? true : false,
                     }}
                     InputLabelProps={{ style: { fontSize: 18, color: 'black', fontWeight: "500" }, shrink: true }}
                 />
@@ -149,10 +192,13 @@ export const LoteAdminMartillador = ({ listadoLotes = [] }: LoteMartillador) => 
                     InputLabelProps={{ style: { fontSize: 18, color: 'black', fontWeight: "500" }, shrink: true }}
                 />
 
-                <Button type="submit" variant="contained" color="success" style={{ flex: 1, marginRight: 8 }}>
-                    Guardar
-                </Button>
 
+                <Stack direction='row' spacing={1}>
+                    <Button type="button" variant="contained" fullWidth color="secondary" onClick={partirPuja}>Partir puja</Button>
+                    <Button type="submit" variant="contained" fullWidth color="success">Guardar</Button>
+                </Stack>
+
+                <Button type="button" variant="contained" fullWidth color="error" onClick={eliminarUltimaPuja}>Eliminar ultima puja</Button>
             </Box>
 
         </FormProvider>

@@ -42,5 +42,8 @@ async function obtenerUltimaPujaMasAlta(req: NextApiRequest, res: NextApiRespons
         ],
         take: 1,
     });
+
+    
+
     res.json(puja);
 }

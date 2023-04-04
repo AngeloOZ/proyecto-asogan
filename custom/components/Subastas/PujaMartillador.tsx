@@ -8,23 +8,43 @@ import { subastaAPI } from 'custom/api';
 import { handleErrorsAxios } from 'utils';
 import { Box } from '@mui/system';
 import { lotes } from '@prisma/client';
+import { UltimaPuja } from '@types';
 
 type Props = {
     lote: lotes;
+    ultimaPuja: UltimaPuja | null;
 }
-export function PujaMartillador({ lote }: Props) {
+export function PujaMartillador({ lote, ultimaPuja }: Props) {
     const { enqueueSnackbar } = useSnackbar();
     const { mutate } = useSWRConfig();
     const [paleta, setPaleta] = useState("");
 
-    const incremento = Number(lote.puja_final) + Number(lote.incremento) || 0;
+    let incremento = Number(lote?.puja_final || 0);
 
-    const handleClickButtons = async (accion: string) => {
+    if (ultimaPuja) {
+        incremento = Number(ultimaPuja?.puja || 0);
+    }
+    incremento = incremento + Number(lote.incremento);
+
+    const terminarSubasta = async (accion: string) => {
         try {
             const datos = await subastaAPI.get(`/subastas/ultima-puja?id=${lote.id_lote}`)
+
             if (datos.data.codigo_paleta === 'P') {
                 setIsOpen(true);
+                return;
             }
+
+            const { data } = await subastaAPI.put('subastas/terminar', {
+                id_lote: lote?.id_lote,
+                accion,
+            }) as { data: { message: string } };
+            enqueueSnackbar(`${data.message}`, { variant: 'success' });
+
+            mutate(`/lotes/${lote.id_evento}`)
+            mutate(`/subastas/pujas?lote=${lote.id_lote}`)
+            mutate(`/subastas/lotes?id=${lote.id_evento}`)
+            mutate(`/subastas/ultima-puja?id=${lote.id_evento}`)
 
         } catch (error) {
             enqueueSnackbar(`Oops... ${handleErrorsAxios(error)}`, { variant: 'error' });
@@ -38,11 +58,15 @@ export function PujaMartillador({ lote }: Props) {
                 puja: incremento,
                 codigo_paleta: 'P',
             }
+            
             await subastaAPI.put('subastas/registrar/martillador', body);
-            enqueueSnackbar('Oferta registrada', { variant: 'success' });
+
             mutate(`/lotes/${lote.id_evento}`)
-            mutate(`/subastas/pujas?lote=${lote.id_lote}`)
             mutate(`/subastas/lotes?id=${lote.id_evento}`)
+            mutate(`/subastas/ultima-puja?id=${lote.id_evento}`)
+    
+            enqueueSnackbar('Oferta registrada', { variant: 'success' });
+
         } catch (error) {
             enqueueSnackbar(`Oops... ${handleErrorsAxios(error)}`, { variant: 'error' });
         } finally {
@@ -85,14 +109,14 @@ export function PujaMartillador({ lote }: Props) {
                     Pujar
                 </Button>
                 <Button
-                    onClick={() => handleClickButtons('subastado')}
+                    onClick={() => terminarSubasta('subastado')}
                     variant="contained"
                     color="success"
                     style={{ flex: 1, marginRight: 8, width: '100%', height: '100%', fontSize: "20px" }}>
                     Vendido
                 </Button>
                 <Button
-                    onClick={() => handleClickButtons('rechazado')}
+                    onClick={() => terminarSubasta('rechazado')}
                     variant="contained"
                     color="error"
                     style={{ flex: 1, marginRight: 8, width: '100%', height: '100%', fontSize: "20px" }}>
