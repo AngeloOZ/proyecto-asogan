@@ -34,7 +34,7 @@ export function FormProveedores({ esEditar = false, proveedoraEditar }: Props) {
     const { enqueueSnackbar } = useSnackbar();
     const { agregarProveedor, actualizarProveedor } = useProveedores();
     const { validarIdentificacion,consultarIdentificacion } = useGlobales();
-    const [validacionI, setValidacionI ]= useState(false);
+    const [validacionI, setValidacionI ]= useState(esEditar);
     useEffect(() => {
         if (esEditar && proveedoraEditar) {
             reset(defaultValues);
@@ -83,7 +83,7 @@ export function FormProveedores({ esEditar = false, proveedoraEditar }: Props) {
     // Funcion para enviar el formulario
     const onSubmit = async (data: FormValuesProps) => {
         try {
-            if (validacionI == true ){
+            if (validacionI){
                 if (!esEditar) {
                     await agregarProveedor(data);
                     enqueueSnackbar('Proveedor agregado correctamente', { variant: 'success' });
@@ -95,7 +95,7 @@ export function FormProveedores({ esEditar = false, proveedoraEditar }: Props) {
                 }
                 reset();
             }else{
-                enqueueSnackbar("La identificacion ingresada es incorrecta", { variant: 'error' });
+                enqueueSnackbar("La identificacion ingresada es incorrecta", { variant: 'warning' });
             }
            
         } catch (error) {
@@ -120,7 +120,7 @@ export function FormProveedores({ esEditar = false, proveedoraEditar }: Props) {
             setValidacionI(true);
         }else {
             setValidacionI(false);
-            enqueueSnackbar("La identificacion ingresada es incorrecta", { variant: 'error' });
+            enqueueSnackbar("La identificacion ingresada es incorrecta", { variant: 'warning' });
         }
 
       
