@@ -5,8 +5,18 @@ import { mutate } from "swr";
 
 export const useGlobales = () => {
 
-
-
+    const soloDigitos = (event: any )=> {
+        const charCode = event.charCode;
+        if (charCode < 48 || charCode > 57) {
+          event.preventDefault();
+        }
+      }
+      const soloLetras = (event: any )=> {
+        const charCode = event.charCode;
+        if ((charCode < 65 || charCode > 90) && (charCode < 97 || charCode > 122)) {
+          event.preventDefault();
+        }
+      }
     const validarIdentificacion = (identificacion: string) => {
         var i;
         var cad = identificacion.trim();
@@ -84,5 +94,5 @@ export const useGlobales = () => {
 
     }
 
-    return { validarIdentificacion, consultarIdentificacion, enviarCorreoClave }
+    return { validarIdentificacion, consultarIdentificacion, enviarCorreoClave, soloDigitos, soloLetras }
 }
