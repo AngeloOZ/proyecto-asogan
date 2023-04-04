@@ -331,11 +331,12 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
                             <RHFTextField
                                 name="cantidad_animales"
                                 label="Cantidad de animales"
-                                type='number'
+                                type='text'
                                 size='small'
                                 inputProps={{
                                     readOnly: soloVer,
                                 }}
+                                onChange={soloNumero}
                             />
                             <RHFSelect name="tipo_animales" label="Tipo de animales" size='small'
                                 inputProps={{

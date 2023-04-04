@@ -40,7 +40,7 @@ async function obtenerLoteActivo(req: NextApiRequest, res: NextApiResponse) {
     }
     catch (error) {
         console.log(error);
-        return res.status(500).json(handleErrorsPrisma(error?.code));
+        return res.status(500).json({ message: handleErrorsPrisma(error) });
     }
     finally {
         await prisma.$disconnect();
@@ -76,7 +76,7 @@ async function modificarLote(req: NextApiRequest, res: NextApiResponse) {
         return res.status(200).json(lote);
     }
     catch (error) {
-        return res.status(500).json(handleErrorsPrisma(error?.code));
+        return res.status(500).json({ message: handleErrorsPrisma(error) });
     }
     finally {
         await prisma.$disconnect();
@@ -110,7 +110,7 @@ async function activarLote(req: NextApiRequest, res: NextApiResponse) {
         return res.status(200).json(lote);
     }
     catch (error) {
-        return res.status(500).json(handleErrorsPrisma(error?.code));
+        return res.status(500).json({ message: handleErrorsPrisma(error) });
     }
     finally {
         await prisma.$disconnect();

@@ -15,7 +15,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
         }
     } catch (error) {
         console.log(error);
-        res.status(500).json(handleErrorsPrisma(error));
+        res.status(500).json({ message: handleErrorsPrisma(error) });
     }
     finally {
         await prisma.$disconnect();

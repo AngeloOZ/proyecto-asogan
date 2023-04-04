@@ -9,7 +9,7 @@ datasource db {
 
 model usuario {
   usuarioid      Int          @id @default(autoincrement())
-  nombres        String       @db.VarChar(255)
+  nombres        String       @db.VarChar(300)
   identificacion String       @unique(map: "cedula") @db.VarChar(13)
   clave          String       @db.VarChar(255)
   rol            String       @db.VarChar(255)

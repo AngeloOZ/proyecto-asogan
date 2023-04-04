@@ -11,6 +11,7 @@ import CustomBreadcrumbs from 'src/components/custom-breadcrumbs/CustomBreadcrum
 import { lotes as ILote } from '@prisma/client'
 import { useSnackbar } from 'notistack'
 import { useLotes } from 'custom/components/Lotes/hooks';
+import { handleErrorsAxios } from 'utils'
 
 PageAdminProveedores.getLayout = (page: React.ReactElement) => <DashboardLayout roles={['admin', 'digitador', 'admin-martillador']}>{page}</DashboardLayout>
 
@@ -28,8 +29,8 @@ export default function PageAdminProveedores() {
             eliminarLote(item);
             enqueueSnackbar('Lote eliminado correctamente', { variant: 'success' });
         }
-        catch (err) {
-            enqueueSnackbar(`Oops... hubo un error ${err.message}`, { variant: 'error' });
+        catch (error) {
+            enqueueSnackbar(`Oops... ${handleErrorsAxios(error)}`, { variant: 'error' });
         }
     }
     return (

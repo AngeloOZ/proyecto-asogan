@@ -19,7 +19,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
         const lotes = await prisma.lotes.findMany();
         return res.status(200).json(lotes);
     } catch (error) {
-        return res.status(500).json(handleErrorsPrisma(error));
+        return res.status(500).json({ message: handleErrorsPrisma(error) });
     } finally {
         await prisma.$disconnect();
     }

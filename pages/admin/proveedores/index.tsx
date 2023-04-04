@@ -3,13 +3,14 @@ import { useRouter } from 'next/router'
 import Link from 'next/link'
 
 import { Button, Container } from '@mui/material'
+import { proveedores as IProveedor } from '@prisma/client'
 
 import DashboardLayout from 'src/layouts/dashboard/DashboardLayout'
 import { PATH_DASHBOARD } from 'src/routes/paths'
 
 import { TableCustom, useObtenerProveedores, useProveedores } from 'custom/components'
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs/CustomBreadcrumbs'
-import { proveedores as IProveedor } from '@prisma/client'
+import { handleErrorsAxios } from 'utils'
 import { useSnackbar } from '../../../src/components/snackbar';
 
 
@@ -34,7 +35,7 @@ export default function PageAdminProveedores() {
             router.push(PATH_DASHBOARD.proveedores.root);
 
         } catch (error) {
-            enqueueSnackbar(`Oops... hubo un error ${error.message}`, { variant: 'error' })
+            enqueueSnackbar(`Oops... ${handleErrorsAxios(error)}`, { variant: 'error' });
         }
     }
     return (

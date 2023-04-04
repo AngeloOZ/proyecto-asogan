@@ -12,6 +12,7 @@ import MenuPopover from '../../../src/components/menu-popover';
 import ConfirmDialog from '../../../src/components/confirm-dialog';
 import { useImagenes } from '.';
 import Image from 'next/image'
+import { handleErrorsAxios } from 'utils';
 
 type Props = {
     imagenes: imagenes;
@@ -47,7 +48,7 @@ export const ImagenItem = ({ imagenes }: Props) => {
             enqueueSnackbar('Imagen Eliminada', { variant: 'success' });
         } catch (error) {
             console.log(error);
-            enqueueSnackbar('Error al eliminar la imagen: ' + error.message, { variant: 'error' });
+            enqueueSnackbar(`Oops... ${handleErrorsAxios(error)}`, { variant: 'error' });
         }
     }
 
