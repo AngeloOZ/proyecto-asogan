@@ -2,10 +2,15 @@ export function handleErrorsPrisma(error: any) {
     let mensaje: string = error?.message || "Ha ocurrido un error";
 
     switch (error.code) {
+        case "P2002":
+            mensaje = "No se pudo crear el registro porque ya existe un registro con la misma información.";
+            break;
         case "P2003":
             mensaje = "Ha habido un error debido a que existe informacion relacionada con este registro.";
             break;
-
+        case "P2011":
+            mensaje = "No se pudo crear el registro porque hay un campo obligatorio que no ha sido completado.";
+            break;
         case "P2016":
             mensaje = "No se pudo crear el registro porque ya existe un registro con la misma información.";
             break;

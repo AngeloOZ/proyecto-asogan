@@ -59,6 +59,7 @@ async function crearProveedor(req: NextApiRequest, res: NextApiResponse) {
         });
         return res.status(200).json(proveedor);
     } catch (error) {
+        console.log(error);
         return res.status(500).json({ message: handleErrorsPrisma(error) });
     }
     finally {

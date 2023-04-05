@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useMemo,useState } from 'react';
+import { ChangeEvent, useEffect, useMemo, useState } from 'react';
 import * as Yup from 'yup';
 // next
 import { useRouter } from 'next/router';
@@ -33,8 +33,8 @@ export function FormProveedores({ esEditar = false, proveedoraEditar }: Props) {
     const { push } = useRouter();
     const { enqueueSnackbar } = useSnackbar();
     const { agregarProveedor, actualizarProveedor } = useProveedores();
-    const { validarIdentificacion,consultarIdentificacion } = useGlobales();
-    const [validacionI, setValidacionI ]= useState(esEditar);
+    const { validarIdentificacion, consultarIdentificacion } = useGlobales();
+    const [validacionI, setValidacionI] = useState(esEditar);
     useEffect(() => {
         if (esEditar && proveedoraEditar) {
             reset(defaultValues);
@@ -50,10 +50,10 @@ export function FormProveedores({ esEditar = false, proveedoraEditar }: Props) {
     // Validaciones de los campos
     const ProveedorEsquema = Yup.object().shape({
         nombres: Yup.string().required('El nombre es requerido'),
-        identificacion: Yup.string().required('La identificación requerido').min(10, 'La identificación al menos tener 10 caracteres'),
+        identificacion: Yup.string().required('La identificación requerido').min(10, 'La identificación al menos tener 10 caracteres').max(13, 'La identificación no puede tener más de 13 caracteres'),
         direccion: Yup.string().required('La dirección es requerido'),
         correo: Yup.string().required('El correo es requerido').email('El correo no es valido'),
-        telefono: Yup.string().required('El teléfono es requerido'),
+        telefono: Yup.string().required('El teléfono es requerido').length(10, 'El teléfono debe tener 10 caracteres')
     });
 
     // Se carga los valores en caso de que sea editar
@@ -83,7 +83,7 @@ export function FormProveedores({ esEditar = false, proveedoraEditar }: Props) {
     // Funcion para enviar el formulario
     const onSubmit = async (data: FormValuesProps) => {
         try {
-            if (validacionI){
+            if (validacionI) {
                 if (!esEditar) {
                     await agregarProveedor(data);
                     enqueueSnackbar('Proveedor agregado correctamente', { variant: 'success' });
@@ -94,7 +94,7 @@ export function FormProveedores({ esEditar = false, proveedoraEditar }: Props) {
                     push(PATH_DASHBOARD.proveedores.root);
                 }
                 reset();
-            }else{
+            } else {
                 enqueueSnackbar("La identificacion ingresada es incorrecta", { variant: 'warning' });
             }
         } catch (error) {
@@ -105,25 +105,37 @@ export function FormProveedores({ esEditar = false, proveedoraEditar }: Props) {
 
     const verificarIdentificacion = async () => {
         const validacion = validarIdentificacion(watch("identificacion"))
-        
-        if (validacion){
-            
+
+        if (validacion) {
+
             const data = await consultarIdentificacion(watch("identificacion"));
-            
-            setValue('nombres',data.razon_social);
-            setValue('direccion',data.direccion);
-            setValue('correo',data.correo);
-            setValue('telefono',data.telefono2);
+
+            setValue('nombres', data.razon_social);
+            setValue('direccion', data.direccion);
+            setValue('correo', data.correo);
+            setValue('telefono', data.telefono2);
             setValidacionI(true);
-        }else {
+        } else {
             setValidacionI(false);
             enqueueSnackbar("La identificacion ingresada es incorrecta", { variant: 'warning' });
-        }      
+        }
     }
 
-    function soloNumero(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+    function soloNumero(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, maxLength: number = 0) {
         const currentValue = event.target.value;
-        const newValue = currentValue.replace(/[^0-9]/g, '');
+        let newValue = currentValue.replace(/[^0-9]/g, '');
+        const name = event.target.name as keyof FormValuesProps;
+
+        if (maxLength !== 0) {
+            newValue = newValue.slice(0, maxLength);
+        }
+
+        setValue(name, newValue);
+    }
+
+    function soloLetras(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+        const currentValue = event.target.value;
+        const newValue = currentValue.replace(/[^a-zA-ZñÑáéíóúÁÉÍÓÚ\s]/g, '');
 
         const name = event.target.name as keyof FormValuesProps;
 
@@ -140,11 +152,13 @@ export function FormProveedores({ esEditar = false, proveedoraEditar }: Props) {
                         size='small'
                         disabled={esEditar}
                         onBlur={verificarIdentificacion}
+                        onChange={(e) => soloNumero(e, 13)}
                     />
                     <RHFTextField
                         name="nombres"
                         label="Nombres y Apellidos"
                         size='small'
+                        onChange={soloLetras}
                     />
                     <RHFTextField
                         name="direccion"
@@ -161,7 +175,7 @@ export function FormProveedores({ esEditar = false, proveedoraEditar }: Props) {
                         name="telefono"
                         type='tel'
                         label="WhatsApp"
-                        onChange={soloNumero}
+                        onChange={(event)=> soloNumero(event, 10)}
                         size='small'
                     />
                 </Stack>
