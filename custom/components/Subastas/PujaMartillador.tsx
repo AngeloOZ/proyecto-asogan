@@ -42,9 +42,9 @@ export function PujaMartillador({ lote, ultimaPuja }: Props) {
             enqueueSnackbar(`${data.message}`, { variant: 'success' });
 
             mutate(`/lotes/${lote.id_evento}`)
-            mutate(`/subastas/pujas?lote=${lote.id_lote}`)
             mutate(`/subastas/lotes?id=${lote.id_evento}`)
             mutate(`/subastas/ultima-puja?id=${lote.id_evento}`)
+            mutate(`/subastas/monitor/id?uuid=${lote.id_evento}`)
 
         } catch (error) {
             enqueueSnackbar(`Oops... ${handleErrorsAxios(error)}`, { variant: 'error' });
@@ -64,6 +64,7 @@ export function PujaMartillador({ lote, ultimaPuja }: Props) {
             mutate(`/lotes/${lote.id_evento}`)
             mutate(`/subastas/lotes?id=${lote.id_evento}`)
             mutate(`/subastas/ultima-puja?id=${lote.id_evento}`)
+            mutate(`/subastas/monitor/id?uuid=${lote.id_evento}`)
     
             enqueueSnackbar('Oferta registrada', { variant: 'success' });
 
