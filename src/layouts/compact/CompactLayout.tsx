@@ -3,9 +3,9 @@
 // @mui
 import { Stack, Container } from '@mui/material';
 // hooks
-import useOffSetTop from '../../hooks/useOffSetTop';
+// import useOffSetTop from '../../hooks/useOffSetTop';
 // config
-import { HEADER } from '../../config-global';
+// import { HEADER } from '../../config-global';
 //
 // const Header = dynamic(() => import('./Header'), { ssr: false });
 
@@ -16,7 +16,7 @@ type Props = {
 };
 
 export default function CompactLayout({ children }: Props) {
-  const isOffset = useOffSetTop(HEADER.H_MAIN_DESKTOP);
+  // const isOffset = useOffSetTop(HEADER.H_MAIN_DESKTOP);
 
   return (
     <>
