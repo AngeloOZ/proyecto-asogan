@@ -9,6 +9,7 @@ import prisma from 'database/prismaClient'
 import { MainMonitor, useLoteMonitor2, useUltimaPuja } from 'custom/components'
 import moment from 'moment-timezone'
 import { PATH_DASHBOARD_CLEINTE } from 'src/routes/paths'
+import AuthGuard from 'src/auth/AuthGuard'
 // import { useMemo } from 'react'
 
 type Props = {
@@ -30,14 +31,14 @@ const PageMonitor = ({ uuid, evento, banners }: Props) => {
     // }, [loteActual])
 
     return (
-        <>
+        <AuthGuard>
             <Head>
                 <title>Subasta Lote</title>
             </Head>
             <Box component='main' width='100%' height='100vh'>
                 {!isLoading && <MainMonitor lote={loteActual} ultimaPuja={ultimaPuja} banners={banners} evento={evento} />}
             </Box>
-        </>
+        </AuthGuard>
     )
 }
 

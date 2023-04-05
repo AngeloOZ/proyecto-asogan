@@ -6,6 +6,7 @@ import { eventos } from '@prisma/client';
 import prisma from 'database/prismaClient'
 import { PATH_DASHBOARD_CLEINTE } from 'src/routes/paths'
 import moment from 'moment-timezone'
+import AuthGuard from 'src/auth/AuthGuard';
 
 type Props = {
     uuid: string;
@@ -18,14 +19,13 @@ export const PageMartillador = ({ uuid, evento }: Props) => {
     const { ultimaPuja } = useUltimaPuja(loteActual?.id_lote || 0);
 
     return (
-        <>
+        <AuthGuard>
             <Head>
                 <title>Subasta Lote</title>
             </Head>
 
             {!isLoading && <MainMartillador lote={loteActual} ultimaPuja={ultimaPuja} evento={evento} />}
-
-        </>
+        </AuthGuard>
     )
 }
 
