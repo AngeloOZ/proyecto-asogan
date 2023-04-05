@@ -8,7 +8,6 @@ import prisma from 'database/prismaClient'
 
 import { MainMonitor, useLoteMonitor2, useUltimaPuja } from 'custom/components'
 import moment from 'moment-timezone'
-import { PATH_DASHBOARD_CLEINTE } from 'src/routes/paths'
 import AuthGuard from 'src/auth/AuthGuard'
 // import { useMemo } from 'react'
 
