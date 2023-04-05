@@ -70,7 +70,7 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
         celular: Yup.string().required('El celular es requerido').length(10, 'El número de celular no puede tener mas de 10 digitos'),
 
         codigo_paleta: Yup.string().max(3, 'El numero de paleta no puede tener mas de 5 caracteres'),
-        calificacion_bancaria: Yup.string().required('La calificacion bancaria es requerida').max(5, 'La calificacion bancaria no puede tener mas de 5 caracteres'),
+        calificacion_bancaria: Yup.string().required('La calificacion bancaria es requerida').max(4, 'La calificacion bancaria no puede tener mas de 4 caracteres') .test('max-value', 'La calificación bancaria no puede ser mayor que 1000', value => Number(value) <= 1000),
     });
 
 
@@ -84,7 +84,7 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
             id_comprador: compradorEditar?.id_comprador || 0,
             codigo_paleta: (esEditar == true) ?
                 (compradorEditar?.codigo_paleta || '') : (Math.floor(Math.random() * (Number(process.env.NEXT_PUBLIC_STMP_PALETA) - Number(process.env.NEXT_PUBLIC_STMP_PALETA_HASTA) + 1) +  Number(process.env.NEXT_PUBLIC_STMP_PALETA_HASTA))).toString(),
-            calificacion_bancaria: compradorEditar?.calificacion_bancaria || "",
+            calificacion_bancaria: compradorEditar?.calificacion_bancaria || "0",
             antecedentes_penales: compradorEditar?.antecedentes_penales || false,
             procesos_judiciales: compradorEditar?.procesos_judiciales || false,
             estado: (esEditar == true) ? (compradorEditar?.estado || false) : true,
