@@ -8,7 +8,7 @@ import useResponsive from '../../../hooks/useResponsive';
 // config
 import { NAV } from '../../../config-global';
 // components
-import Logo from '../../../components/logo';
+// import Logo from '../../../components/logo';
 import Scrollbar from '../../../components/scrollbar';
 import { NavSectionVertical } from '../../../components/nav-section';
 //
@@ -54,8 +54,13 @@ export default function NavVertical({ openNav, onCloseNav }: Props) {
           px: 2.5,
           flexShrink: 0,
         }}
-      >
-        <Logo image='/logo/logo_full.png' sx={{ width: '100%', height: 40 }} bgcolor='crimson' />
+      > 
+        <Box
+          component="img"
+          src="/favicon/logo_full.png"
+          sx={{ width: '85%', margin: 'auto' }}
+        />
+        {/* <Logo image='/favicon/logo_full.png' sx={{ width: '100%', height: 40 }} /> */}
 
         <NavAccount />
       </Stack>
