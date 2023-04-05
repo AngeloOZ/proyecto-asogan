@@ -37,12 +37,15 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
     try {
         const eventos = await prisma.eventos.findUnique({ where: { uuid: evento } });
+        await prisma.$disconnect();
         
         if (!eventos) {
             throw new Error('Evento no encontrado');
         }
 
-        await prisma.$disconnect();
+        if(eventos.abierto !== 2){
+            throw new Error('Evento no abierto');
+        }
 
         return {
             props: {
@@ -54,7 +57,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
             }
         }
     } catch (error) {
-        console.log(error);
         await prisma.$disconnect();
         return {
             notFound: true

@@ -107,10 +107,35 @@ async function actualizarEvento(req: NextApiRequest, res: NextApiResponse) {
             }
         });
 
-        if (evento.abierto === 3) {
+        if (evento.abierto === 1) {
             await prisma.lotes.updateMany({
                 where: {
-                    id_evento: evento.id_evento
+                    id_evento: evento.id_evento,
+                    subastado: {
+                        in: [1, 2]
+                    }
+                },
+                data: {
+                    subastado: 0,
+                }
+            });
+        } else if (evento.abierto === 2) {
+            await prisma.lotes.updateMany({
+                where: {
+                    id_evento: evento.id_evento,
+                    subastado: 2
+                },
+                data: {
+                    subastado: 0,
+                }
+            });
+        } else if (evento.abierto === 3) {
+            await prisma.lotes.updateMany({
+                where: {
+                    id_evento: evento.id_evento,
+                    subastado: {
+                        in: [0, 1]
+                    }
                 },
                 data: {
                     subastado: 2,

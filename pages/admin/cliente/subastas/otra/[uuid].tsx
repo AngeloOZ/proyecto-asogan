@@ -46,9 +46,16 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
         const banners = await prisma.imagenes.findMany();
 
+        await prisma.$disconnect();
+
         if (!evento) {
             throw new Error('Evento no encontrado');
         }
+
+        if (evento.abierto !== 2) {
+            throw new Error('Evento no abierto');
+        }
+
 
         return {
             props: {
@@ -62,10 +69,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
         }
     } catch (error) {
         return {
-            redirect: {
-                destination: PATH_DASHBOARD_CLEINTE.root,
-                permanent: false
-            }
+            notFound: true
         }
     }
 }
