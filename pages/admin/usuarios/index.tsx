@@ -33,7 +33,7 @@ export default function PageAdminUsuarios() {
             await eliminarUsuario(item.usuarioid)
             enqueueSnackbar('Usuario eliminado correctamente', { variant: 'success' });
             router.push(PATH_DASHBOARD.usuarios.root);
-
+   
         } catch (error) {
             enqueueSnackbar(`Oops... ${handleErrorsAxios(error)}`, { variant: 'error' });
         }

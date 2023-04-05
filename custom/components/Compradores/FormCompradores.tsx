@@ -67,9 +67,9 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
         }
         ),
         correo: Yup.string().required('El correo es requerido').email('El correo ingresado es invalido'),
-        celular: Yup.string().required('El celular es requerido').length(10, 'El número de celular no puede tener mas de 10 digitos'),
+        celular: Yup.string().required('El celular es requerido').length(10, 'El número de celular debe tener 10 digitos'),
 
-        codigo_paleta: Yup.string().max(3, 'El numero de paleta no puede tener mas de 5 caracteres'),
+        codigo_paleta: Yup.string().max(3, 'El numero de paleta no puede tener mas de 3 caracteres'),
         calificacion_bancaria: Yup.string().required('La calificacion bancaria es requerida').max(4, 'La calificacion bancaria no puede tener mas de 4 caracteres') .test('max-value', 'La calificación bancaria no puede ser mayor que 1000', value => Number(value) <= 1000),
     });
 

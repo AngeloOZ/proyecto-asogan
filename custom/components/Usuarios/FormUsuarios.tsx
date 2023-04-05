@@ -66,7 +66,7 @@ export function FormUsuarios({ esEditar = false, usuariosEditar }: Props) {
         }
         ),
         correo: Yup.string().required('El correo es requerido').email('El correo ingresado es invalido'),
-        celular: Yup.string().required('El celular es requerido').length(10,'El número de celular no puede tener mas de 10 digitos'),
+        celular: Yup.string().required('El celular es requerido').length(10,'El número de celular debe tener 10 digitos'),
         rol: Yup.string().required('El rol es requerido'),
         verificacion_clave: Yup.string().oneOf([Yup.ref('clave'), null], 'Las claves no coinciden'),
     });

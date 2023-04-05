@@ -8,20 +8,20 @@ export const useUsuario = () => {
 
     const agregarUsuario = async (usuario: any) => {
         const { data } = await subastaAPI.post('/user', usuario);
-        mutate('/usuarios');
+        mutate('/user');
     }
 
     const actualizarUsuario = async (usuario: any) => {
 
         const { data } = await subastaAPI.put('/user', usuario);
      
-        mutate('/usuarios');
+        mutate('/user');
     }
 
     const eliminarUsuario = async (usuario: any) => {
 
         const { data } = await subastaAPI.delete(`/user?id= ${usuario}`);
-        mutate('/usuarios');
+        mutate('/user');
     }
 
     const obtenerUsuariosClave = async(identificacionC: string, correoC:string) => {
