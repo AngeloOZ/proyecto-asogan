@@ -6,6 +6,7 @@ import { eventos } from '@prisma/client';
 import prisma from 'database/prismaClient'
 import { PATH_DASHBOARD_CLEINTE } from 'src/routes/paths'
 import moment from 'moment-timezone'
+import AuthGuard from 'src/auth/AuthGuard';
 
 type Props = {
     uuid: string;
@@ -18,14 +19,13 @@ export const PageMartillador = ({ uuid, evento }: Props) => {
     const { ultimaPuja } = useUltimaPuja(loteActual?.id_lote || 0);
 
     return (
-        <>
+        <AuthGuard>
             <Head>
                 <title>Subasta Lote</title>
             </Head>
 
             {!isLoading && <MainMartillador lote={loteActual} ultimaPuja={ultimaPuja} evento={evento} />}
-
-        </>
+        </AuthGuard>
     )
 }
 
@@ -39,8 +39,14 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
         const banners = await prisma.imagenes.findMany();
 
+        await prisma.$disconnect();
+
         if (!evento) {
             throw new Error('Evento no encontrado');
+        }
+
+        if (evento.abierto !== 2) {
+            throw new Error('Evento no abierto');
         }
 
         return {
@@ -55,10 +61,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
         }
     } catch (error) {
         return {
-            redirect: {
-                destination: PATH_DASHBOARD_CLEINTE.root,
-                permanent: false
-            }
+            notFound: true
         }
     }
 }
