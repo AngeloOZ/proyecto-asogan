@@ -116,7 +116,7 @@ async function crearComprador(req: NextApiRequest, res: NextApiResponse) {
                 codigo_paleta,
                 antecedentes_penales,
                 procesos_judiciales,
-                calificacion_bancaria,
+                calificacion_bancaria : calificacion_bancaria || "0",
                 estado,
                 correo,
                 celular,
