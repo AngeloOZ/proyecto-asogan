@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 
+import * as Yup from 'yup';
 import { Box, Button, InputAdornment, MenuItem, Stack } from "@mui/material"
 import { useForm } from "react-hook-form";
 import { useSnackbar } from "notistack";
@@ -13,6 +14,7 @@ import FormProvider, {
 } from 'src/components/hook-form';
 
 import { handleErrorsAxios } from "utils";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 interface Lote {
     id_lote: string;
@@ -34,6 +36,11 @@ export const LoteAdminMartillador = ({ listadoLotes = [], loteEnSubasta }: LoteM
     const { enqueueSnackbar } = useSnackbar();
     const [loteActual, setLoteActual] = useState<lotes>()
 
+    const SubastaSchema = Yup.object().shape({
+        puja_inicial: Yup.number().required('La puja inicial es requerida').min(0.005, 'El valor base debe ser mayor a 0.005').typeError('Solo se adminite valores numéricos'),
+        incremento: Yup.number().required('El incremento es requerido').min(0.005, 'El incremento debe ser mayor a 0.005').typeError('Solo se adminite valores numéricos'),
+    });
+
     const defaultValues = useMemo<FormProps>(() => ({
         id_lote: loteActual?.id_lote.toString() || "",
         id_evento: loteActual?.id_evento || 0,
@@ -50,6 +57,7 @@ export const LoteAdminMartillador = ({ listadoLotes = [], loteEnSubasta }: LoteM
     }, [loteEnSubasta])
 
     const methods = useForm<FormProps>({
+        resolver: yupResolver(SubastaSchema),
         defaultValues
     });
 
@@ -103,6 +111,13 @@ export const LoteAdminMartillador = ({ listadoLotes = [], loteEnSubasta }: LoteM
             }
 
             await subastaAPI.post(`/subastas/loteAdminMartillador`, loteModificado);
+            
+            mutate(`/lotes/${loteActual?.id_lote}`)
+            mutate(`/subastas/lotes?id=${loteActual?.id_evento}`)
+            mutate(`/subastas/ultima-puja?id=${loteActual?.id_evento}`)
+            mutate(`/subastas/monitor/id?uuid=${loteActual?.id_evento}`)
+            
+
             enqueueSnackbar("Lote modificado correctamente", { variant: 'success' });
         } catch (error) {
             console.error(error);
@@ -121,6 +136,7 @@ export const LoteAdminMartillador = ({ listadoLotes = [], loteEnSubasta }: LoteM
 
             mutate(`/lotes/${loteActual?.id_lote}`)
             mutate(`/subastas/lotes?id=${loteActual?.id_evento}`)
+            mutate(`/subastas/monitor/id?uuid=${loteActual?.id_evento}`)
             mutate(`/subastas/ultima-puja?id=${loteActual?.id_evento}`)
 
             enqueueSnackbar("Última puja eliminada", { variant: 'success' });

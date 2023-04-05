@@ -5,6 +5,7 @@ import { MainAdminMartillador, useLoteMonitor2, useUltimaPuja } from 'custom/com
 import prisma from 'database/prismaClient';
 import moment from 'moment-timezone';
 import { eventos } from '@prisma/client';
+import AuthGuard from 'src/auth/AuthGuard';
 
 type Props = {
     uuid: string;
@@ -17,14 +18,13 @@ const PageMonitor = ({ uuid, evento }: Props) => {
     const { ultimaPuja } = useUltimaPuja(loteActual?.id_lote || 0);
 
     return (
-        <>
+        <AuthGuard>
             <Head>
                 <title>Subasta Lote</title>
             </Head>
 
             {!isLoading && <MainAdminMartillador evento={evento} lote={loteActual} ultimaPuja={ultimaPuja} />}
-
-        </>
+        </AuthGuard>
     )
 }
 
@@ -37,12 +37,15 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
     try {
         const eventos = await prisma.eventos.findUnique({ where: { uuid: evento } });
-        
+        await prisma.$disconnect();
+
         if (!eventos) {
             throw new Error('Evento no encontrado');
         }
 
-        await prisma.$disconnect();
+        if (eventos.abierto !== 2) {
+            throw new Error('Evento no abierto');
+        }
 
         return {
             props: {
@@ -54,7 +57,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
             }
         }
     } catch (error) {
-        console.log(error);
         await prisma.$disconnect();
         return {
             notFound: true
