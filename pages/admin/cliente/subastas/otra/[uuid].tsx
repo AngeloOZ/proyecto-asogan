@@ -7,7 +7,6 @@ import { eventos, imagenes } from '@prisma/client'
 
 import { GetServerSideProps } from 'next'
 import prisma from 'database/prismaClient'
-import { PATH_DASHBOARD_CLEINTE } from 'src/routes/paths'
 import moment from 'moment-timezone'
 
 import LoadingScreen from 'src/components/loading-screen/LoadingScreen'

@@ -4,7 +4,6 @@ import { GetServerSideProps } from 'next';
 import { MainMartillador, useLoteMonitor2, useUltimaPuja } from 'custom/components'
 import { eventos } from '@prisma/client';
 import prisma from 'database/prismaClient'
-import { PATH_DASHBOARD_CLEINTE } from 'src/routes/paths'
 import moment from 'moment-timezone'
 import AuthGuard from 'src/auth/AuthGuard';
 
