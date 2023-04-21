@@ -3,13 +3,15 @@ import Head from 'next/head'
 import DashboardLayout from 'src/layouts/dashboard/DashboardLayout'
 
 import { VistaLoteCliente, useLoteMonitor2, useUltimaPuja } from 'custom/components'
-import { eventos, imagenes } from '@prisma/client'
+import { eventos, imagenes, lotes } from '@prisma/client'
 
 import { GetServerSideProps } from 'next'
 import prisma from 'database/prismaClient'
 import moment from 'moment-timezone'
 
 import LoadingScreen from 'src/components/loading-screen/LoadingScreen'
+import socket from 'utils/sockets'
+import { useEffect, useState } from 'react';
 
 
 PageAdminProveedores.getLayout = (page: React.ReactElement) => <DashboardLayout roles={['comprador']}>{page}</DashboardLayout>
@@ -22,10 +24,32 @@ type Props = {
 
 export default function PageAdminProveedores({ uuid, evento, banners }: Props) {
 
-    const { loteActual, isLoading } = useLoteMonitor2(evento.id_evento);
+    // const { loteActual, isLoading } = useLoteMonitor2(evento.id_evento);
+    const [loteActual, setLoteActual] = useState<lotes>()
     const { ultimaPuja } = useUltimaPuja(loteActual?.id_lote || 0);
 
-    if (isLoading) return <LoadingScreen />
+    useEffect(() => {
+        socket.on('activarLote', (lote: lotes) => {
+            console.log(lote);
+            
+            setLoteActual(lote)
+        });
+
+        return () => {
+            socket.off('activarLote');
+        };
+    }, [])
+    
+    useEffect(() => {
+        socket.emit('obtenerLoteActivo', evento.id_evento);
+
+        return () => {
+            socket.off('obtenerLoteActivo');
+        };
+    }, [])
+
+
+    // if (!loteActual) return <LoadingScreen />
 
     return (
         <>

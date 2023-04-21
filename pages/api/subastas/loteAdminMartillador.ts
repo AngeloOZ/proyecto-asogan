@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 import prisma from 'database/prismaClient';
 import { handleErrorsPrisma } from 'utils';
+import socket from 'utils/sockets';
 
 // eslint-disable-next-line
 export default function (req: NextApiRequest, res: NextApiResponse) {
@@ -70,6 +71,7 @@ async function modificarLote(req: NextApiRequest, res: NextApiResponse) {
                 puja_final
             }
         });
+        socket.emit('activarLote', lote);
         return res.status(200).json(lote);
     }
     catch (error) {
