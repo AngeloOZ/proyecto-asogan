@@ -17,6 +17,8 @@ export const PageMartillador = ({ uuid, evento }: Props) => {
     const { loteActual, isLoading } = useLoteMonitor2(evento.id_evento);
     const { ultimaPuja } = useUltimaPuja(loteActual?.id_lote || 0);
 
+    
+
     return (
         <AuthGuard>
             <Head>

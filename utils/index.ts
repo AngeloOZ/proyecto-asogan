@@ -4,3 +4,4 @@ export * as pagoplux from './pagoplux';
 export * from './handleErrorAxios';
 export * from './handleErrorPrisma';
 export * from './calculosSubasta';
+export * from './sockets';
