@@ -43,7 +43,7 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
     const { enqueueSnackbar } = useSnackbar();
     const { agregarComprador, actualizarComprador } = useCompradores();
     const { validarIdentificacion, consultarIdentificacion, enviarCorreoClave, soloDigitos, soloLetras } = useGlobales();
-    const [validacionI, setValidacionI] = useState(false);
+    
     const [nombresV, setNombres] = useState<string>();
     const [botonCorreo, setBotonCorreo] = useState(false);
     useEffect(() => {
@@ -78,7 +78,7 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
     const defaultValues = useMemo<IComprador>(() => {
 
         setNombres(compradorEditar?.usuario?.nombres || '');
-        esEditar && setValidacionI(true);
+        esEditar;
 
         return {
             id_comprador: compradorEditar?.id_comprador || 0,
@@ -112,10 +112,18 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
     } = methods;
 
 
-    const onSubmit = async (data: FormValuesProps) => {
+    const onSubmit = async (data : FormValuesProps ) => {
         try {
+          
+            let identificacion:string = ''
+            if ('identificacion' in data) {
+                 identificacion  = data.identificacion as string;
+              } 
+          
+           
+            const validacion = !esEditar ? validarIdentificacion(identificacion)  : true;
 
-            if (validacionI == true) {
+            if (validacion ) {
                 if (!esEditar) {
 
                     await agregarComprador({ ...data, nombres: nombresV?.trim(), registro: 0 });
@@ -140,18 +148,19 @@ export function FormCompradores({ esEditar = false, compradorEditar }: Props) {
 
     const verificarIdentificacion = async (identificacion: string) => {
 
-        const validacion = validarIdentificacion(identificacion)
+        if (isSubmitting)
+            return;
+        
+        const nombres = await consultarIdentificacion(identificacion);
+        
+            if (nombres){
 
-        if (validacion) {
-            const nombres = await consultarIdentificacion(identificacion);
-            setNombres(nombres.razon_social);
-            setValue('correo', nombres.correo);
-            setValue('celular', nombres.telefono2);
-            setValidacionI(true);
-        } else {
-            setValidacionI(false);
-            enqueueSnackbar("La identificacion ingresada es incorrecta", { variant: 'error' });
-        }
+                setNombres(nombres.razon_social);
+                setValue('correo', nombres.correo);
+                setValue('celular', nombres.telefono2);
+                
+            }
+       
 
 
     }
