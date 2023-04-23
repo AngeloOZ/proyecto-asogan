@@ -49,7 +49,7 @@ export const UsuariosConectados = () => {
                 border: "1px solid rgba(0, 0, 0, 0.1)",
               }}
             >
-              <ListItemText primary={conectado.usuario.nombres} />
+              <ListItemText primary={conectado.nombres} />
             </ListItem>
           ))}
         </List>

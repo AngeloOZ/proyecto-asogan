@@ -39,7 +39,10 @@ async function verifyJWT(req: NextApiRequest, res: NextApiResponse<Data>) {
         if (!user) {
             return res.status(404).json({ status: 404, message: "Usuario no encontrado" })
         }
-
+        await prisma.usuario.update({
+            where: { usuarioid: id },
+            data: { conectado: 1 },
+          });
         return res.status(200).json({
             user: {
                 usuarioid: user.usuarioid,
