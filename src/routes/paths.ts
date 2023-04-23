@@ -87,6 +87,9 @@ export const PATH_DASHBOARD = {
     agregar: path(PATH_ADMIN, '/banner/agregar'),
     editar: path(PATH_ADMIN, '/banner/editar'),
   },
+  transmision: {
+    root: path(PATH_ADMIN, "/transmision"),
+  },
 };
 
 export const PATH_TIENDA = '/tienda';
