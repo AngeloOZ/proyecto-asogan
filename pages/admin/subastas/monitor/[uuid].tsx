@@ -12,7 +12,6 @@ import AuthGuard from 'src/auth/AuthGuard'
 import { useObtenerLoteActivo, useObtenerUltimaPuja } from 'custom/hooks'
 
 type Props = {
-    uuid: string;
     evento: eventos;
     banners: imagenes[];
 }
@@ -56,7 +55,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
         return {
             props: {
-                uuid,
                 evento: {
                     ...evento,
                     fecha: moment(evento.fecha).format('dd/MM/yyyy')

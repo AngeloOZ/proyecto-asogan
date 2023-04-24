@@ -3,7 +3,7 @@ import Head from 'next/head'
 import DashboardLayout from 'src/layouts/dashboard/DashboardLayout'
 
 import { VistaLoteCliente } from 'custom/components'
-import { eventos, imagenes, lotes } from '@prisma/client'
+import { eventos, imagenes } from '@prisma/client'
 
 import { GetServerSideProps } from 'next'
 import prisma from 'database/prismaClient'
@@ -15,7 +15,6 @@ import { useObtenerLoteActivo, useObtenerUltimaPuja } from 'custom/hooks'
 PageSubastaCliente.getLayout = (page: React.ReactElement) => <DashboardLayout roles={['comprador']}>{page}</DashboardLayout>
 
 type Props = {
-    uuid: string;
     evento: eventos;
     banners: imagenes[];
 }
@@ -56,7 +55,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
         return {
             props: {
-                uuid,
                 evento: {
                     ...evento,
                     fecha: moment(evento.fecha).format('dd/MM/yyyy')

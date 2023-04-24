@@ -1,7 +1,7 @@
 import Head from 'next/head'
 
 import { GetServerSideProps } from 'next';
-import { MainAdminMartillador, useLoteMonitor2, useUltimaPuja } from 'custom/components'
+import { MainAdminMartillador } from 'custom/components'
 import prisma from 'database/prismaClient';
 import moment from 'moment-timezone';
 import { eventos } from '@prisma/client';
@@ -9,7 +9,6 @@ import AuthGuard from 'src/auth/AuthGuard';
 import { useObtenerLoteActivo, useObtenerUltimaPuja } from 'custom/hooks';
 
 type Props = {
-    uuid: string;
     evento: eventos;
 }
 
@@ -50,7 +49,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
         return {
             props: {
-                uuid: evento,
                 evento: {
                     ...eventos,
                     fecha: moment(eventos.fecha).format('dd/MM/yyyy')

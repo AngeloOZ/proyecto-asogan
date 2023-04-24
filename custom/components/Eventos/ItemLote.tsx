@@ -26,7 +26,7 @@ type Props = {
 export const ItemLote = ({ lote, expanded, setExpanded, isEventActive }: Props) => {
     const { enqueueSnackbar } = useSnackbar();
     const { mutate } = useSWRConfig();
-    const newLote = calcularSubasta(lote);
+    const newLote = calcularSubasta(lote, undefined);
     const { rol: [rolLogged], user } = useContext(AuthContext);
 
 
