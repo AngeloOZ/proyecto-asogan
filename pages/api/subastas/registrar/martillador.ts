@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 import prisma from 'database/prismaClient';
 import { handleErrorsPrisma } from 'utils';
+import socket from 'utils/sockets';
 
 // eslint-disable-next-line
 export default async function (req: NextApiRequest, res: NextApiResponse) {
@@ -22,9 +23,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 async function registrarPujaMartillador(req: NextApiRequest, res: NextApiResponse) {
     const { id_lote, codigo_paleta, puja } = req.body;
 
-    // await prisma.$transaction(async (prisma) => {
-
-    await prisma.pujas.create({
+    const ultimaPuja = await prisma.pujas.create({
         data: {
             id_lote,
             id_usuario: 1,
@@ -33,12 +32,12 @@ async function registrarPujaMartillador(req: NextApiRequest, res: NextApiRespons
         }
     });
 
-    await prisma.lotes.update({
+    const lote = await prisma.lotes.update({
         where: { id_lote },
         data: { puja_final: puja }
     });
 
-    // });
+    socket.emit('ultimaPuja', { lote, ultimaPuja });
 
     res.status(200).json({ message: 'Puja registrada' });
 }

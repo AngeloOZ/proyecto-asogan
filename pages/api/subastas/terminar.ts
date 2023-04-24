@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 import prisma from 'database/prismaClient';
+import socket from 'utils/sockets';
 
 // eslint-disable-next-line
 export default async function (req: NextApiRequest, res: NextApiResponse) {
@@ -14,7 +15,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
             res.status(200).json({ message: 'el lote ha sido rechazado' });
         } else if (query === 'oferta') {
             res.status(200).json({ message: 'tu oferta ha sido recibida' });
-        }else{
+        } else {
             res.status(200).json({ message: 'el lote ha sido subastado' });
         }
 
@@ -30,7 +31,7 @@ async function terminarSubasta(req: NextApiRequest, res: NextApiResponse) {
     const { accion, id_lote } = req.body;
 
     if (accion === 'rechazado') {
-        await prisma.lotes.update({
+        const lote = await prisma.lotes.update({
             where: {
                 id_lote: Number(id_lote),
             },
@@ -38,6 +39,8 @@ async function terminarSubasta(req: NextApiRequest, res: NextApiResponse) {
                 subastado: 2,
             }
         });
+        socket.emit('activarLote', lote);
+
         return 'rechazado';
     }
 
@@ -77,7 +80,7 @@ async function terminarSubasta(req: NextApiRequest, res: NextApiResponse) {
     if (!comprador) throw new Error('No se encontró comprador para este lote');
 
     // 3. actualizar lote con comprador y paleta
-    await prisma.lotes.update({
+    const lote = await prisma.lotes.update({
         where: {
             id_lote: Number(id_lote),
         },
@@ -87,6 +90,8 @@ async function terminarSubasta(req: NextApiRequest, res: NextApiResponse) {
             subastado: 3,
         }
     });
+
+    socket.emit('activarLote', lote);
     return 'subastado';
 }
 

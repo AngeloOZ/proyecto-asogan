@@ -6,6 +6,7 @@ import prisma from 'database/prismaClient';
 import moment from 'moment-timezone';
 import { eventos } from '@prisma/client';
 import AuthGuard from 'src/auth/AuthGuard';
+import { useObtenerLoteActivo, useObtenerUltimaPuja } from 'custom/hooks';
 
 type Props = {
     uuid: string;
@@ -14,8 +15,8 @@ type Props = {
 
 const PageMonitor = ({ evento }: Props) => {
 
-    const { loteActual, isLoading } = useLoteMonitor2(evento.id_evento);
-    const { ultimaPuja } = useUltimaPuja(loteActual?.id_lote || 0);
+    const { loteActual } = useObtenerLoteActivo(evento.id_evento);
+    const { ultimaPuja } = useObtenerUltimaPuja(loteActual);
 
     return (
         <AuthGuard>
@@ -23,7 +24,7 @@ const PageMonitor = ({ evento }: Props) => {
                 <title>Subasta Lote</title>
             </Head>
 
-            {!isLoading && <MainAdminMartillador evento={evento} lote={loteActual} ultimaPuja={ultimaPuja} />}
+            <MainAdminMartillador evento={evento} lote={loteActual} ultimaPuja={ultimaPuja} />
         </AuthGuard>
     )
 }

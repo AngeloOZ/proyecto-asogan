@@ -10,18 +10,25 @@ import { calcularSubasta } from 'utils';
 import { CardInfo } from '../Monitor';
 import { PujaMartillador, useLotesSubasta, VideoPlayer } from '../Subastas';
 import { LoteAdminMartillador } from '../Subastas/LoteAdminMartillador';
+import { SecondLoader } from '../SecondLoader';
+import { useState } from 'react';
 
 type Props = {
-    lote: lotes,
-    ultimaPuja: UltimaPuja | null,
+    lote?: lotes,
+    ultimaPuja?: UltimaPuja,
     evento: eventos
 }
 
 export const MainAdminMartillador = ({ evento, lote, ultimaPuja }: Props) => {
+    const [showLoader, setShowLoader] = useState(false);
+
     const theme = useTheme();
     const { lotes } = useLotesSubasta(evento.id_evento);
     const newLote = calcularSubasta(lote, ultimaPuja);
 
+    const handleShowLoader = (state: boolean = false) => {
+        setShowLoader(state);
+    }
 
     return (
         <Grid height="100%" className={css.container}>
@@ -32,6 +39,10 @@ export const MainAdminMartillador = ({ evento, lote, ultimaPuja }: Props) => {
                     </Box>
                 </Card>
             </Box>
+
+            {
+                showLoader && <SecondLoader />
+            }
 
             <Box component="div" className={css.input}>
                 <Card sx={{ height: "100%", boxShadow: '0 0 4px rgba(0,0,0,0.3)' }}>
@@ -48,7 +59,7 @@ export const MainAdminMartillador = ({ evento, lote, ultimaPuja }: Props) => {
                         </Box>
                         <Box component='div' width="100%" height="100%" style={{ backgroundColor: '#e7ebf0', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                             {(lote && evento.abierto === 2) && (
-                                <PujaMartillador lote={lote!} ultimaPuja={ultimaPuja} />
+                                <PujaMartillador lote={lote!} ultimaPuja={ultimaPuja} setLoader={handleShowLoader} />
                             )
                             }
                         </Box>

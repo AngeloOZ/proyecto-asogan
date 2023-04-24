@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 import prisma from 'database/prismaClient';
 import { handleErrorsPrisma } from 'utils';
+import socket from 'utils/sockets';
 
 // eslint-disable-next-line
 export default async function (req: NextApiRequest, res: NextApiResponse) {
@@ -27,7 +28,15 @@ async function registrarPuja(req: NextApiRequest, res: NextApiResponse) {
         const { id_lote, id_usuario, codigo_paleta, puja } = req.body;
         // return await prisma.$transaction(async (prisma) => {
 
-        await prisma.pujas.create({
+        const loteAux = await prisma.lotes.findUnique({
+            where: { id_lote },
+        });
+
+        if (loteAux?.subastado !== 1) {
+            throw new Error('Este lote ya no se encuentra en subasta');
+        }
+
+        const ultimaPuja = await prisma.pujas.create({
             data: {
                 id_lote,
                 id_usuario,
@@ -36,10 +45,13 @@ async function registrarPuja(req: NextApiRequest, res: NextApiResponse) {
             }
         });
 
-        await prisma.lotes.update({
+        const lote = await prisma.lotes.update({
             where: { id_lote },
             data: { puja_final: puja }
         });
+
+        socket.emit('ultimaPuja', { lote, ultimaPuja });
+
 
         // });
     } catch (error) {

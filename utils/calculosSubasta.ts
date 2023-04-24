@@ -19,7 +19,7 @@ interface CalculosSubasta {
     pujaProximaText: string;
 }
 
-export function calcularSubasta(lote: lotes | Lote | null, ultimaPuja: UltimaPuja | null = null): CalculosSubasta {
+export function calcularSubasta(lote: lotes | Lote | undefined, ultimaPuja: UltimaPuja | undefined): CalculosSubasta {
 
     let PujaFinalCal = Number(lote?.puja_final || 0);
 

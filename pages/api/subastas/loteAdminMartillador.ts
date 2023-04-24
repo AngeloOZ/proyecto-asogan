@@ -71,7 +71,7 @@ async function modificarLote(req: NextApiRequest, res: NextApiResponse) {
                 puja_final
             }
         });
-        // socket.emit('activarLote', lote);
+        socket.emit('activarLote', lote);
         return res.status(200).json(lote);
     }
     catch (error) {

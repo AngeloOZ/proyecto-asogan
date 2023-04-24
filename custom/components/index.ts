@@ -7,7 +7,7 @@ export * from './Compradores';
 export * from './Subastas';
 export * from './Monitor';
 export * from './Eventos';
-
+export * from './SecondLoader';
 // Angello
 
 

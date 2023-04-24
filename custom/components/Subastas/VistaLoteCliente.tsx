@@ -20,8 +20,8 @@ import { CardInfo } from '../Monitor';
 import { SliderAds } from '../Monitor/SliderAds';
 
 type Props = {
-    lote: lotes,
-    ultimaPuja: UltimaPuja | null,
+    lote?: lotes,
+    ultimaPuja?: UltimaPuja,
     banners: imagenes[]
     evento: eventos
 }

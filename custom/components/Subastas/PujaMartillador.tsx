@@ -1,6 +1,5 @@
-import { useState } from 'react';
-import { InputBase, IconButton, InputAdornment, Stack, Button, Modal, Typography } from '@mui/material';
-import { useSWRConfig } from 'swr';
+import { useEffect, useRef, useState } from 'react';
+import { InputBase, IconButton, InputAdornment, Button, Modal, Typography } from '@mui/material';
 import { useSnackbar } from 'src/components/snackbar';
 import { IoHandRight } from 'react-icons/io5';
 import { TbEditCircle } from 'react-icons/tb';
@@ -12,25 +11,38 @@ import { UltimaPuja } from '@types';
 
 type Props = {
     lote: lotes;
-    ultimaPuja: UltimaPuja | null;
+    ultimaPuja?: UltimaPuja;
+    setLoader: (state: boolean) => void;
 }
-export function PujaMartillador({ lote, ultimaPuja }: Props) {
+export function PujaMartillador({ lote, ultimaPuja, setLoader }: Props) {
+    const buttonPujar = useRef<HTMLButtonElement>(null)
     const { enqueueSnackbar } = useSnackbar();
-    const { mutate } = useSWRConfig();
     const [paleta, setPaleta] = useState("");
+    const [isOpen, setIsOpen] = useState(false);
 
     let incremento = Number(lote?.puja_final || 0);
-
     if (ultimaPuja) {
         incremento = Number(ultimaPuja?.puja || 0);
     }
     incremento = incremento + Number(lote.incremento);
 
+    useEffect(() => {
+        function handleKeyUp(e: KeyboardEvent) {
+            if (e.key === 'Enter') {
+                buttonPujar.current?.click();
+            }
+        }
+
+        document.addEventListener('keyup', handleKeyUp);
+        return () => {
+            document.removeEventListener('keyup', handleKeyUp);
+        }
+    }, []);
+
     const terminarSubasta = async (accion: string) => {
         try {
             if (accion === 'subastado') {
                 const datos = await subastaAPI.get(`/subastas/ultima-puja?id=${lote.id_lote}`)
-
                 if (datos.data.codigo_paleta === 'P') {
                     setIsOpen(true);
                     return;
@@ -44,11 +56,6 @@ export function PujaMartillador({ lote, ultimaPuja }: Props) {
 
             enqueueSnackbar(`${data.message}`, { variant: 'success' });
 
-            mutate(`/lotes/${lote.id_evento}`)
-            mutate(`/subastas/lotes?id=${lote.id_evento}`)
-            mutate(`/subastas/ultima-puja?id=${lote.id_evento}`)
-            mutate(`/subastas/monitor/id?uuid=${lote.id_evento}`)
-
         } catch (error) {
             enqueueSnackbar(`Oops... ${handleErrorsAxios(error)}`, { variant: 'error' });
         }
@@ -56,21 +63,15 @@ export function PujaMartillador({ lote, ultimaPuja }: Props) {
 
     const registrarPujaMartillador = async (incremento: number) => {
         try {
+            setLoader(true);
             const body = {
                 id_lote: lote.id_lote,
                 puja: incremento,
                 codigo_paleta: 'P',
             }
-
             await subastaAPI.put('subastas/registrar/martillador', body);
-
-            mutate(`/lotes/${lote.id_evento}`)
-            mutate(`/subastas/lotes?id=${lote.id_evento}`)
-            mutate(`/subastas/ultima-puja?id=${lote.id_evento}`)
-            mutate(`/subastas/monitor/id?uuid=${lote.id_evento}`)
-
+            setLoader(false);
             enqueueSnackbar('Oferta registrada', { variant: 'success' });
-
         } catch (error) {
             enqueueSnackbar(`Oops... ${handleErrorsAxios(error)}`, { variant: 'error' });
         } finally {
@@ -78,9 +79,7 @@ export function PujaMartillador({ lote, ultimaPuja }: Props) {
         }
     }
 
-    const [isOpen, setIsOpen] = useState(false);
-
-    const onSubmit = async () => {
+    const onSubmitPresencial = async () => {
         try {
             await subastaAPI.put('subastas/loteAdminMartillador', {
                 id_lote: lote?.id_lote,
@@ -104,6 +103,7 @@ export function PujaMartillador({ lote, ultimaPuja }: Props) {
         <>
             <Box style={{ display: 'flex', justifyContent: 'center', height: "100%" }} p={1}>
                 <Button
+                    ref={buttonPujar}
                     variant='contained'
                     onClick={() => registrarPujaMartillador(incremento)}
                     color='secondary'
@@ -159,14 +159,13 @@ export function PujaMartillador({ lote, ultimaPuja }: Props) {
                                 </IconButton>
                             </InputAdornment>
                         }
-                    //onKeyDown={handleKeyDown}
                     />
                     <Button
                         type="submit"
                         variant="contained"
                         color="success"
                         style={{ flex: 1, marginRight: 8 }}
-                        onClick={onSubmit}
+                        onClick={onSubmitPresencial}
                     >
                         Guardar
                     </Button>
