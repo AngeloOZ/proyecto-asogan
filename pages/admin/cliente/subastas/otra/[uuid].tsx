@@ -14,7 +14,7 @@ import socket from 'utils/sockets'
 import { useEffect, useState } from 'react';
 
 
-PageAdminProveedores.getLayout = (page: React.ReactElement) => <DashboardLayout roles={['comprador']}>{page}</DashboardLayout>
+PageSubastaCliente.getLayout = (page: React.ReactElement) => <DashboardLayout roles={['comprador']}>{page}</DashboardLayout>
 
 type Props = {
     uuid: string;
@@ -22,31 +22,31 @@ type Props = {
     banners: imagenes[];
 }
 
-export default function PageAdminProveedores({ uuid, evento, banners }: Props) {
+export default function PageSubastaCliente({ evento, banners }: Props) {
 
-    // const { loteActual, isLoading } = useLoteMonitor2(evento.id_evento);
-    const [loteActual, setLoteActual] = useState<lotes>()
+    const { loteActual, isLoading } = useLoteMonitor2(evento.id_evento);
+    // const [loteActual, setLoteActual] = useState<lotes>()
     const { ultimaPuja } = useUltimaPuja(loteActual?.id_lote || 0);
 
-    useEffect(() => {
-        socket.on('activarLote', (lote: lotes) => {
-            console.log(lote);
+    // useEffect(() => {
+    //     socket.on('activarLote', (lote: lotes) => {
+    //         console.log(lote);
             
-            setLoteActual(lote)
-        });
+    //         setLoteActual(lote)
+    //     });
 
-        return () => {
-            socket.off('activarLote');
-        };
-    }, [])
+    //     return () => {
+    //         socket.off('activarLote');
+    //     };
+    // }, [])
     
-    useEffect(() => {
-        socket.emit('obtenerLoteActivo', evento.id_evento);
+    // useEffect(() => {
+    //     socket.emit('obtenerLoteActivo', evento.id_evento);
 
-        return () => {
-            socket.off('obtenerLoteActivo');
-        };
-    }, [])
+    //     return () => {
+    //         socket.off('obtenerLoteActivo');
+    //     };
+    // }, [])
 
 
     // if (!loteActual) return <LoadingScreen />
