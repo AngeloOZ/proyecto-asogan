@@ -2,7 +2,7 @@ import { useEffect, useMemo, useReducer } from 'react';
 import Cookies from 'js-cookie';
 
 import { UserLogged } from '@types';
-import { tiendaApi,subastaAPI  } from 'custom/api';
+import { tiendaApi  } from 'custom/api';
 // eslint-disable-next-line
 import { AuthContext, authReducer } from '.';
 
@@ -60,7 +60,7 @@ export const AuthProvider = ({ children }: Props) => {
             const { token, user } = data;
             Cookies.set('token', token);
             dispatch({ type: 'AUTH_LOGIN', payload: user });
-            await subastaAPI.put(`/compradores/conectados?usuarioid=${user?.usuarioid}&conectado=1`);  
+       
             return true;
         } catch (error) {
             return false;

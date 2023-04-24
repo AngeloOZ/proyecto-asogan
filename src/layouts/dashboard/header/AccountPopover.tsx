@@ -18,7 +18,6 @@ import { IconButtonAnimate } from '../../../components/animate';
 
 // ----------------------------------------------------------------------
 import { subastaAPI } from "../../../../custom/api";
-import { CambiarConectados } from '../../../../custom/components/Transmision';
 
 // ----------------------------------------------------------------------
 
@@ -89,7 +88,7 @@ export default function AccountPopover() {
       >
         <CustomAvatar src='https://icons-for-free.com/iconfiles/png/512/avatar+human+people+profile+user+icon-1320168139431219590.png' alt={user?.nombres} name={user?.nombres} />
       </IconButtonAnimate>
-      <CambiarConectados/>
+  
       <MenuPopover open={openPopover} onClose={handleClosePopover} sx={{ width: 200, p: 0 }}>
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle2" noWrap>
