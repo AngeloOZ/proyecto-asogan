@@ -14,6 +14,7 @@ import { styled } from '@mui/material/styles';
 import { eventos, lotes } from '@prisma/client';
 import { UltimaPuja } from '@types';
 import { calcularSubasta } from 'utils';
+import { useObtenerMejoresPujas } from '../../hooks/useObtenerMejoresPujas';
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -26,15 +27,17 @@ const Item = styled(Paper)(({ theme }) => ({
 const fetcher = (url: string) => subastaAPI.get(url).then(r => r.data)
 
 type Props = {
-    lote: lotes,
-    ultimaPuja: UltimaPuja | null,
+    lote?: lotes,
+    ultimaPuja?: UltimaPuja,
     evento: eventos,
 }
 
 export const MainMartillador = ({ lote, ultimaPuja, evento }: Props) => {
+    const { mejoresPujas} = useObtenerMejoresPujas(lote);
+    const newLote = calcularSubasta(lote, ultimaPuja); 
 
-    const { data } = useSWR(`/subastas/pujas?lote=${lote?.id_lote}`, fetcher, { refreshInterval: 1500 }) as { data: PujasRequest };
-    const newLote = calcularSubasta(lote, ultimaPuja);
+    console.log(ultimaPuja);
+    
 
     const proxValorAnimal = newLote.pesoPromedio * newLote.valorFinal2;
     const proxValorTotal = proxValorAnimal * newLote.cantidadAnimales;
@@ -164,6 +167,7 @@ export const MainMartillador = ({ lote, ultimaPuja, evento }: Props) => {
                 bgColorCustom='#fabf25'
                 fontSizeCustom='50px'
             />
+
             <Box component="div" className={css.pujas_realizadas}>
                 <Card sx={{ height: "100%", boxShadow: '0 0 4px rgba(0,0,0,0.3)' }}>
                     <CardContent component='div' style={{ padding: 0, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'stretch' }} >
@@ -178,10 +182,10 @@ export const MainMartillador = ({ lote, ultimaPuja, evento }: Props) => {
                             </Typography>
                         </Box>
                         <Box component='div' width="100%" height="100%" style={{ backgroundColor: '#e7ebf0', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                            {data && data.mejoresPujas && data.mejoresPujas.length > 0 ? (
+                            {mejoresPujas && mejoresPujas.length > 0 ? (
                                 <Stack spacing={0.5}>
-                                    {data.mejoresPujas.map((puja) => (
-                                        <Item key={puja.id_puja} sx={{ fontSize: '11px' }}>
+                                    {mejoresPujas.map((puja) => (
+                                        <Item key={puja.id_puja} sx={{ fontSize: '0.8em' }}>
                                             <strong >PALETA:</strong> {puja.codigo_paleta} <br />
                                             <strong>USUARIO:</strong> {puja?.usuario?.nombres}<br />
                                             <strong>VALOR:</strong> {'$' + parseFloat(puja.puja).toFixed(2)}
@@ -190,7 +194,7 @@ export const MainMartillador = ({ lote, ultimaPuja, evento }: Props) => {
 
                                 </Stack>
                             ) : (
-                                <div>No hay datos de pujas disponibles.</div>
+                                <Typography variant='subtitle1'>No hay datos de pujas disponibles.</Typography>
                             )}
                         </Box>
                     </CardContent>

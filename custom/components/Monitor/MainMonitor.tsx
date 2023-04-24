@@ -7,13 +7,12 @@ import { UltimaPuja } from '@types';
 import { calcularSubasta } from 'utils';
 
 type Props = {
-    lote: lotes,
-    ultimaPuja: UltimaPuja | null,
+    lote?: lotes,
+    ultimaPuja?: UltimaPuja,
     banners: imagenes[]
     evento: eventos
 }
-export const MainMonitor = ({ lote, ultimaPuja, banners, evento }: Props) => {
-
+export const MainMonitor = ({ lote, ultimaPuja, banners }: Props) => {
     const theme = useTheme();
     const newLote = calcularSubasta(lote, ultimaPuja);
 

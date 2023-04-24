@@ -4,3 +4,4 @@ export * from './useExportTable';
 // sockets
 export * from './useObtenerLoteActivo';
 export * from './useObtenerUltimaPuja';
+export * from './useObtenerMejoresPujas';
