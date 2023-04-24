@@ -49,6 +49,12 @@ const navConfig = [
         icon: <FaImages size={20} />,
         roles: ['admin',],
       },
+      {
+        title: 'Transmisión',
+        path: PATH_DASHBOARD.transmision.root,
+        icon: <FaImages size={20} />,
+        roles: ['admin',],
+      },
     ],
   },
   {

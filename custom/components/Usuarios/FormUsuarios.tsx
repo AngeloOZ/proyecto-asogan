@@ -86,6 +86,7 @@ export function FormUsuarios({ esEditar = false, usuariosEditar }: Props) {
             verificacion_clave: '',
             rol: JSON.parse(usuariosEditar?.rol || `[""]`)[0],
             tipo: usuariosEditar?.tipo || 1,
+            conectado: usuariosEditar?.conectado || 0,
             correo: usuariosEditar?.correo || '',
             celular:usuariosEditar?.celular || ''
         };
