@@ -11,8 +11,10 @@ import moment from 'moment-timezone'
 
 import LoadingScreen from 'src/components/loading-screen/LoadingScreen'
 import socket from 'utils/sockets'
-import { useEffect, useState } from 'react';
-
+import { useEffect, useState, useContext } from 'react';
+import { subastaAPI } from 'custom/api';
+import { AuthContext } from "src/auth";
+import { CambiarConectados } from 'custom/components/Transmision'
 
 PageSubastaCliente.getLayout = (page: React.ReactElement) => <DashboardLayout roles={['comprador']}>{page}</DashboardLayout>
 
@@ -27,11 +29,27 @@ export default function PageSubastaCliente({ evento, banners }: Props) {
     const { loteActual, isLoading } = useLoteMonitor2(evento.id_evento);
     // const [loteActual, setLoteActual] = useState<lotes>()
     const { ultimaPuja } = useUltimaPuja(loteActual?.id_lote || 0);
+    const { user } = useContext(AuthContext);
+
+    useEffect(() => {
+
+        try {
+            const validarConectado = async () => {
+                await subastaAPI.put(`/compradores/conectados?usuarioid=${user?.usuarioid}&conectado=1`);
+            }
+            validarConectado()
+        } catch (error) {
+            console.log(error)
+        }
+
+
+    })
+
 
     // useEffect(() => {
     //     socket.on('activarLote', (lote: lotes) => {
     //         console.log(lote);
-            
+
     //         setLoteActual(lote)
     //     });
 
@@ -39,7 +57,7 @@ export default function PageSubastaCliente({ evento, banners }: Props) {
     //         socket.off('activarLote');
     //     };
     // }, [])
-    
+
     // useEffect(() => {
     //     socket.emit('obtenerLoteActivo', evento.id_evento);
 
@@ -57,6 +75,7 @@ export default function PageSubastaCliente({ evento, banners }: Props) {
                 <title>Subasta Lote #{loteActual?.codigo_lote || 'SN'}</title>
             </Head>
             <VistaLoteCliente lote={loteActual} ultimaPuja={ultimaPuja} banners={banners} evento={evento} />
+            <CambiarConectados />
         </>
     )
 }
@@ -68,6 +87,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
         const evento = await prisma.eventos.findUnique({ where: { uuid } });
 
         const banners = await prisma.imagenes.findMany();
+
 
         await prisma.$disconnect();
 

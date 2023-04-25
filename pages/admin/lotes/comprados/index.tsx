@@ -9,9 +9,9 @@ import { PATH_DASHBOARD } from 'src/routes/paths'
 import { TableCustom, useObtenerLotesComprados } from 'custom/components'
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs/CustomBreadcrumbs'
 import { lotes as ILote } from '@prisma/client'
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import { AuthContext } from 'src/auth'
-
+import { subastaAPI } from 'custom/api';
 
 PageAdminProveedores.getLayout = (page: React.ReactElement) => <DashboardLayout>{page}</DashboardLayout>
 
@@ -20,6 +20,19 @@ export default function PageAdminProveedores() {
     const { user } = useContext(AuthContext)
     const { lotes, isLoading } = useObtenerLotesComprados(user?.comprador?.id_comprador!);
 
+
+    useEffect(() => {
+
+        try {
+            const validarConectado = async () => {
+                await subastaAPI.put(`/compradores/conectados?usuarioid=${user?.usuarioid}&conectado=0`);
+            }
+            validarConectado()
+        } catch (error) {
+            console.log(error)
+        }
+
+    })
     const handleClickShow = (item: ILote) => {
         router.push(`${PATH_DASHBOARD.lotes.ver}/${item.id_lote}`);
     }

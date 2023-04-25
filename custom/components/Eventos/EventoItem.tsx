@@ -99,7 +99,7 @@ export const EventoItem = ({ eventos }: Props) => {
 					{
 						eventos.abierto === 2 && (rolLogged === 'comprador') && (
 							<Link href={`${PATH_DASHBOARD_CLEINTE.subastas}/otra/${eventos.uuid}`} passHref legacyBehavior>
-								<a target='_blank' style={{ textDecoration: 'none' }}>
+								<a style={{ textDecoration: 'none' }}>
 									<Button
 										fullWidth
 										color="primary"
