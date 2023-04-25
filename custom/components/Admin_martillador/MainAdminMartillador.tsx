@@ -192,7 +192,7 @@ export const MainAdminMartillador = ({ evento, lote, ultimaPuja }: Props) => {
       />
 
       <Box component="div" className={css.video} sx={{ position: "relative" }}>
-        <Timer lote={lote?.id_lote} evento={evento.abierto}/>
+        
         <VideoPlayer
           playerProps={{
             url: evento.url_video || "",

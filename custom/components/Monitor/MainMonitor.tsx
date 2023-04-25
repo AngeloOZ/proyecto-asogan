@@ -5,6 +5,8 @@ import { SliderAds } from './SliderAds';
 import { imagenes, lotes, eventos } from '@prisma/client';
 import { UltimaPuja } from '@types';
 import { calcularSubasta } from 'utils';
+import { Timer } from '../Transmision';
+
 
 type Props = {
     lote: lotes,
@@ -20,6 +22,7 @@ export const MainMonitor = ({ lote, ultimaPuja, banners, evento }: Props) => {
     return (
         <Grid container height="100%" width="100%">
             <Grid item xs={4} height="100%" bgcolor='rosybrown'>
+            <Timer lote={lote?.id_lote} evento = {evento.abierto} />
                 <SliderAds banners={banners} />
             </Grid>
             <Grid item xs={8} height="100%" className={css.container}>
