@@ -90,6 +90,10 @@ export const PATH_DASHBOARD = {
   transmision: {
     root: path(PATH_ADMIN, "/transmision"),
   },
+  notificaciones: {
+    root: path(PATH_ADMIN, "/notificaciones"),
+    agregar: path(PATH_ADMIN, '/notificaciones/agregar'),
+  },
 };
 
 export const PATH_TIENDA = '/tienda';

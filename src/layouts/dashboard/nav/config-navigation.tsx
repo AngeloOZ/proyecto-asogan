@@ -1,6 +1,6 @@
 import { MdSell } from 'react-icons/md';
 
-import { FaCalendarAlt, FaCubes, FaHandHoldingUsd, FaImages, FaTruckLoading, FaUsers } from 'react-icons/fa';
+import { FaBell, FaCalendarAlt, FaCubes, FaHandHoldingUsd, FaImages, FaTruckLoading, FaUsers } from 'react-icons/fa';
 // routes
 import { PATH_DASHBOARD, PATH_DASHBOARD_CLEINTE } from '../../../routes/paths';
 
@@ -55,6 +55,12 @@ const navConfig = [
         icon: <FaImages size={20} />,
         roles: ['admin',],
       },
+      {
+        title: 'Notificaciones',
+        path: PATH_DASHBOARD.notificaciones.root,
+        icon: <FaBell size={20} />,
+        roles: ['admin',],
+      },
     ],
   },
   {
@@ -73,7 +79,7 @@ const navConfig = [
           {
             title: 'Agregar',
             path: PATH_DASHBOARD.digitador.root,
-            roles: ['admin','digitador'],
+            roles: ['admin', 'digitador'],
           },
         ]
       },

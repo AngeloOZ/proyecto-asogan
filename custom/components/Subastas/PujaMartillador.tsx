@@ -28,6 +28,7 @@ export function PujaMartillador({ lote, ultimaPuja }: Props) {
 
     const terminarSubasta = async (accion: string) => {
         try {
+
             if (accion === 'subastado') {
                 const datos = await subastaAPI.get(`/subastas/ultima-puja?id=${lote.id_lote}`)
 
