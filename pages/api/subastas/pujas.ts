@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 import prisma from 'database/prismaClient';
 import { handleErrorsPrisma } from 'utils';
+import socket from 'utils/sockets';
 
 // eslint-disable-next-line
 export default async function (req: NextApiRequest, res: NextApiResponse) {
@@ -63,7 +64,7 @@ async function eliminarPuja(req: NextApiRequest, res: NextApiResponse) {
     if (!id_lote || Number.isNaN(Number(id_lote))) {
         return res.status(405).json({ message: 'id no valido' });
     }
-    
+
     // obtener la ultima puja
     const ultimaPuja = await prisma.pujas.findMany({
         where: {
@@ -96,6 +97,9 @@ async function eliminarPuja(req: NextApiRequest, res: NextApiResponse) {
             where: { id_lote: ultima.id_lote },
             data: { puja_final: nuevaPujaFinal },
         });
+
+        socket.emit('ultimaPuja', { lote, ultimaPuja });
+        socket.emit('mejoresPujas', lote!.id_lote);
     }
 
     return res.status(200).json({ message: 'ok' });
