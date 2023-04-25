@@ -19,7 +19,6 @@ import { CambiarConectados } from 'custom/components/Transmision'
 PageSubastaCliente.getLayout = (page: React.ReactElement) => <DashboardLayout roles={['comprador']}>{page}</DashboardLayout>
 
 type Props = {
-    uuid: string;
     evento: eventos;
     banners: imagenes[];
 }
@@ -67,7 +66,7 @@ export default function PageSubastaCliente({ evento, banners }: Props) {
     // }, [])
 
 
-    // if (!loteActual) return <LoadingScreen />
+    if (!isLoading) return <LoadingScreen />
 
     return (
         <>

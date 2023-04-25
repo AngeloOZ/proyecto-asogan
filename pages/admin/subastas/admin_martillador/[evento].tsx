@@ -8,7 +8,6 @@ import { eventos } from '@prisma/client';
 import AuthGuard from 'src/auth/AuthGuard';
 
 type Props = {
-    uuid: string;
     evento: eventos;
 }
 
