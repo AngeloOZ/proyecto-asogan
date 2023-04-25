@@ -8,6 +8,7 @@ import { useObtenerEventosHoy } from 'custom/components/Eventos/Hooks';
 import { useEffect, useContext } from 'react'
 import { subastaAPI } from 'custom/api';
 import { AuthContext } from 'src/auth'
+
 PageAdminEventos.getLayout = (page: React.ReactElement) => <DashboardLayout roles={['comprador']}>{page}</DashboardLayout>
 
 
