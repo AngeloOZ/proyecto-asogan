@@ -45,3 +45,6 @@ _static
 # prisma
 /prisma/migrations
 prisma/migrations
+
+# sockets
+/server-sockets
