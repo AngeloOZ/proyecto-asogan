@@ -14,7 +14,7 @@ type Props = {
     banners: imagenes[]
     evento: eventos
 }
-export const MainMonitor = ({ lote, ultimaPuja, banners }: Props) => {
+export const MainMonitor = ({ lote, ultimaPuja, banners, evento }: Props) => {
     const theme = useTheme();
     const newLote = calcularSubasta(lote, ultimaPuja);
 
