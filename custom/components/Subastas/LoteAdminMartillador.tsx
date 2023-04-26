@@ -215,7 +215,7 @@ export const LoteAdminMartillador = ({ listadoLotes = [], loteEnSubasta }: LoteM
                     <Button type="button" variant="contained" fullWidth color="secondary" disabled={values.incremento <= 0} onClick={partirPuja}>Partir incremento</Button>
                 </Stack>
 
-                <Button type="button" variant="contained" fullWidth color="error" onClick={eliminarUltimaPuja}>Eliminar ultima puja</Button>
+                <Button type="button" variant="contained" fullWidth color="error" onClick={eliminarUltimaPuja}>Cancelar puja</Button>
             </Box>
 
         </FormProvider>

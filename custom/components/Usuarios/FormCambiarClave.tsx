@@ -51,7 +51,6 @@ export function FormCambiarClave({ usuariosEditar }: Props) {
 
     // Se carga los valores en caso de que sea editar
     const defaultValues = useMemo<IUsuario>(() => ({
-
         conectado: usuariosEditar?.conectado || 0,
         usuarioid: usuariosEditar?.usuarioid || 0,
         nombres: usuariosEditar?.nombres || '',

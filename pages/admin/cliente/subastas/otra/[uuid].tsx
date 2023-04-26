@@ -1,16 +1,16 @@
+import { useEffect, useState, useContext } from 'react';
+import { GetServerSideProps } from 'next'
 import Head from 'next/head'
 
-import DashboardLayout from 'src/layouts/dashboard/DashboardLayout'
-
-import { VistaLoteCliente } from 'custom/components'
 import { eventos, imagenes } from '@prisma/client'
-
-import { GetServerSideProps } from 'next'
 import prisma from 'database/prismaClient'
 import moment from 'moment-timezone'
 
-import { useObtenerLoteActivo, useObtenerUltimaPuja } from 'custom/hooks'
+import DashboardLayout from 'src/layouts/dashboard/DashboardLayout'
 
+import { useObtenerLoteActivo, useObtenerUltimaPuja } from 'custom/hooks'
+import { VistaLoteCliente } from 'custom/components'
+import { CambiarConectados } from 'custom/components/Transmision'
 
 PageSubastaCliente.getLayout = (page: React.ReactElement) => <DashboardLayout roles={['comprador']}>{page}</DashboardLayout>
 
@@ -30,6 +30,7 @@ export default function PageSubastaCliente({ evento, banners }: Props) {
                 <title>Subasta Lote #{loteActual?.codigo_lote || 'SN'}</title>
             </Head>
             <VistaLoteCliente lote={loteActual} ultimaPuja={ultimaPuja} banners={banners} evento={evento} />
+            <CambiarConectados />
         </>
     )
 }
@@ -41,6 +42,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
         const evento = await prisma.eventos.findUnique({ where: { uuid } });
 
         const banners = await prisma.imagenes.findMany();
+
 
         await prisma.$disconnect();
 

@@ -4,7 +4,7 @@ import DashboardLayout from 'src/layouts/dashboard/DashboardLayout'
 import { Container } from '@mui/material'
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs/CustomBreadcrumbs'
 import { PATH_DASHBOARD } from 'src/routes/paths'
-import { FormImagenes } from 'custom/components'
+import { FormNotificaciones } from 'custom/components'
 
 
 
@@ -16,18 +16,17 @@ export default function PageAdminProveedores() {
     return (
         <>
             <Head>
-                <title>Agregar Imagen</title>
+                <title>Notificacion</title>
             </Head>
             <Container maxWidth={false}>
                 <CustomBreadcrumbs
-                    heading="Imagenes"
+                    heading="Enviar Notificacion"
                     links={[
-                        { name: 'Lista de Imagenes', href: PATH_DASHBOARD.banner.root },
-                        { name: 'Agregar Imagen' },
+                        { name: 'Notificacion' },
                     ]}
                 />
 
-                <FormImagenes />
+                <FormNotificaciones />
 
             </Container>
         </>
