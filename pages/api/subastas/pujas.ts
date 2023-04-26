@@ -93,14 +93,14 @@ async function eliminarPuja(req: NextApiRequest, res: NextApiResponse) {
         const nuevaPujaFinal = penultima ? penultima.puja : lote!.puja_inicial;
 
         // Actualizar el lote con la nueva puja final
-        await prisma.lotes.update({
+        const loteActualizado = await prisma.lotes.update({
             where: { id_lote: ultima.id_lote },
             data: { puja_final: nuevaPujaFinal },
         });
 
+        socket.emit('activarLote', loteActualizado);
+        socket.emit('obtenerUltimaPuja', Number(id_lote));
     }
-    // TODO: revisar
-    socket.emit('obtenerUltimaPuja', Number(id_lote));
     socket.emit('mejoresPujas', Number(id_lote));
 
     return res.status(200).json({ message: 'ok' });

@@ -41,8 +41,12 @@ export function PujaMartillador({ lote, ultimaPuja, setLoader }: Props) {
 
     const terminarSubasta = async (accion: string) => {
         try {
-
             if (accion === 'subastado') {
+                if (!ultimaPuja) {
+                    enqueueSnackbar(`No se puede finalizar la subasta, no hay pujas registradas`, { variant: 'error' });
+                    return;
+                }
+
                 const datos = await subastaAPI.get(`/subastas/ultima-puja?id=${lote.id_lote}`)
                 if (datos.data.codigo_paleta === 'P') {
                     setIsOpen(true);
@@ -64,6 +68,7 @@ export function PujaMartillador({ lote, ultimaPuja, setLoader }: Props) {
 
     const registrarPujaMartillador = async (incremento: number) => {
         try {
+            if (isOpen) return;
             setLoader(true);
             const body = {
                 id_lote: lote.id_lote,

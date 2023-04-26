@@ -4,7 +4,6 @@ import * as Yup from 'yup';
 import { Box, Button, InputAdornment, MenuItem, Stack } from "@mui/material"
 import { useForm } from "react-hook-form";
 import { useSnackbar } from "notistack";
-import { useSWRConfig } from "swr";
 
 import { lotes } from "@prisma/client";
 import { subastaAPI } from 'custom/api'
@@ -32,7 +31,6 @@ interface LoteMartillador {
 type FormProps = Lote;
 
 export const LoteAdminMartillador = ({ listadoLotes = [], loteEnSubasta }: LoteMartillador) => {
-    const { mutate } = useSWRConfig();
     const { enqueueSnackbar } = useSnackbar();
     const [loteActual, setLoteActual] = useState<lotes>()
 
@@ -111,13 +109,6 @@ export const LoteAdminMartillador = ({ listadoLotes = [], loteEnSubasta }: LoteM
             }
 
             await subastaAPI.post(`/subastas/loteAdminMartillador`, loteModificado);
-            
-            mutate(`/lotes/${loteActual?.id_lote}`)
-            mutate(`/subastas/lotes?id=${loteActual?.id_evento}`)
-            mutate(`/subastas/ultima-puja?id=${loteActual?.id_evento}`)
-            mutate(`/subastas/monitor/id?uuid=${loteActual?.id_evento}`)
-            
-
             enqueueSnackbar("Lote modificado correctamente", { variant: 'success' });
         } catch (error) {
             console.error(error);
@@ -131,17 +122,11 @@ export const LoteAdminMartillador = ({ listadoLotes = [], loteEnSubasta }: LoteM
     }
 
     const eliminarUltimaPuja = async () => {
-        try{
+        try {
             await subastaAPI.delete(`/subastas/pujas?id_lote=${values.id_lote}`);
-
-            mutate(`/lotes/${loteActual?.id_lote}`)
-            mutate(`/subastas/lotes?id=${loteActual?.id_evento}`)
-            mutate(`/subastas/monitor/id?uuid=${loteActual?.id_evento}`)
-            mutate(`/subastas/ultima-puja?id=${loteActual?.id_evento}`)
-
             enqueueSnackbar("Última puja eliminada", { variant: 'success' });
         }
-        catch(error){
+        catch (error) {
             console.error(error);
             enqueueSnackbar(handleErrorsAxios(error), { variant: 'error' });
         }
@@ -152,7 +137,6 @@ export const LoteAdminMartillador = ({ listadoLotes = [], loteEnSubasta }: LoteM
             <Box
                 gap={1.8}
                 display="grid"
-            // gridTemplateColumns="repeat(2, 1fr)"
             >
                 <RHFSelect
                     name='id_lote'
@@ -190,8 +174,6 @@ export const LoteAdminMartillador = ({ listadoLotes = [], loteEnSubasta }: LoteM
                     InputProps={{
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
                         style: { fontSize: 15 },
-                        // TODO: habilitar si se aprueba la funcionalidad
-                        // readOnly: idLoteActual === values.id_lote ? true : false,
                     }}
                     InputLabelProps={{ style: { fontSize: 18, color: 'black', fontWeight: "500" }, shrink: true }}
                 />

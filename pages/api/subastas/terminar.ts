@@ -20,7 +20,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
         }
 
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: `Hubo un error: ${error.message}` });     
     }
     finally {
         prisma.$disconnect();
@@ -40,7 +40,6 @@ async function terminarSubasta(req: NextApiRequest, res: NextApiResponse) {
             }
         });
         socket.emit('activarLote', lote);
-
         return 'rechazado';
     }
 
