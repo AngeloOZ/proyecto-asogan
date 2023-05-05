@@ -55,7 +55,7 @@ export const MainAdminMartillador = ({ evento, lote, ultimaPuja }: Props) => {
                 justifyContent: "center",
               }}
             >
-              <LoteAdminMartillador listadoLotes={lotes} loteEnSubasta={lote} />
+              <LoteAdminMartillador evento={evento} loteActivo={lote} ultimaPuja={ultimaPuja} />
             </Box>
           </Card>
         </Box>

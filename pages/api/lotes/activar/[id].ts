@@ -1,51 +1,61 @@
 import prisma from 'database/prismaClient'
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { handleErrorsPrisma } from 'utils';
+import socket from 'utils/sockets';
 
 // eslint-disable-next-line
 export default async function (req: NextApiRequest, res: NextApiResponse) {
 
     if (req.method !== 'PUT') return res.status(405).json({ error: 'Method not allowed' });
-    
+
     try {
         const { id } = req.query;
 
-        if (id) {
-            const lotes = await prisma.lotes.updateMany({
-                where: {
-                    id_evento: Number(id),
-                    subastado: {
-                        lt: 2
-                    }
-                },
-                data: {
-                    subastado: 1
-                }
-            });
-
-            return res.json(lotes)
+        if (Number.isNaN(Number(id))) {
+            throw new Error('El id del lote no es un número');
         }
-        return res.status(404).json({ error: 'Not found' })
-    }
-    catch (error) {
 
-    }
+        const loteActivo = await prisma.lotes.findFirst({
+            where: { subastado: 1 }
+        });
 
-    const { id } = req.query
+        if (loteActivo) {      
+            if (loteActivo.paleta_comprador || loteActivo.id_comprador) {
+                await prisma.lotes.update({
+                    where: { id_lote: loteActivo.id_lote },
+                    data: {
+                        subastado: 3
+                    }
+                });
+            } else {
+                // await prisma.lotes.update({
+                //     where: { id_lote: loteActivo.id_lote },
+                //     data: {
+                //         subastado: 0
+                //     }
+                // });
+                throw new Error('Hay un lote activo que no ha sido vendido');
+            }
+        }
 
-    if (id) {
-        const lotes = await prisma.lotes.findMany({
+        const lote = await prisma.lotes.update({
             where: {
-                id_evento: Number(id),
-                subastado: {
-                    lt: 2
-                }
+                id_lote: Number(id),
             },
-            include: {
-                proveedores: true
+            data: {
+                subastado: 1
             }
         });
 
-        return res.json(lotes)
+        res.status(200).json(lote);
+        socket.emit('activarLote', lote);
+        socket.emit('mejoresPujas', lote.id_lote);
+        socket.emit('listadoPujas', lote.id_lote);
     }
-    return res.status(404).json({ error: 'Not found' })
+    catch (error) {
+        res.status(500).json({ message: handleErrorsPrisma(error) });
+    }
+    finally {
+        await prisma.$disconnect();
+    }
 }

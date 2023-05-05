@@ -1,7 +1,7 @@
 import Head from 'next/head'
 
 import { GetServerSideProps } from 'next';
-import { AdminMartillador, MainAdminMartillador } from 'custom/components'
+import { AdminMartillador } from 'custom/components'
 import prisma from 'database/prismaClient';
 import moment from 'moment-timezone';
 import { eventos } from '@prisma/client';

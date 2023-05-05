@@ -10,11 +10,14 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
             where: {
                 id_evento: Number(id),
                 subastado: {
-                    lt: 2
+                    lte: 4
                 }
             },
             include: {
                 proveedores: true
+            },
+            orderBy: {
+                subastado: 'asc',
             }
         });
 

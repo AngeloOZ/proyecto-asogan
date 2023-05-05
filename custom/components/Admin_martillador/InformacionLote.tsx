@@ -32,7 +32,7 @@ export const LabelInformation = ({ text, bgcolor = 'primary.main' }: { text: str
                 borderRadius: '5px',
                 p: 1,
                 textAlign: 'center',
-                width: '100%'
+                width: '100%',
             }}
         >
             <Typography
@@ -103,7 +103,7 @@ export const InformacionLote = ({ lote }: Props) => {
                 <Grid container spacing={1}>
                     <Fila
                         title={'Valor Base'}
-                        value={lote?.puja_inicial || '0'}
+                        value={loteAux.valorBase || '0'}
                     />
                     <Fila
                         title={'Puja Actual'}
@@ -122,7 +122,7 @@ export const InformacionLote = ({ lote }: Props) => {
                     />
                 </Grid>
 
-                <Stack direction="row" spacing={1}>
+                <Stack direction="row" spacing={1.5} flexWrap={{ xs: 'wrap', sm: 'nowrap' }}>
                     <LabelInformation
                         bgcolor='warning.main'
                         text={`Valor promedio <strong>${(loteAux.pesoPromedio * loteAux.valorFinal2).toFixed(2)}</strong>`} 
@@ -131,7 +131,6 @@ export const InformacionLote = ({ lote }: Props) => {
                         text={`Valor total ${(loteAux.pesoTotal * loteAux.valorFinal2).toFixed(2)}`}
                     />
                 </Stack>
-
             </CardContent>
         </Card>
     )

@@ -20,6 +20,7 @@ import { ModalLotes } from '../';
 interface Lote {
     id_lote: string;
     id_evento: number;
+    codigo_lote: string;
     puja_inicial: string;
     incremento: number;
     subastado: string;
@@ -34,17 +35,14 @@ interface LoteMartillador {
 type FormProps = Lote;
 
 export const LoteAdminMartillador = ({ loteActivo, ultimaPuja, evento }: LoteMartillador) => {
-
+    const { enqueueSnackbar } = useSnackbar();
     const [openModal, setOpenModal] = useState(false);
-
     const handleCloseModal = () => setOpenModal(false);
     const handleOpenModal = () => setOpenModal(true);
 
-    const { enqueueSnackbar } = useSnackbar();
-
-    const deleteLastPuja = useMemo(() => {
-        return (ultimaPuja != null || ultimaPuja != undefined) ? false : true;
-    }, [ultimaPuja]);
+    useEffect(() => {
+        reset(defaultValues);
+    }, [loteActivo]);
 
     const SubastaSchema = Yup.object().shape({
         puja_inicial: Yup
@@ -61,6 +59,7 @@ export const LoteAdminMartillador = ({ loteActivo, ultimaPuja, evento }: LoteMar
 
     const defaultValues = useMemo<FormProps>(() => ({
         id_lote: loteActivo?.id_lote.toString() || "",
+        codigo_lote: loteActivo?.codigo_lote || "",
         id_evento: loteActivo?.id_evento || 0,
         puja_inicial: Number(loteActivo?.puja_inicial || 0).toFixed(2),
         incremento: Number(loteActivo?.incremento || 0),
@@ -69,10 +68,10 @@ export const LoteAdminMartillador = ({ loteActivo, ultimaPuja, evento }: LoteMar
 
     const methods = useForm<FormProps>({
         resolver: yupResolver(SubastaSchema),
-        defaultValues
+        defaultValues,
     });
-
     const {
+        reset,
         handleSubmit,
         setValue,
         watch,
@@ -83,7 +82,6 @@ export const LoteAdminMartillador = ({ loteActivo, ultimaPuja, evento }: LoteMar
 
     const guardarLote = async (data: FormProps) => {
         try {
-
             const loteModificado = {
                 id_lote: Number(data.id_lote),
                 id_evento: Number(data.id_evento),
@@ -91,7 +89,9 @@ export const LoteAdminMartillador = ({ loteActivo, ultimaPuja, evento }: LoteMar
                 incremento: data.incremento,
                 subastado: data.subastado,
             }
+            console.log(loteModificado);
 
+            return;
             await subastaAPI.post(`/subastas/loteAdminMartillador`, loteModificado);
             enqueueSnackbar("Lote modificado correctamente", { variant: 'success' });
         } catch (error) {
@@ -118,7 +118,12 @@ export const LoteAdminMartillador = ({ loteActivo, ultimaPuja, evento }: LoteMar
 
     return (
         <>
-            {openModal && <ModalLotes open={openModal} handleClose={handleCloseModal} evento={evento} />}
+            {openModal && <ModalLotes
+                open={openModal}
+                handleClose={handleCloseModal}
+                evento={evento}
+            />}
+
             <FormProvider methods={methods} onSubmit={handleSubmit(guardarLote)}>
                 <Box
                     gap={2}
@@ -133,11 +138,10 @@ export const LoteAdminMartillador = ({ loteActivo, ultimaPuja, evento }: LoteMar
                     </Button>
 
                     <RHFTextField
-                        name="id_lote"
+                        name="codigo_lote"
                         label="Numero de lote"
                         size='small'
                         fullWidth
-                        defaultValue={values.id_lote}
                         InputProps={{
                             readOnly: true,
                         }}
@@ -156,7 +160,6 @@ export const LoteAdminMartillador = ({ loteActivo, ultimaPuja, evento }: LoteMar
                         label="Valor base"
                         size='small'
                         fullWidth
-                        defaultValue={values.puja_inicial}
                         InputProps={{
                             startAdornment: <InputAdornment position="start">$</InputAdornment>,
                             style: { fontSize: 15 },
@@ -173,7 +176,6 @@ export const LoteAdminMartillador = ({ loteActivo, ultimaPuja, evento }: LoteMar
                             startAdornment: <InputAdornment position="start">$</InputAdornment>,
                             style: { fontSize: 15 }
                         }}
-
                         InputLabelProps={{ style: { fontSize: 18, color: 'black', fontWeight: "500" }, shrink: true }}
                     />
 
@@ -205,7 +207,7 @@ export const LoteAdminMartillador = ({ loteActivo, ultimaPuja, evento }: LoteMar
                         fullWidth
                         color="error"
                         onClick={eliminarUltimaPuja}
-                        disabled={deleteLastPuja}
+                        disabled={ultimaPuja ? false : true}
                     >
                         Cancelar puja
                     </Button>

@@ -1,10 +1,15 @@
 
-import { Backdrop, Box, Modal, Fade, Card, CardContent, Grid, Stack, Button, TextField, CircularProgress } from '@mui/material';
+import { Backdrop, Box, Modal, Fade, Card, CardContent, Grid, Stack, Button, TextField, CircularProgress, Typography, FormGroup, FormControlLabel, Switch } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { lotes, eventos } from '@prisma/client';
 import { tiendaApi } from 'custom/api';
 import { calcularSubasta } from 'utils';
 import { Fila } from './InformacionLote';
+
+import { useSnackbar } from 'src/components/snackbar';
+import { handleErrorsAxios } from '../../../utils/handleErrorAxios';
+import { EstadoLote } from '../Eventos/EstadoLote';
+
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -86,7 +91,13 @@ export function ModalLotes({ open, handleClose, evento }: Props) {
                                     value={numeroLote}
                                     onChange={handleBuscarLote}
                                 />
-                                {lotes.map((lote) => <InformacionLoteModal lote={lote} key={lote.id_lote} />)}
+                                {lotes.map((lote) => (
+                                    <InformacionLoteModal
+                                        lote={lote}
+                                        key={lote.id_lote}
+                                        handleClose={handleClose}
+                                    />
+                                ))}
                             </Stack>
                     }
                 </Box>
@@ -95,8 +106,22 @@ export function ModalLotes({ open, handleClose, evento }: Props) {
     );
 }
 
-const InformacionLoteModal = ({ lote }: { lote: lotes }) => {
+const InformacionLoteModal = ({ lote, handleClose }: { lote: lotes, handleClose: () => void }) => {
+    const { enqueueSnackbar } = useSnackbar();
     const loteAux = calcularSubasta(lote, undefined);
+    const [stateButton, setStateButton] = useState(lote.subastado === 3 ? true : false)
+
+
+
+    const handleActivarLote = async () => {
+        try {
+            await tiendaApi.put(`/lotes/activar/${lote.id_lote}`);
+            enqueueSnackbar("Lote modificado correctamente", { variant: 'success', autoHideDuration: 3000 });
+            handleClose();
+        } catch (error) {
+            enqueueSnackbar(handleErrorsAxios(error), { variant: 'error' });
+        }
+    }
 
     return (
         <Card style={{ height: '100%' }} sx={{ boxShadow: '0 0 8px rgba(0,0,0,0.4)' }}>
@@ -171,8 +196,36 @@ const InformacionLoteModal = ({ lote }: { lote: lotes }) => {
                     />
                 </Grid>
 
+                <Grid container spacing={1}>
+                    <Grid item xs={12} md={6}>
+                        <Stack direction='row' spacing={1} mb={2}>
+                            <Typography component='p' variant='h5'>Estado</Typography>
+                            <EstadoLote estado={lote.subastado!} />
+                        </Stack>
+                    </Grid>
+                </Grid>
+
+                {
+                    lote.subastado === 3 && (
+                        <FormGroup>
+                            <FormControlLabel
+                                label={<Typography variant='subtitle1'>Habilitar botón</Typography>}
+                                control={<Switch />}
+                                onChange={() => setStateButton(!stateButton)}
+                            />
+                        </FormGroup>
+                    )
+                }
+
                 <Box component='div' display='flex' justifyContent='center' mt={2}>
-                    <Button variant='contained' size='large'>Activar lote</Button>
+                    <Button 
+                        variant='contained' 
+                        disabled={stateButton} 
+                        size='large' 
+                        onClick={handleActivarLote}
+                    >
+                        Activar lote
+                    </Button>
                 </Box>
             </CardContent>
         </Card>

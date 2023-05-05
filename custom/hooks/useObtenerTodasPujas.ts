@@ -14,7 +14,7 @@ export const useObtenerTodasPujas = (lote: lotes) => {
     // Efecto para obtener ultima puja
     useEffect(() => {
         socket.on('listadoPujas', (pujas: pujas[]) => {
-            console.log('listadoPujas', pujas.length);
+            // console.log('listadoPujas', pujas.length);
             setListadoPujas(pujas);
         });
 
