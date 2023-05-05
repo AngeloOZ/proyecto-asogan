@@ -15,6 +15,7 @@ type Props = {
     setLoader: (state: boolean) => void;
 }
 export function PujaMartillador({ lote, ultimaPuja, setLoader }: Props) {
+    
     const buttonPujar = useRef<HTMLButtonElement>(null)
     const { enqueueSnackbar } = useSnackbar();
     const [paleta, setPaleta] = useState("");
@@ -109,6 +110,13 @@ export function PujaMartillador({ lote, ultimaPuja, setLoader }: Props) {
         <>
             <Box style={{ display: 'flex', justifyContent: 'center', height: "100%" }} p={1}>
                 <Button
+                    onClick={() => terminarSubasta('rechazado')}
+                    variant="contained"
+                    color="error"
+                    style={{ flex: 1, marginRight: 8, width: '100%', height: '100%', fontSize: "20px" }}>
+                    Pendiente
+                </Button>
+                <Button
                     ref={buttonPujar}
                     variant='contained'
                     onClick={() => registrarPujaMartillador(incremento)}
@@ -125,13 +133,7 @@ export function PujaMartillador({ lote, ultimaPuja, setLoader }: Props) {
                     style={{ flex: 1, marginRight: 8, width: '100%', height: '100%', fontSize: "20px" }}>
                     Vendido
                 </Button>
-                <Button
-                    onClick={() => terminarSubasta('rechazado')}
-                    variant="contained"
-                    color="error"
-                    style={{ flex: 1, marginRight: 8, width: '100%', height: '100%', fontSize: "20px" }}>
-                    Pendiente
-                </Button>
+
             </Box>
 
             <Modal open={isOpen} onClose={() => setIsOpen(false)}>

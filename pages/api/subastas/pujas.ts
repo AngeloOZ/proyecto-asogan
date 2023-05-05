@@ -102,6 +102,8 @@ async function eliminarPuja(req: NextApiRequest, res: NextApiResponse) {
         socket.emit('obtenerUltimaPuja', Number(id_lote));
     }
     socket.emit('mejoresPujas', Number(id_lote));
+    socket.emit('listadoPujas', Number(id_lote));
+
 
     return res.status(200).json({ message: 'ok' });
 }   

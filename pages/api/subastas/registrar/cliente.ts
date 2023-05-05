@@ -52,6 +52,7 @@ async function registrarPuja(req: NextApiRequest, res: NextApiResponse) {
 
         socket.emit('ultimaPuja', { lote, ultimaPuja });
         socket.emit('mejoresPujas', lote.id_lote);
+        socket.emit('listadoPujas', lote.id_lote);
 
         // });
     } catch (error) {

@@ -1,7 +1,7 @@
 import Head from 'next/head'
 
 import { GetServerSideProps } from 'next';
-import { MainAdminMartillador } from 'custom/components'
+import { AdminMartillador, MainAdminMartillador } from 'custom/components'
 import prisma from 'database/prismaClient';
 import moment from 'moment-timezone';
 import { eventos } from '@prisma/client';
@@ -23,7 +23,7 @@ const PageMonitor = ({ evento }: Props) => {
                 <title>Subasta Lote</title>
             </Head>
 
-            <MainAdminMartillador evento={evento} lote={loteActual} ultimaPuja={ultimaPuja} />
+            <AdminMartillador evento={evento} lote={loteActual} ultimaPuja={ultimaPuja} />
         </AuthGuard>
     )
 }

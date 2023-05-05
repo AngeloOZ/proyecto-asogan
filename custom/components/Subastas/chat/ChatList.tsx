@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import Scrollbar from 'src/components/scrollbar';
 import { pujas } from '@prisma/client';
 import { ChatItem } from './ChatItem';

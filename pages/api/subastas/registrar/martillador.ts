@@ -39,6 +39,7 @@ async function registrarPujaMartillador(req: NextApiRequest, res: NextApiRespons
 
     socket.emit('ultimaPuja', { lote, ultimaPuja });
     socket.emit('mejoresPujas', lote.id_lote);
+    socket.emit('listadoPujas', lote.id_lote);
 
     res.status(200).json({ message: 'Puja registrada' });
 }

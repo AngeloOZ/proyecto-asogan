@@ -5,7 +5,7 @@ import { Box, Button, InputAdornment, MenuItem, Stack } from "@mui/material"
 import { useForm } from "react-hook-form";
 import { useSnackbar } from "notistack";
 
-import { lotes } from "@prisma/client";
+import { eventos, lotes } from "@prisma/client";
 import { subastaAPI } from 'custom/api'
 
 import FormProvider, {
@@ -14,6 +14,8 @@ import FormProvider, {
 
 import { handleErrorsAxios } from "utils";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { UltimaPuja } from "@types";
+import { ModalLotes } from '../';
 
 interface Lote {
     id_lote: string;
@@ -24,35 +26,46 @@ interface Lote {
 }
 
 interface LoteMartillador {
-    listadoLotes?: lotes[];
-    loteEnSubasta?: lotes;
+    loteActivo?: lotes;
+    ultimaPuja?: UltimaPuja | null;
+    evento: eventos;
 }
 
 type FormProps = Lote;
 
-export const LoteAdminMartillador = ({ listadoLotes = [], loteEnSubasta }: LoteMartillador) => {
+export const LoteAdminMartillador = ({ loteActivo, ultimaPuja, evento }: LoteMartillador) => {
+
+    const [openModal, setOpenModal] = useState(false);
+
+    const handleCloseModal = () => setOpenModal(false);
+    const handleOpenModal = () => setOpenModal(true);
+
     const { enqueueSnackbar } = useSnackbar();
-    const [loteActual, setLoteActual] = useState<lotes>()
+
+    const deleteLastPuja = useMemo(() => {
+        return (ultimaPuja != null || ultimaPuja != undefined) ? false : true;
+    }, [ultimaPuja]);
 
     const SubastaSchema = Yup.object().shape({
-        puja_inicial: Yup.number().required('La puja inicial es requerida').min(0.005, 'El valor base debe ser mayor a 0.005').typeError('Solo se adminite valores numéricos'),
-        incremento: Yup.number().required('El incremento es requerido').min(0.005, 'El incremento debe ser mayor a 0.005').typeError('Solo se adminite valores numéricos'),
+        puja_inicial: Yup
+            .number()
+            .required('La puja inicial es requerida')
+            .min(0.005, 'El valor base debe ser mayor a 0.005')
+            .typeError('Solo se adminite valores numéricos'),
+        incremento: Yup
+            .number()
+            .required('El incremento es requerido')
+            .min(0.005, 'El incremento debe ser mayor a 0.005')
+            .typeError('Solo se adminite valores numéricos'),
     });
 
     const defaultValues = useMemo<FormProps>(() => ({
-        id_lote: loteActual?.id_lote.toString() || "",
-        id_evento: loteActual?.id_evento || 0,
-        puja_inicial: Number(loteActual?.puja_inicial || 0).toFixed(2),
-        incremento: Number(loteActual?.incremento || 0),
-        subastado: loteActual?.subastado?.toString() || "",
-    }), [loteActual]);
-
-    const idLoteActual = useMemo(() => {
-        if (loteEnSubasta) {
-            return loteEnSubasta.id_lote.toString();
-        }
-        return "";
-    }, [loteEnSubasta])
+        id_lote: loteActivo?.id_lote.toString() || "",
+        id_evento: loteActivo?.id_evento || 0,
+        puja_inicial: Number(loteActivo?.puja_inicial || 0).toFixed(2),
+        incremento: Number(loteActivo?.incremento || 0),
+        subastado: loteActivo?.subastado?.toString() || "",
+    }), [loteActivo]);
 
     const methods = useForm<FormProps>({
         resolver: yupResolver(SubastaSchema),
@@ -60,7 +73,6 @@ export const LoteAdminMartillador = ({ listadoLotes = [], loteEnSubasta }: LoteM
     });
 
     const {
-        reset,
         handleSubmit,
         setValue,
         watch,
@@ -68,34 +80,6 @@ export const LoteAdminMartillador = ({ listadoLotes = [], loteEnSubasta }: LoteM
 
     // Obtiene los valores de los campos del formulario cuando cambian
     const values = watch();
-
-    useEffect(() => {
-        const cargarDatosLote = async () => {
-            try {
-                const { data } = await subastaAPI.get(`/subastas/loteAdminMartillador?id=${values.id_lote}`);
-                setLoteActual(data);
-            } catch (error) {
-                console.error(error);
-            }
-        };
-
-        if (values.id_lote) {
-            cargarDatosLote();
-        }
-
-    }, [values.id_lote])
-
-    useEffect(() => {
-        if (loteActual) {
-            reset(defaultValues);
-        }
-    }, [loteActual])
-
-    useEffect(() => {
-        if (idLoteActual !== "") {
-            setValue('id_lote', idLoteActual);
-        }
-    }, [idLoteActual])
 
     const guardarLote = async (data: FormProps) => {
         try {
@@ -133,74 +117,101 @@ export const LoteAdminMartillador = ({ listadoLotes = [], loteEnSubasta }: LoteM
     }
 
     return (
-        <FormProvider methods={methods} onSubmit={handleSubmit(guardarLote)}>
-            <Box
-                gap={1.8}
-                display="grid"
-            >
-                <RHFSelect
-                    name='id_lote'
-                    label='Listado de lotes'
-                    placeholder="Lotes"
-                    size='small'
-                    InputLabelProps={{
-                        style: { fontSize: 18, color: 'black', fontWeight: "500" }, shrink: true
-                    }}
-                    InputProps={{
-                        startAdornment: <InputAdornment position="start">#</InputAdornment>,
-                        style: { fontSize: 15 }
-                    }}
+        <>
+            {openModal && <ModalLotes open={openModal} handleClose={handleCloseModal} evento={evento} />}
+            <FormProvider methods={methods} onSubmit={handleSubmit(guardarLote)}>
+                <Box
+                    gap={2}
+                    display="grid"
                 >
-                    {
-                        listadoLotes.length == 0 ?
-                            <MenuItem value="">No hay lotes</MenuItem>
-                            : listadoLotes.map((lote) => <MenuItem key={lote.id_lote} value={lote.id_lote}>{lote.codigo_lote}</MenuItem>)
-                    }
-                </RHFSelect>
+                    <Button
+                        type="button"
+                        variant="outlined"
+                        onClick={handleOpenModal}
+                    >
+                        Ver lotes
+                    </Button>
 
-                <RHFSelect name='subastado' label='Seleccione Estado' size='small'>
-                    <MenuItem value='0'>No subastado</MenuItem>
-                    <MenuItem value='1'>En subasta</MenuItem>
-                    <MenuItem value='2'>Postergado</MenuItem>
-                    <MenuItem value='3'>Subastado</MenuItem>
-                </RHFSelect>
+                    <RHFTextField
+                        name="id_lote"
+                        label="Numero de lote"
+                        size='small'
+                        fullWidth
+                        defaultValue={values.id_lote}
+                        InputProps={{
+                            readOnly: true,
+                        }}
+                        InputLabelProps={{ style: { fontSize: 18, color: 'black', fontWeight: "500" }, shrink: true }}
+                    />
 
-                <RHFTextField
-                    name="puja_inicial"
-                    label="Valor base"
-                    size='small'
-                    fullWidth
-                    defaultValue={values.puja_inicial}
-                    InputProps={{
-                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                        style: { fontSize: 15 },
-                    }}
-                    InputLabelProps={{ style: { fontSize: 18, color: 'black', fontWeight: "500" }, shrink: true }}
-                />
+                    <RHFSelect name='subastado' label='Seleccione Estado' size='small'>
+                        <MenuItem value='0'>No subastado</MenuItem>
+                        <MenuItem value='1'>En subasta</MenuItem>
+                        <MenuItem value='2'>Postergado</MenuItem>
+                        <MenuItem value='3'>Subastado</MenuItem>
+                    </RHFSelect>
 
-                <RHFTextField
-                    name="incremento"
-                    label="Incremento"
-                    size='small'
-                    fullWidth
-                    InputProps={{
-                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                        style: { fontSize: 15 }
-                    }}
+                    <RHFTextField
+                        name="puja_inicial"
+                        label="Valor base"
+                        size='small'
+                        fullWidth
+                        defaultValue={values.puja_inicial}
+                        InputProps={{
+                            startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                            style: { fontSize: 15 },
+                        }}
+                        InputLabelProps={{ style: { fontSize: 18, color: 'black', fontWeight: "500" }, shrink: true }}
+                    />
 
-                    InputLabelProps={{ style: { fontSize: 18, color: 'black', fontWeight: "500" }, shrink: true }}
-                />
+                    <RHFTextField
+                        name="incremento"
+                        label="Incremento"
+                        size='small'
+                        fullWidth
+                        InputProps={{
+                            startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                            style: { fontSize: 15 }
+                        }}
 
+                        InputLabelProps={{ style: { fontSize: 18, color: 'black', fontWeight: "500" }, shrink: true }}
+                    />
 
-                <Stack direction='row' spacing={1}>
-                    <Button type="submit" variant="contained" fullWidth color="success" disabled={values.incremento <= 0 || Number(values.puja_inicial) <= 0}>Guardar</Button>
-                    <Button type="button" variant="contained" fullWidth color="secondary" disabled={values.incremento <= 0} onClick={partirPuja}>Partir incremento</Button>
-                </Stack>
+                    <Stack direction='row' spacing={1}>
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            fullWidth
+                            color="success"
+                            disabled={values.incremento <= 0 || Number(values.puja_inicial) <= 0}
+                        >
+                            Guardar
+                        </Button>
+                        <Button
+                            type="button"
+                            variant="contained"
+                            fullWidth
+                            color="secondary"
+                            disabled={values.incremento <= 0}
+                            onClick={partirPuja}
+                        >
+                            Partir incremento
+                        </Button>
+                    </Stack>
 
-                <Button type="button" variant="contained" fullWidth color="error" onClick={eliminarUltimaPuja}>Cancelar puja</Button>
-            </Box>
+                    <Button
+                        type="button"
+                        variant="contained"
+                        fullWidth
+                        color="error"
+                        onClick={eliminarUltimaPuja}
+                        disabled={deleteLastPuja}
+                    >
+                        Cancelar puja
+                    </Button>
+                </Box>
 
-        </FormProvider>
-
+            </FormProvider>
+        </>
     )
 }
