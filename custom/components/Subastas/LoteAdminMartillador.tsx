@@ -89,9 +89,7 @@ export const LoteAdminMartillador = ({ loteActivo, ultimaPuja, evento }: LoteMar
                 incremento: data.incremento,
                 subastado: data.subastado,
             }
-            console.log(loteModificado);
 
-            return;
             await subastaAPI.post(`/subastas/loteAdminMartillador`, loteModificado);
             enqueueSnackbar("Lote modificado correctamente", { variant: 'success' });
         } catch (error) {
