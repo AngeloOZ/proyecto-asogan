@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Tabs, Tab, Typography, Box, BoxProps, Card, Skeleton, } from '@mui/material';
 
 import { VideoPlayer } from '.';
-
+import { TransmisionUsuarios } from '../Transmision';
 interface TabPanelProps {
     children?: React.ReactNode;
     index: number;
@@ -64,7 +64,7 @@ export function TabVideos({ urlTransmisionEnVivo = '', urlVideoDemostracion = ''
             </Box>
             <TabPanel value={value} index={0}>
                 {
-                    urlTransmisionEnVivo === '' ?
+                   /*  urlTransmisionEnVivo === '' ?
                         <Skeleton variant="rectangular" width="100%" style={{ minHeight: 150, height: '100%' }} />
                         :
                         <VideoPlayer
@@ -74,8 +74,8 @@ export function TabVideos({ urlTransmisionEnVivo = '', urlVideoDemostracion = ''
                                 controls: true,
                                 playing: true,
                             }}
-                        />
-
+                        /> */
+                        <TransmisionUsuarios ancho="100%" alto="100%" audio={true} />
                 }
             </TabPanel>
             <TabPanel value={value} index={1}>

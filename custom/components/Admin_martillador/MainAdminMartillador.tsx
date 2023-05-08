@@ -19,7 +19,7 @@ import { calcularSubasta } from "utils";
 import { CardInfo } from "../Monitor";
 import { PujaMartillador, useLotesSubasta, VideoPlayer } from "../Subastas";
 import { LoteAdminMartillador } from "../Subastas/LoteAdminMartillador";
-import { Timer } from "../Transmision";
+
 
 type Props = {
   lote: lotes;
@@ -193,12 +193,13 @@ export const MainAdminMartillador = ({ evento, lote, ultimaPuja }: Props) => {
 
       <Box component="div" className={css.video} sx={{ position: "relative" }}>
         
-        <VideoPlayer
+      {/*   <VideoPlayer
           playerProps={{
             url: evento.url_video || "",
             muted: true,
           }}
-        />
+        /> */}
+     
       </Box>
     </Grid>
   );

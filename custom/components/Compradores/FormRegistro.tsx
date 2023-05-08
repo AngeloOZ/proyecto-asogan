@@ -48,7 +48,7 @@ export const Registro = () => {
             then: Yup.string().required('El nombre es requerido')
         }
         ),
-        celular: Yup.string().required('El celular es requerido').max(10, 'El celular no puede tener mas de 10 caracteres'),
+        celular: Yup.string().required('El celular es requerido').min(7, 'El celular no puede tener menos de 7 caracteres').max(10, 'El celular no puede tener mas de 10 caracteres'),
         correo: Yup.string().required('El correo es requerido').email('El correo no es valido'),
     });
 

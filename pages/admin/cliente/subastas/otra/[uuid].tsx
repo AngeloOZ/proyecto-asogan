@@ -66,7 +66,7 @@ export default function PageSubastaCliente({ evento, banners }: Props) {
     // }, [])
 
 
-    if (!isLoading) return <LoadingScreen />
+  /*   if (!isLoading) return <LoadingScreen /> */
 
     return (
         <>

@@ -14,7 +14,7 @@ import { styled } from "@mui/material/styles";
 import { eventos, lotes } from "@prisma/client";
 import { UltimaPuja } from "@types";
 import { calcularSubasta } from "utils";
-import { Timer } from "../Transmision";
+import { Timer,TransmisionUsuarios } from "../Transmision";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -89,12 +89,14 @@ export const MainMartillador = ({ lote, ultimaPuja, evento }: Props) => {
 
       <Box component="div" className={css.video} sx={{ position: "relative" }}>
         <Timer lote={lote?.id_lote} evento = {evento.abierto} />
-        <VideoPlayer
+       {/*  <VideoPlayer
           playerProps={{
             url: evento?.url_video || "",
             muted: true,
           }}
-        />
+        /> */}
+         <TransmisionUsuarios ancho="100%" alto="275px" audio={false} />
+
       </Box>
 
       <CardInfo
