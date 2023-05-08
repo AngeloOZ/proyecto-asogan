@@ -39,6 +39,8 @@ export const Timer = ({ lote, evento }: any) => {
         zIndex: 1,
         borderRadius: 1,
         fontSize: 22,
+        background: "gray",
+        color:"white"
       }}
     />
   );

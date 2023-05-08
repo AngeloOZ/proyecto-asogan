@@ -7,10 +7,10 @@ import { calcularSubasta } from "utils";
 
 import { useObtenerMejoresPujas } from '../../hooks/useObtenerMejoresPujas';
 import { VideoPlayer } from "../Subastas";
-import { Timer } from "../Transmision";
 import { CardInfo } from "../Monitor";
 
 import css from "../../styles/martillador.module.css";
+import { Timer,TransmisionUsuarios } from "../Transmision";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -80,13 +80,15 @@ export const MainMartillador = ({ lote, ultimaPuja, evento }: Props) => {
       />
 
       <Box component="div" className={css.video} sx={{ position: "relative" }}>
-        <Timer lote={lote?.id_lote} evento={evento.abierto} />
-        <VideoPlayer
+        <Timer lote={lote?.id_lote} evento = {evento.abierto} />
+       {/*  <VideoPlayer
           playerProps={{
             url: evento?.url_video || "",
             muted: true,
           }}
-        />
+        /> */}
+         <TransmisionUsuarios ancho="100%" alto="275px" audio={false} />
+
       </Box>
 
       <CardInfo

@@ -40,7 +40,7 @@ export const UsuariosConectados = () => {
         >
           <Typography variant="subtitle1" sx={{paddingBottom:'15px'}}>Compradores Conectados</Typography>
 
-          {conectados.map((conectado: any) => (
+          {conectados.length > 0 &&  (conectados.map((conectado: any) => (
             <ListItem
               key={conectado.id_comprador}
               sx={{
@@ -51,7 +51,7 @@ export const UsuariosConectados = () => {
             >
               <ListItemText primary={conectado.nombres} />
             </ListItem>
-          ))}
+          )))}
         </List>
       </Container>
     </>
