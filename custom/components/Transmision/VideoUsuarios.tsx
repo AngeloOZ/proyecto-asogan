@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import socket from 'utils/sockets';
+import io from 'socket.io-client';
 
 const config = {
     iceServers: [
@@ -18,37 +18,43 @@ export function TransmisionUsuarios(props: any) {
     const { ancho, alto, audio } = props
     const [peerConnection, setPeerConnection] = useState<RTCPeerConnection | null>(null);
     const videoRef = useRef<HTMLVideoElement>(null);
-    const handleCleanup = () => {
-        socket.close();
-        if (peerConnection) {
-            peerConnection.close();
-        }
-    };
+
     useEffect(() => {
+        const socket = io('http://localhost:3000');
+        let pc = new RTCPeerConnection(config);
         socket.on("offer", (id, description) => {
-            const pc = new RTCPeerConnection(config);
-            setPeerConnection(pc);
-            pc.setRemoteDescription(description)
-                .then(() => pc.createAnswer())
-                .then(sdp => pc.setLocalDescription(sdp))
-                .then(() => {
-                    socket.emit("answer", id, pc.localDescription);
-                });
-            pc.ontrack = event => {
-                if (videoRef && videoRef.current) {
-                    videoRef.current.srcObject = event.streams[0];
-                }
-            };
-            pc.onicecandidate = event => {
-                if (event.candidate) {
-                    socket.emit("candidate", id, event.candidate);
-                }
-            };
+
+            if (pc.connectionState == "closed") {
+                pc = new RTCPeerConnection(config);
+            }
+            if (pc.signalingState !== "closed") {
+
+                pc.setRemoteDescription(description)
+                    .then(() => pc.createAnswer())
+                    .then(sdp => pc.setLocalDescription(sdp))
+                    .then(() => {
+                        socket.emit("answer", id, pc.localDescription);
+                    });
+                pc.ontrack = event => {
+                    if (videoRef && videoRef.current) {
+                        videoRef.current.srcObject = event.streams[0];
+                    }
+                };
+                pc.onicecandidate = event => {
+                    if (event.candidate) {
+                        socket.emit("candidate", id, event.candidate);
+                    }
+                };
+            }
         });
         socket.on("candidate", (id, candidate) => {
-            if (peerConnection) {
-                peerConnection.addIceCandidate(new RTCIceCandidate(candidate))
-                    .catch(e => console.error(e));
+            if (pc) {
+                console.log('entroo')
+                if (pc.signalingState !== "closed") {
+
+                    pc.addIceCandidate(new RTCIceCandidate(candidate))
+                        .catch(e => console.error(e));
+                }
             }
         });
 
@@ -57,10 +63,17 @@ export function TransmisionUsuarios(props: any) {
             socket.emit("watcher");
 
         });
-        socket.emit("watcher");
+        socket.on("connect", () => {
+            socket.emit("watcher");
+
+        });
+
 
         return () => {
-            handleCleanup();
+            if (pc) {
+                pc.close();
+            }
+
         };
     }, []);
 

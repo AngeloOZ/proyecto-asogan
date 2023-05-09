@@ -51,7 +51,7 @@ const navConfig = [
       },
       {
         title: 'Transmisión',
-        path: PATH_DASHBOARD.transmision.root,
+        path:  `http://localhost:8084/${PATH_DASHBOARD.transmision.root}`,
         icon: <FaImages size={20} />,
         roles: ['admin',],
       },

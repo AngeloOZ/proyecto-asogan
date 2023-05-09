@@ -1,9 +1,6 @@
 import { Card, CardContent, Grid, Typography, useTheme } from "@mui/material";
-import { LoteMonitor } from "@types";
 import css from "../../styles/martillador.module.css";
 import { CardInfo } from "../Monitor";
-import moment from "moment-timezone";
-import { useSubastas, VideoPlayer } from "../Subastas";
 import { Box } from "@mui/system";
 import { PujasRequest } from "@types";
 import { subastaAPI } from "custom/api";
@@ -95,7 +92,7 @@ export const MainMartillador = ({ lote, ultimaPuja, evento }: Props) => {
             muted: true,
           }}
         /> */}
-         <TransmisionUsuarios ancho="100%" alto="275px" audio={false} />
+         <TransmisionUsuarios ancho="100%" alto="100%" audio={false} />
 
       </Box>
 

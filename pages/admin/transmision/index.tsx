@@ -8,9 +8,6 @@ import {
   UsuariosConectados,
 } from "custom/components/Transmision";
 
-PageAdminTransmision.getLayout = (page: React.ReactElement) => (
-  <DashboardLayout roles={["admin"]}>{page}</DashboardLayout>
-);
 
 export default function PageAdminTransmision() {
   return (
@@ -19,7 +16,7 @@ export default function PageAdminTransmision() {
         <title>Transmisión</title>
       </Head>
 
-      <Grid container spacing={1}>
+      <Grid container spacing={1} padding="60px" >
 
         <Grid item xs={12} sm={5}>
           <UsuariosConectados />
