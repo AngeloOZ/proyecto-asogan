@@ -19,9 +19,9 @@ export function TransmisionUsuarios(props: any) {
     const [visualizarI, setVisualizarI] = useState("block");
     const [visualizarV, setVisualizarV] = useState("none");
     const videoRef = useRef<HTMLVideoElement>(null);
-
+    const servidor:any = process.env.NEXT_PUBLIC_PORT_SOCKETS 
     useEffect(() => {
-        const socket = io('http://localhost:3000');
+        const socket = io(servidor);
         let pc = new RTCPeerConnection(config);
         socket.on("offer", (id, description) => {
 
