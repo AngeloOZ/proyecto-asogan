@@ -45,7 +45,7 @@ export const UsuariosConectados = () => {
             .filter((conectado: any) => conectado.usuarioid !== null)
             .map((conectado: any) => (
               <ListItem
-               key={conectado.usuarioid}
+                key={conectado.usuarioid}
                 sx={{
                   mt: "10px",
                   borderRadius: "5px",

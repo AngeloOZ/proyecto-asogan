@@ -135,20 +135,19 @@ export function TransmisionSubasta() {
   ////Terminar
 
   function terminarTransmision() {
+    
     if (videoRef.current) {
       const stream = videoRef.current.srcObject as MediaStream | null;
-
       if (stream instanceof MediaStream) {
         stream.getTracks().forEach((track) => {
           track.stop();
           stream.removeTrack(track);
         });
       }
-
       videoRef.current.srcObject = null;
     }
+    socket.emit("video")
     socket.emit("disconnectPeer")
-
 
     if (socket && socket.connected) {
       socket.close();
@@ -163,17 +162,19 @@ export function TransmisionSubasta() {
   }
 
   function iniciarTransmision() {
+    
     const videoElement = videoRef.current;
     if (selectedAudioDevice && selectedVideoDevice && videoElement?.srcObject != null) {
       if (socket.connected != true) {
         socket.connect();
-        "entro a conectar nuevamente"
+   
       }
 
       const newPeerConnectionId = generarNuevoId();
       const newPeerConnection = new RTCPeerConnection(config);
       peerConnections[newPeerConnectionId] = newPeerConnection;
       socket.emit("broadcaster");
+  
       setBotonIniciar(true)
       setBotonTerminar(false)
     } else {
@@ -181,6 +182,7 @@ export function TransmisionSubasta() {
         variant: "error",
       });
     }
+
   }
 
   ///////////////////////////////Microfono y Camara
@@ -208,6 +210,8 @@ export function TransmisionSubasta() {
     setSelectedDispositivoVideo(
       dispositivoVideo.length ? dispositivoVideo[0].deviceId : null
     ); */
+
+   
   };
 
   const getStream = () => {

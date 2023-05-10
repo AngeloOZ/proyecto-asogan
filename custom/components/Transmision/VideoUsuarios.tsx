@@ -16,7 +16,8 @@ const config = {
 
 export function TransmisionUsuarios(props: any) {
     const { ancho, alto, audio } = props
-    const [peerConnection, setPeerConnection] = useState<RTCPeerConnection | null>(null);
+    const [visualizarI, setVisualizarI] = useState("block");
+    const [visualizarV, setVisualizarV] = useState("none");
     const videoRef = useRef<HTMLVideoElement>(null);
 
     useEffect(() => {
@@ -36,7 +37,10 @@ export function TransmisionUsuarios(props: any) {
                         socket.emit("answer", id, pc.localDescription);
                     });
                 pc.ontrack = event => {
+                    setVisualizarI("none")
+                    setVisualizarV("block")
                     if (videoRef && videoRef.current) {
+                        console.log("siiii existee")
                         videoRef.current.srcObject = event.streams[0];
                     }
                 };
@@ -49,7 +53,6 @@ export function TransmisionUsuarios(props: any) {
         });
         socket.on("candidate", (id, candidate) => {
             if (pc) {
-                console.log('entroo')
                 if (pc.signalingState !== "closed") {
 
                     pc.addIceCandidate(new RTCIceCandidate(candidate))
@@ -68,6 +71,14 @@ export function TransmisionUsuarios(props: any) {
 
         });
 
+        socket.on("video2", () => {
+
+            if (videoRef && videoRef.current) {
+                videoRef.current.srcObject = null
+            }
+            setVisualizarI("block")
+            setVisualizarV("none")
+        });
 
         return () => {
             if (pc) {
@@ -75,12 +86,15 @@ export function TransmisionUsuarios(props: any) {
             }
 
         };
-    }, []);
+    }, [visualizarI, visualizarV]);
 
 
     return (
         <>
-            <video ref={videoRef} autoPlay muted={true} width={ancho} height={alto} controls={audio} />
+
+            <video ref={videoRef} autoPlay muted={true} width={ancho} height={alto} controls={audio} style={{ display: visualizarV }} />
+
+            <img src='https://www.creativefabrica.com/wp-content/uploads/2020/07/06/Video-Camera-Icon-Graphics-4551757-1.jpg' width={ancho} height={alto} style={{ display: visualizarI }} ></img>
 
         </>
     );
