@@ -26,7 +26,7 @@ type Props = {
 export default function PageSubastaCliente({ evento, banners }: Props) {
 
     const { loteActual, isLoading } = useLoteMonitor2(evento.id_evento);
-    // const [loteActual, setLoteActual] = useState<lotes>()
+
     const { ultimaPuja } = useUltimaPuja(loteActual?.id_lote || 0);
     const { user } = useContext(AuthContext);
     const procesoEnCurso = true;
@@ -34,7 +34,10 @@ export default function PageSubastaCliente({ evento, banners }: Props) {
 
         try {
             const validarConectado = async () => {
-                await subastaAPI.put(`/compradores/conectados?usuarioid=${user?.usuarioid}&conectado=1`);
+                if (loteActual){
+
+                    await subastaAPI.put(`/compradores/conectados?usuarioid=${user?.usuarioid}&conectado=1`);
+                }
             }
             validarConectado()
         } catch (error) {
@@ -62,7 +65,7 @@ export default function PageSubastaCliente({ evento, banners }: Props) {
             window.removeEventListener("beforeunload", handleBeforeUnload);
             window.removeEventListener("unload", handleUnload);
         };
-    }, [procesoEnCurso,user?.usuarioid])
+    }, [procesoEnCurso,user?.usuarioid,loteActual])
 
 
     // useEffect(() => {
