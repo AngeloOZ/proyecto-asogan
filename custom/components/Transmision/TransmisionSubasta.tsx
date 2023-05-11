@@ -280,7 +280,7 @@ export function TransmisionSubasta() {
     <Box component="div" className={css.video} mx="auto">
       <Stack>
         <label>Dispositivos de Audio: </label>
-        {dispositivoAudio.length > 0 ? (
+        { (
           <select
             id="audioSource"
             value={selectedAudioDevice || ""}
@@ -294,9 +294,7 @@ export function TransmisionSubasta() {
               </option>
             ))}
           </select>
-        ) : (
-          <p>Cargando dispositivos...</p>
-        )}
+        ) }
       </Stack>
 
       <Stack style={{ marginTop: "10px" }}>

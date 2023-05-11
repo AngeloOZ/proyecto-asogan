@@ -62,7 +62,7 @@ export default function PageSubastaCliente({ evento, banners }: Props) {
             window.removeEventListener("beforeunload", handleBeforeUnload);
             window.removeEventListener("unload", handleUnload);
         };
-    }, [procesoEnCurso])
+    }, [procesoEnCurso,user?.usuarioid])
 
 
     // useEffect(() => {
