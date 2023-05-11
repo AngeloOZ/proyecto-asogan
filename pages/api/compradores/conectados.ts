@@ -41,17 +41,25 @@ async function actualizarConectados( req: NextApiRequest, res: NextApiResponse) 
      
     try {
         const { usuarioid, conectado } = req.query;
+        let comprador
+      if(Number(usuarioid) == 0){
+        comprador = await prisma.usuario.updateMany({
+          data: {
+              conectado: Number(conectado)
+          }
+      });
+      }else{
 
-      
-
-        const comprador = await prisma.usuario.update({
+      comprador = await prisma.usuario.update({
             where: { usuarioid: Number(usuarioid) },
             data: {
                 conectado: Number(conectado)
-
+  
             }
-
+  
         });
+      }
+
 
         return res.status(200).json(comprador);
 

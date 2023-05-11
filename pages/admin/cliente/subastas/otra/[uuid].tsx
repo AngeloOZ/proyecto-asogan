@@ -29,7 +29,7 @@ export default function PageSubastaCliente({ evento, banners }: Props) {
     // const [loteActual, setLoteActual] = useState<lotes>()
     const { ultimaPuja } = useUltimaPuja(loteActual?.id_lote || 0);
     const { user } = useContext(AuthContext);
-
+    const procesoEnCurso = true;
     useEffect(() => {
 
         try {
@@ -41,8 +41,28 @@ export default function PageSubastaCliente({ evento, banners }: Props) {
             console.log(error)
         }
 
+        const handleBeforeUnload = async (event:any) => {
+            if (procesoEnCurso) {
+                event.preventDefault();
+                await fetch(
+                    `/api/compradores/conectados?usuarioid=${user?.usuarioid}&conectado=0`,
+                    { keepalive: true, method: "PUT" }
+                );
+            }
+        };
 
-    })
+        const handleUnload = async () => {
+            window.removeEventListener("beforeunload", handleBeforeUnload);
+        };
+
+        window.addEventListener("beforeunload", handleBeforeUnload);
+        window.addEventListener("unload", handleUnload);
+
+        return () => {
+            window.removeEventListener("beforeunload", handleBeforeUnload);
+            window.removeEventListener("unload", handleUnload);
+        };
+    }, [procesoEnCurso])
 
 
     // useEffect(() => {
@@ -66,15 +86,16 @@ export default function PageSubastaCliente({ evento, banners }: Props) {
     // }, [])
 
 
-  /*   if (!isLoading) return <LoadingScreen /> */
+    /*   if (!isLoading) return <LoadingScreen /> */
 
     return (
         <>
+       
             <Head>
                 <title>Subasta Lote #{loteActual?.codigo_lote || 'SN'}</title>
             </Head>
             <VistaLoteCliente lote={loteActual} ultimaPuja={ultimaPuja} banners={banners} evento={evento} />
-            <CambiarConectados />
+
         </>
     )
 }

@@ -1,5 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useContext } from 'react';
 import io from 'socket.io-client';
+
 
 const config = {
     iceServers: [
@@ -19,7 +20,8 @@ export function TransmisionUsuarios(props: any) {
     const [visualizarI, setVisualizarI] = useState("block");
     const [visualizarV, setVisualizarV] = useState("none");
     const videoRef = useRef<HTMLVideoElement>(null);
-    const servidor:any = process.env.NEXT_PUBLIC_PORT_SOCKETS 
+    const servidor: any = process.env.NEXT_PUBLIC_PORT_SOCKETS
+
     useEffect(() => {
         const socket = io(servidor);
         let pc = new RTCPeerConnection(config);
@@ -31,16 +33,23 @@ export function TransmisionUsuarios(props: any) {
             if (pc.signalingState !== "closed") {
 
                 pc.setRemoteDescription(description)
-                    .then(() => pc.createAnswer())
+                    .then(() => {
+                        if (pc.signalingState === "have-remote-offer" || pc.signalingState === "have-local-pranswer") {
+                            return pc.createAnswer();
+                        }
+                    })
                     .then(sdp => pc.setLocalDescription(sdp))
                     .then(() => {
                         socket.emit("answer", id, pc.localDescription);
-                    });
+                    }).catch(error => {
+
+                        console.error(error);
+                    });;
                 pc.ontrack = event => {
                     setVisualizarI("none")
                     setVisualizarV("block")
                     if (videoRef && videoRef.current) {
-                        console.log("siiii existee")
+
                         videoRef.current.srcObject = event.streams[0];
                     }
                 };
@@ -84,10 +93,16 @@ export function TransmisionUsuarios(props: any) {
             if (pc) {
                 pc.close();
             }
+            desconectar()
 
         };
+
+
     }, [visualizarI, visualizarV]);
 
+    const desconectar = async () => {
+
+    }
 
     return (
         <>

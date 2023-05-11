@@ -4,7 +4,7 @@ import { Box, Stack, MenuItem, Select, Button } from "@mui/material";
 import { useEffect, useState, useRef } from "react";
 import { useSnackbar } from "../../../src/components/snackbar";
 import io from 'socket.io-client';
-
+import { subastaAPI } from 'custom/api';
 const config = {
   iceServers: [
     {
@@ -66,7 +66,13 @@ export function TransmisionSubasta() {
     socket.connect();
 
     socket.on("answer", (id, description) => {
-      peerConnections[id].setRemoteDescription(description);
+      const peerConnection = peerConnections[id];
+
+ 
+      if (peerConnection.signalingState === "have-local-offer" || peerConnection.signalingState === "have-remote-pranswer") {
+
+        peerConnections[id].setRemoteDescription(description);
+      }
     });
 
     socket.on("watcher", (id: string) => {
@@ -122,7 +128,7 @@ export function TransmisionSubasta() {
     });
 
     const handleUnload = () => {
-      socket.close();
+      socket.close()
     };
 
     window.addEventListener("beforeunload", handleUnload);
@@ -134,8 +140,16 @@ export function TransmisionSubasta() {
 
   ////Terminar
 
-  function terminarTransmision() {
-    
+ async function terminarTransmision() {
+  try{
+
+    await subastaAPI.put(`/compradores/conectados?usuarioid=0&conectado=0`);
+  }catch{
+    enqueueSnackbar("Ocurrió un error", {
+      variant: "error",
+    });
+  }
+
     if (videoRef.current) {
       const stream = videoRef.current.srcObject as MediaStream | null;
       if (stream instanceof MediaStream) {
