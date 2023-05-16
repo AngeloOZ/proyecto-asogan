@@ -25,11 +25,12 @@ export default function PageSubastaCliente({ evento, banners }: Props) {
 
     return (
         <>
+       
             <Head>
                 <title>Subasta Lote #{loteActual?.codigo_lote || 'SN'}</title>
             </Head>
             <VistaLoteCliente lote={loteActual} ultimaPuja={ultimaPuja} banners={banners} evento={evento} />
-            <CambiarConectados />
+
         </>
     )
 }

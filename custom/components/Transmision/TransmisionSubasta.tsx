@@ -1,9 +1,10 @@
-import socket from "utils/sockets";
+import socket from 'utils/sockets';
 import css from "../../styles/martillador.module.css";
 import { Box, Stack, MenuItem, Select, Button } from "@mui/material";
 import { useEffect, useState, useRef } from "react";
 import { useSnackbar } from "../../../src/components/snackbar";
 import io from 'socket.io-client';
+import { subastaAPI } from 'custom/api';
 const config = {
   iceServers: [
     {
@@ -32,11 +33,26 @@ export function TransmisionSubasta() {
   >("");
   const [stream, setStream] = useState(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const peerConnections: { [id: string]: RTCPeerConnection } = {};
+  let peerConnections: { [id: string]: RTCPeerConnection } = {};
   const { enqueueSnackbar } = useSnackbar();
+  const [botonIniciar, setBotonIniciar] = useState(false);
+  const [botonTerminar, setBotonTerminar] = useState(true);
 
   useEffect(() => {
-    navigator.mediaDevices.enumerateDevices().then(dispositivos);
+    const pedirPermisos = async () => {
+      try {
+     
+
+        await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+
+        navigator.mediaDevices.enumerateDevices().then(dispositivos);
+      } catch (error) {
+        console.error('Error al solicitar permisos:', error);
+      }
+    };
+  
+    pedirPermisos();
+
   }, []);
 
   useEffect(() => {
@@ -44,12 +60,23 @@ export function TransmisionSubasta() {
   }, [selectedAudioDevice, selectedVideoDevice]);
 
   //////////////////////////////////////////////////
+
   useEffect(() => {
+
+    socket.connect();
+
     socket.on("answer", (id, description) => {
-      peerConnections[id].setRemoteDescription(description);
+      const peerConnection = peerConnections[id];
+
+ 
+      if (peerConnection.signalingState === "have-local-offer" || peerConnection.signalingState === "have-remote-pranswer") {
+
+        peerConnections[id].setRemoteDescription(description);
+      }
     });
 
     socket.on("watcher", (id: string) => {
+
       const peerConnection = new RTCPeerConnection(config);
       peerConnections[id] = peerConnection;
 
@@ -59,23 +86,30 @@ export function TransmisionSubasta() {
       }
 
       if (stream != null) {
-        stream
-          .getTracks()
-          .forEach((track) => peerConnection.addTrack(track, stream!));
+        const existingTracks = peerConnection.getSenders().map((sender) => sender.track);
+        stream.getTracks().forEach((track) => {
+          if (!existingTracks.includes(track)) {
+            peerConnection.addTrack(track, stream!);
+          }
+        });
       }
 
       peerConnection.onicecandidate = (event: RTCPeerConnectionIceEvent) => {
+
         if (event.candidate) {
+
           socket.emit("candidate", id, event.candidate);
         }
       };
 
-      peerConnection
-        .createOffer()
-        .then((sdp) => peerConnection.setLocalDescription(sdp))
-        .then(() => {
-          socket.emit("offer", id, peerConnection.localDescription);
-        });
+      if (peerConnection.signalingState !== "closed") {
+
+        peerConnection.createOffer()
+          .then((sdp) => peerConnection.setLocalDescription(sdp))
+          .then(() => {
+            socket.emit("offer", id, peerConnection.localDescription);
+          });
+      }
     });
 
     socket.on("candidate", (id, candidate) => {
@@ -83,13 +117,18 @@ export function TransmisionSubasta() {
     });
 
     socket.on("disconnectPeer", (id) => {
+
       if (id) {
-        peerConnections[id].close();
-        delete peerConnections[id];
+        if (peerConnections[id]) {
+
+          peerConnections[id].close();
+          delete peerConnections[id];
+        }
       }
     });
+
     const handleUnload = () => {
-      socket.close();
+      socket.close()
     };
 
     window.addEventListener("beforeunload", handleUnload);
@@ -97,53 +136,67 @@ export function TransmisionSubasta() {
     return () => {
       window.removeEventListener("beforeunload", handleUnload);
     };
-  }, [socket]);
-  //////////////////
+  }, []);
 
   ////Terminar
 
-  function terminarTransmision() {
+ async function terminarTransmision() {
+  try{
+
+    await subastaAPI.put(`/compradores/conectados?usuarioid=0&conectado=0`);
+  }catch{
+    enqueueSnackbar("Ocurrió un error", {
+      variant: "error",
+    });
+  }
+
     if (videoRef.current) {
       const stream = videoRef.current.srcObject as MediaStream | null;
-
       if (stream instanceof MediaStream) {
         stream.getTracks().forEach((track) => {
           track.stop();
+          stream.removeTrack(track);
         });
       }
-
       videoRef.current.srcObject = null;
     }
-
-    for (const peerConnectionId in peerConnections) {
-      peerConnections[peerConnectionId].close();
-      delete peerConnections[peerConnectionId];
-    }
+    socket.emit("video")
+    socket.emit("disconnectPeer")
 
     if (socket && socket.connected) {
-      socket.disconnect();
+      socket.close();
     }
+    peerConnections = {};
+    window.location.reload()
   }
+
   function generarNuevoId() {
-    // Generar un ID único utilizando el timestamp actual
+
     return Date.now().toString();
   }
+
   function iniciarTransmision() {
-    if (selectedAudioDevice && selectedVideoDevice) {
+    
+    const videoElement = videoRef.current;
+    if (selectedAudioDevice && selectedVideoDevice && videoElement?.srcObject != null) {
       if (socket.connected != true) {
         socket.connect();
-        console.log('conectado')
+   
       }
 
       const newPeerConnectionId = generarNuevoId();
-      const newPeerConnection = new RTCPeerConnection();
+      const newPeerConnection = new RTCPeerConnection(config);
       peerConnections[newPeerConnectionId] = newPeerConnection;
       socket.emit("broadcaster");
+  
+      setBotonIniciar(true)
+      setBotonTerminar(false)
     } else {
-      enqueueSnackbar("Escoja un dispositivo de Audio y Video", {
+      enqueueSnackbar("Escoja un dispositivo de Audio y Video hasta que se previsualice", {
         variant: "error",
       });
     }
+
   }
 
   ///////////////////////////////Microfono y Camara
@@ -171,6 +224,8 @@ export function TransmisionSubasta() {
     setSelectedDispositivoVideo(
       dispositivoVideo.length ? dispositivoVideo[0].deviceId : null
     ); */
+
+   
   };
 
   const getStream = () => {
@@ -225,7 +280,7 @@ export function TransmisionSubasta() {
     <Box component="div" className={css.video} mx="auto">
       <Stack>
         <label>Dispositivos de Audio: </label>
-        {dispositivoAudio.length > 0 ? (
+        { (
           <select
             id="audioSource"
             value={selectedAudioDevice || ""}
@@ -239,9 +294,7 @@ export function TransmisionSubasta() {
               </option>
             ))}
           </select>
-        ) : (
-          <p>Cargando dispositivos...</p>
-        )}
+        ) }
       </Stack>
 
       <Stack style={{ marginTop: "10px" }}>
@@ -270,19 +323,20 @@ export function TransmisionSubasta() {
         height="350px"
         style={{ marginTop: "35px" }}
       ></video>
-      <Stack direction="row" mt="20px" spacing={2}>
+      <Stack direction="row" mt="20px" spacing={2} mx="17%">
         <Button
           color="success"
           variant="contained"
           onClick={iniciarTransmision}
+          disabled={botonIniciar}
         >
           Iniciar Transmisión
         </Button>
 
-        <Button color="error" variant="contained" onClick={terminarTransmision}>
+        <Button color="error" variant="contained" onClick={terminarTransmision} disabled={botonTerminar} >
           Terminar Transmisión
         </Button>
-        <Button color="secondary" variant="contained" onClick={getStream}>
+        <Button color="secondary" variant="contained" onClick={getStream} >
           Mostrar
         </Button>
       </Stack>

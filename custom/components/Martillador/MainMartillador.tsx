@@ -1,12 +1,10 @@
 import { Card, CardContent, Grid, Typography, Paper, Stack, Box, styled } from "@mui/material";
-import moment from "moment-timezone";
 
 import { eventos, lotes } from "@prisma/client";
 import { UltimaPuja } from "@types";
 import { calcularSubasta } from "utils";
 
 import { useObtenerMejoresPujas } from '../../hooks/useObtenerMejoresPujas';
-import { VideoPlayer } from "../Subastas";
 import { CardInfo } from "../Monitor";
 
 import css from "../../styles/martillador.module.css";
@@ -87,7 +85,7 @@ export const MainMartillador = ({ lote, ultimaPuja, evento }: Props) => {
             muted: true,
           }}
         /> */}
-         <TransmisionUsuarios ancho="100%" alto="275px" audio={false} />
+         <TransmisionUsuarios ancho="100%" alto="100%" audio={false} />
 
       </Box>
 

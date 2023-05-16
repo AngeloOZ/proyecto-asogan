@@ -51,7 +51,7 @@ const navConfig = [
       },
       {
         title: 'Transmisión',
-        path: PATH_DASHBOARD.transmision.root,
+        path:  `${process.env.NEXT_PUBLIC_PORT_MARTILLAZO}/${PATH_DASHBOARD.transmision.root}`,
         icon: <FaImages size={20} />,
         roles: ['admin',],
       },

@@ -12,6 +12,7 @@ export const PATH_AUTH = {
   login: '/login',
   clave: '/login/clave',
   registro: '/registro',
+  video: '/video'
 };
 
 
