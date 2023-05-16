@@ -2,7 +2,6 @@ import Head from "next/head";
 
 import {Grid } from "@mui/material";
 
-import DashboardLayout from "src/layouts/dashboard/DashboardLayout";
 import {
   TransmisionSubasta,
   UsuariosConectados,
