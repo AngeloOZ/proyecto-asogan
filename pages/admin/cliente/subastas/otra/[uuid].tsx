@@ -4,12 +4,15 @@ import Head from 'next/head'
 import { eventos, imagenes } from '@prisma/client'
 import prisma from 'database/prismaClient'
 import moment from 'moment-timezone'
-
+import { useEffect, useContext} from 'react';
 import DashboardLayout from 'src/layouts/dashboard/DashboardLayout'
 
 import { useObtenerLoteActivo, useObtenerUltimaPuja } from 'custom/hooks'
 import { VistaLoteCliente } from 'custom/components'
-import { CambiarConectados } from 'custom/components/Transmision'
+import { subastaAPI } from 'custom/api';
+import { AuthContext } from "src/auth";
+
+
 
 PageSubastaCliente.getLayout = (page: React.ReactElement) => <DashboardLayout roles={['comprador']}>{page}</DashboardLayout>
 
@@ -22,6 +25,44 @@ export default function PageSubastaCliente({ evento, banners }: Props) {
 
     const { loteActual } = useObtenerLoteActivo(evento.id_evento);
     const { ultimaPuja } = useObtenerUltimaPuja(loteActual);
+    const { user } = useContext(AuthContext);
+    const procesoEnCurso = true;
+    useEffect(() => {
+
+        try {
+            const validarConectado = async () => {
+                if (loteActual){
+
+                    await subastaAPI.put(`/compradores/conectados?usuarioid=${user?.usuarioid}&conectado=1`);
+                }
+            }
+            validarConectado()
+        } catch (error) {
+            console.log(error)
+        }
+
+        const handleBeforeUnload = async (event:any) => {
+            if (procesoEnCurso) {
+                event.preventDefault();
+                await fetch(
+                    `/api/compradores/conectados?usuarioid=${user?.usuarioid}&conectado=0`,
+                    { keepalive: true, method: "PUT" }
+                );
+            }
+        };
+
+        const handleUnload = async () => {
+            window.removeEventListener("beforeunload", handleBeforeUnload);
+        };
+
+        window.addEventListener("beforeunload", handleBeforeUnload);
+        window.addEventListener("unload", handleUnload);
+
+        return () => {
+            window.removeEventListener("beforeunload", handleBeforeUnload);
+            window.removeEventListener("unload", handleUnload);
+        };
+    }, [procesoEnCurso,user?.usuarioid,loteActual])
 
     return (
         <>

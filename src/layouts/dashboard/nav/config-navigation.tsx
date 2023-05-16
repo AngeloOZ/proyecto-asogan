@@ -1,6 +1,6 @@
 import { MdSell } from 'react-icons/md';
 
-import { FaBell, FaCalendarAlt, FaCubes, FaHandHoldingUsd, FaImages, FaTruckLoading, FaUsers } from 'react-icons/fa';
+import { FaBell, FaCalendarAlt, FaCubes, FaHandHoldingUsd, FaImages, FaTruckLoading, FaTv, FaUsers } from 'react-icons/fa';
 // routes
 import { PATH_DASHBOARD, PATH_DASHBOARD_CLEINTE } from '../../../routes/paths';
 
@@ -52,7 +52,7 @@ const navConfig = [
       {
         title: 'Transmisión',
         path:  `${process.env.NEXT_PUBLIC_PORT_MARTILLAZO}/${PATH_DASHBOARD.transmision.root}`,
-        icon: <FaImages size={20} />,
+        icon: <FaTv size={20} />,
         roles: ['admin',],
       },
       {

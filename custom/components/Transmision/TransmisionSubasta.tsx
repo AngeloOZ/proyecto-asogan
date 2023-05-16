@@ -37,7 +37,7 @@ export function TransmisionSubasta() {
   const { enqueueSnackbar } = useSnackbar();
   const [botonIniciar, setBotonIniciar] = useState(false);
   const [botonTerminar, setBotonTerminar] = useState(true);
-
+  const [selectDispositivos, setSelectDispositivos] = useState(false);
   useEffect(() => {
     const pedirPermisos = async () => {
       try {
@@ -191,6 +191,7 @@ export function TransmisionSubasta() {
   
       setBotonIniciar(true)
       setBotonTerminar(false)
+      setSelectDispositivos(true)
     } else {
       enqueueSnackbar("Escoja un dispositivo de Audio y Video hasta que se previsualice", {
         variant: "error",
@@ -286,6 +287,7 @@ export function TransmisionSubasta() {
             value={selectedAudioDevice || ""}
             onChange={cambiarAudio}
             style={{ width: "100%", height: "40px" }}
+            disabled={selectDispositivos}
           >
             <option value="">Escoja un Audio</option>
             {dispositivoAudio.map((device: any) => (
@@ -304,6 +306,7 @@ export function TransmisionSubasta() {
           id="videoSource"
           onChange={cambiarVideo}
           style={{ width: "100%", height: "35px" }}
+          disabled={selectDispositivos}
         >
           <option value="">Escoja un Video</option>
           {dispositivoVideo.map((device: any) => (
