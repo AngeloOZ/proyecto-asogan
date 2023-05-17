@@ -125,10 +125,10 @@ export const InformacionLote = ({ lote }: Props) => {
                 <Stack direction="row" spacing={1.5} flexWrap={{ xs: 'wrap', sm: 'nowrap' }}>
                     <LabelInformation
                         bgcolor='warning.main'
-                        text={`Valor promedio <strong>${(loteAux.pesoPromedio * loteAux.valorFinal2).toFixed(2)}</strong>`} 
+                        text={`Valor promedio <strong>${(loteAux.pesoPromedio * loteAux.valorFinal).toFixed(2)}</strong>`} 
                     />
                     <LabelInformation 
-                        text={`Valor total ${(loteAux.pesoTotal * loteAux.valorFinal2).toFixed(2)}`}
+                        text={`Valor total ${(loteAux.pesoTotal * loteAux.valorFinal).toFixed(2)}`}
                     />
                 </Stack>
             </CardContent>
