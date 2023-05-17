@@ -1,10 +1,10 @@
 import { MdSell } from 'react-icons/md';
-
 import { FaBell, FaCalendarAlt, FaCubes, FaHandHoldingUsd, FaImages, FaTruckLoading, FaTv, FaUsers } from 'react-icons/fa';
+
 // routes
 import { PATH_DASHBOARD, PATH_DASHBOARD_CLEINTE } from '../../../routes/paths';
 
-
+const TRANSMISION = process.env.NEXT_PUBLIC_URL_APP || '';
 
 // https://react-icons.github.io/react-icons
 // https://mui.com/material-ui/material-icons/
@@ -51,7 +51,7 @@ const navConfig = [
       },
       {
         title: 'Transmisión',
-        path:  `${process.env.NEXT_PUBLIC_PORT_MARTILLAZO}/${PATH_DASHBOARD.transmision.root}`,
+        path:  `${TRANSMISION}${PATH_DASHBOARD.transmision.root}`,
         icon: <FaTv size={20} />,
         roles: ['admin',],
       },

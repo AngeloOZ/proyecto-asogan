@@ -7,7 +7,7 @@ import { LoadingButton } from '@mui/lab';
 import { Card, Stack, Button, MenuItem } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
-import FormProvider, { RHFSelect, RHFSwitch, RHFTextField } from '../../../src/components/hook-form';
+import FormProvider, { RHFSelect, RHFTextField } from '../../../src/components/hook-form';
 import { useSnackbar } from '../../../src/components/snackbar';
 import { PATH_DASHBOARD } from 'src/routes/paths';
 import { eventos } from '@prisma/client';
@@ -41,6 +41,7 @@ export function FormEventos({ esEditar = false, eventoEditar }: Props) {
 
     // Validaciones de los campos
     const EventoEsquema = Yup.object().shape({
+        descripcion: Yup.string().required('La fecha es requerida'),
         fecha: Yup.string().required('La fecha es requerida'),
         lugar: Yup.string().required('El lugar es requerido'),
         tipo: Yup.string().required('La tipo es requerido'),
@@ -110,12 +111,12 @@ export function FormEventos({ esEditar = false, eventoEditar }: Props) {
                         size='small'
                         autoComplete='off'
                     />
-                    <RHFTextField
+                    {/* <RHFTextField
                         name="url_video"
                         label="URL Video"
                         size='small'
                         autoComplete='off'
-                    />
+                    /> */}
                     <RHFTextField
                         name="tipo"
                         label="Tipo"
