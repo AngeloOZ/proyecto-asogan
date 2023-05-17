@@ -79,6 +79,7 @@ export function TransmisionSubasta() {
 
       const peerConnection = new RTCPeerConnection(config);
       peerConnections[id] = peerConnection;
+  
 
       let stream: MediaStream | null = null;
       if (videoRef.current) {
@@ -117,10 +118,9 @@ export function TransmisionSubasta() {
     });
 
     socket.on("disconnectPeer", (id) => {
-
+      
       if (id) {
         if (peerConnections[id]) {
-
           peerConnections[id].close();
           delete peerConnections[id];
         }
@@ -176,7 +176,7 @@ export function TransmisionSubasta() {
   }
 
   function iniciarTransmision() {
-    
+    socket.emit("disconnectPeer")
     const videoElement = videoRef.current;
     if (selectedAudioDevice && selectedVideoDevice && videoElement?.srcObject != null) {
       if (socket.connected != true) {

@@ -87,22 +87,24 @@ export function TransmisionUsuarios(props: any) {
             }
             setVisualizarI("block")
             setVisualizarV("none")
+            if (pc) {
+                pc.close();
+                
+            }
         });
 
         return () => {
             if (pc) {
                 pc.close();
             }
-            desconectar()
+          
 
         };
 
 
-    }, [visualizarI, visualizarV]);
+    }, []);
 
-    const desconectar = async () => {
-
-    }
+   
 
     return (
         <>
