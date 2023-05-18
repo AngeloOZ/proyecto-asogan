@@ -91,14 +91,13 @@ export function TransmisionUsuarios(props: any) {
                 pc.close();
                 
             }
+            window.location.reload()
         });
 
         return () => {
             if (pc) {
                 pc.close();
             }
-          
-
         };
 
 
