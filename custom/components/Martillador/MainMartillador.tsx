@@ -1,5 +1,5 @@
+import { useContext } from 'react';
 import { Card, CardContent, Grid, Typography, Paper, Stack, Box, styled } from "@mui/material";
-
 import { eventos, lotes } from "@prisma/client";
 import { UltimaPuja } from "@types";
 import { calcularSubasta } from "utils";
@@ -8,7 +8,8 @@ import { useObtenerMejoresPujas } from '../../hooks/useObtenerMejoresPujas';
 import { CardInfo } from "../Monitor";
 
 import css from "../../styles/martillador.module.css";
-import { Timer,TransmisionUsuarios } from "../Transmision";
+import { Timer, TransmisionUsuarios } from "../Transmision";
+import { AuthContext } from 'src/auth';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -26,6 +27,8 @@ type Props = {
 
 
 export const MainMartillador = ({ lote, ultimaPuja, evento }: Props) => {
+  const { rol: [rolLogged] } = useContext(AuthContext)
+
   const { mejoresPujas } = useObtenerMejoresPujas(lote);
   const newLote = calcularSubasta(lote, ultimaPuja);
 
@@ -78,14 +81,14 @@ export const MainMartillador = ({ lote, ultimaPuja, evento }: Props) => {
       />
 
       <Box component="div" className={css.video} sx={{ position: "relative" }}>
-        <Timer lote={lote?.id_lote} evento = {evento.abierto} />
-       {/*  <VideoPlayer
+        <Timer lote={lote?.id_lote} evento={evento.abierto} />
+        {/*  <VideoPlayer
           playerProps={{
             url: evento?.url_video || "",
             muted: true,
           }}
         /> */}
-         <TransmisionUsuarios ancho="100%" alto="100%" audio={false} />
+        <TransmisionUsuarios ancho="100%" alto="100%" audio={false} rol={rolLogged} />
 
       </Box>
 

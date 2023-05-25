@@ -75,7 +75,7 @@ export function TabVideos({ urlTransmisionEnVivo = '', urlVideoDemostracion = ''
                                 playing: true,
                             }}
                         /> */
-                        <TransmisionUsuarios ancho="100%" alto="100%" audio={true} />
+                        <TransmisionUsuarios ancho="100%" alto="100%" audio={true} rol="comprador"/>
                 }
             </TabPanel>
             <TabPanel value={value} index={1}>

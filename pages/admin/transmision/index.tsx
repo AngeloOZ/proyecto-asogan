@@ -4,7 +4,6 @@ import {Grid } from "@mui/material";
 
 import {
   TransmisionSubasta,
-  UsuariosConectados,
 } from "custom/components/Transmision";
 
 
@@ -15,12 +14,10 @@ export default function PageAdminTransmision() {
         <title>Transmisión</title>
       </Head>
 
-      <Grid container spacing={1} padding="60px" >
+      <Grid container spacing={1} padding="15px" >
 
-        <Grid item xs={12} sm={5}>
-          <UsuariosConectados />
-        </Grid>
-        <Grid item xs={12} sm={6}>
+       
+        <Grid item xs={12}>
           <TransmisionSubasta />
         </Grid>
       </Grid>

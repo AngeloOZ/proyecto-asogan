@@ -23,7 +23,8 @@ async function obtenerConectados(req: NextApiRequest, res: NextApiResponse) {
 
       select: {
         usuarioid: true,
-        nombres:true
+        nombres:true,
+        identificacion:true
         },
     
       

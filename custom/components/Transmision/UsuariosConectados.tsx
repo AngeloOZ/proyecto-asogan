@@ -1,4 +1,4 @@
-import { useState } from "react";
+
 import {
   ListItemText,
   ListItem,
@@ -6,22 +6,9 @@ import {
   List,
   Container,
 } from "@mui/material";
-import { subastaAPI } from "custom/api";
-import { compradores } from "@prisma/client";
-import { useInterval } from "usehooks-ts";
 
-
-export const UsuariosConectados = () => {
-  const [conectados, setConectados] = useState<compradores[]>([]);
-
-  useInterval(() => {
-    useObtenerConectados();
-  }, 3000);
-
-  async function useObtenerConectados() {
-    const { data } = await subastaAPI.get("/compradores/conectados");
-    setConectados(data);
-  }
+export const UsuariosConectados = (props: any) => {
+  const { data, cantidad } = props
 
   return (
     <>
@@ -39,20 +26,20 @@ export const UsuariosConectados = () => {
           }}
 
         >
-          <Typography variant="subtitle1" sx={{ paddingBottom: '15px' }}>Compradores Conectados ({conectados.length})</Typography>
+          <Typography variant="subtitle1" sx={{ paddingBottom: '15px' }}>Compradores Conectados ({cantidad})</Typography>
 
-          {conectados.length > 0 && (conectados
-            .filter((conectado: any) => conectado.usuarioid !== null)
+          {cantidad > 0 && (data
+            .filter((conectado: any) => conectado.conectado !== null)
             .map((conectado: any) => (
               <ListItem
-                key={conectado.usuarioid}
+                key={conectado.conectado}
                 sx={{
                   mt: "10px",
                   borderRadius: "5px",
                   border: "1px solid rgba(0, 0, 0, 0.1)",
                 }}
               >
-                <ListItemText primary={conectado.nombres + conectado.usuarioid} />
+                <ListItemText primary={conectado.nombres} />
               </ListItem>
             ))
           )}
@@ -61,3 +48,4 @@ export const UsuariosConectados = () => {
     </>
   );
 };
+

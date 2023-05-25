@@ -1,208 +1,56 @@
-import socket from 'utils/sockets';
-import css from "../../styles/martillador.module.css";
-import { Box, Stack, MenuItem, Select, Button } from "@mui/material";
+/* eslint-disable no-undef */
 import { useEffect, useState, useRef } from "react";
+import { Box, Stack, Button, Grid } from "@mui/material";
 import { useSnackbar } from "../../../src/components/snackbar";
-import io from 'socket.io-client';
-import { subastaAPI } from 'custom/api';
-const config = {
-  iceServers: [
-    {
-      urls: "stun:stun.l.google.com:19302",
-    },
-    // {
-    //   "urls": "turn:TURN_IP?transport=tcp",
-    //   "username": "TURN_USERNAME",
-    //   "credential": "TURN_CREDENTIALS"
-    // }
-  ],
-};
+import { UsuariosConectados } from "./UsuariosConectados";
 
 export function TransmisionSubasta() {
+  const { enqueueSnackbar } = useSnackbar();
+  const [contador, setContador] = useState(0);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const botonRef = useRef<HTMLButtonElement>(null);
+  var allRecordedBlobs: any = [];
+  var broadcastId = "";
+  let verificar = false;
   const [dispositivoAudio, setdispositivoAudio] = useState<MediaDeviceInfo[]>(
     []
   );
   const [dispositivoVideo, setdispositivoVideo] = useState<MediaDeviceInfo[]>(
     []
   );
-  const [selectedAudioDevice, setSelectedDispositivoAudio] = useState<
-    string | null
-  >("");
-  const [selectedVideoDevice, setSelectedDispositivoVideo] = useState<
-    string | null
-  >("");
-  const [stream, setStream] = useState(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  let peerConnections: { [id: string]: RTCPeerConnection } = {};
-  const { enqueueSnackbar } = useSnackbar();
+  const [selectedAudioDevice, setSelectedDispositivoAudio] = useState("");
+  const [selectedVideoDevice, setSelectedDispositivoVideo] = useState("");
   const [botonIniciar, setBotonIniciar] = useState(false);
-  const [botonTerminar, setBotonTerminar] = useState(true);
-  const [selectDispositivos, setSelectDispositivos] = useState(false);
+  const [botonFinalizar, setBotonFinalizar] = useState(true);
+  const [conectados, setConectados] = useState<any[]>([]);
+
+  const cambiarAudio = (event: any) => {
+    setSelectedDispositivoAudio(event.target.value);
+  };
+
+  const cambiarVideo = (event: any) => {
+    setSelectedDispositivoVideo(event.target.value);
+
+  };
+
   useEffect(() => {
-    const pedirPermisos = async () => {
-      try {
-     
+    console.log(selectedVideoDevice)
+  }, [selectedAudioDevice, selectedVideoDevice, conectados]);
 
-        await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
 
-        navigator.mediaDevices.enumerateDevices().then(dispositivos);
-      } catch (error) {
-        console.error('Error al solicitar permisos:', error);
-      }
-    };
-  
-    pedirPermisos();
+  useEffect(() => {
+
+    navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+
+    navigator.mediaDevices.enumerateDevices().then(dispositivos);
+
 
   }, []);
 
-  useEffect(() => {
-    getStream();
-  }, [selectedAudioDevice, selectedVideoDevice]);
-
-  //////////////////////////////////////////////////
-
-  useEffect(() => {
-
-    socket.connect();
-
-    socket.on("answer", (id, description) => {
-      const peerConnection = peerConnections[id];
-
- 
-      if (peerConnection.signalingState === "have-local-offer" || peerConnection.signalingState === "have-remote-pranswer") {
-
-        peerConnections[id].setRemoteDescription(description);
-      }
-    });
-
-    socket.on("watcher", (id: string) => {
-
-      const peerConnection = new RTCPeerConnection(config);
-      peerConnections[id] = peerConnection;
-  
-
-      let stream: MediaStream | null = null;
-      if (videoRef.current) {
-        stream = videoRef.current.srcObject as MediaStream;
-      }
-
-      if (stream != null) {
-        const existingTracks = peerConnection.getSenders().map((sender) => sender.track);
-        stream.getTracks().forEach((track) => {
-          if (!existingTracks.includes(track)) {
-            peerConnection.addTrack(track, stream!);
-          }
-        });
-      }
-
-      peerConnection.onicecandidate = (event: RTCPeerConnectionIceEvent) => {
-
-        if (event.candidate) {
-
-          socket.emit("candidate", id, event.candidate);
-        }
-      };
-
-      if (peerConnection.signalingState !== "closed") {
-
-        peerConnection.createOffer()
-          .then((sdp) => peerConnection.setLocalDescription(sdp))
-          .then(() => {
-            socket.emit("offer", id, peerConnection.localDescription);
-          });
-      }
-    });
-
-    socket.on("candidate", (id, candidate) => {
-      peerConnections[id].addIceCandidate(new RTCIceCandidate(candidate));
-    });
-
-    socket.on("disconnectPeer", (id) => {
-      
-      if (id) {
-        if (peerConnections[id]) {
-          peerConnections[id].close();
-          delete peerConnections[id];
-        }
-      }
-    });
-
-    const handleUnload = () => {
-      socket.close()
-    };
-
-    window.addEventListener("beforeunload", handleUnload);
-
-    return () => {
-      window.removeEventListener("beforeunload", handleUnload);
-    };
-  }, []);
-
-  ////Terminar
-
- async function terminarTransmision() {
-  try{
-
-    await subastaAPI.put(`/compradores/conectados?usuarioid=0&conectado=0`);
-  }catch{
-    enqueueSnackbar("Ocurrió un error", {
-      variant: "error",
-    });
-  }
-
-    if (videoRef.current) {
-      const stream = videoRef.current.srcObject as MediaStream | null;
-      if (stream instanceof MediaStream) {
-        stream.getTracks().forEach((track) => {
-          track.stop();
-          stream.removeTrack(track);
-        });
-      }
-      videoRef.current.srcObject = null;
-    }
-    socket.emit("video")
-    socket.emit("disconnectPeer")
-
-    if (socket && socket.connected) {
-      socket.close();
-    }
-    peerConnections = {};
-    window.location.reload()
-  }
-
-  function generarNuevoId() {
-
-    return Date.now().toString();
-  }
-
-  function iniciarTransmision() {
-    socket.emit("disconnectPeer")
-    const videoElement = videoRef.current;
-    if (selectedAudioDevice && selectedVideoDevice && videoElement?.srcObject != null) {
-      if (socket.connected != true) {
-        socket.connect();
-   
-      }
-
-      const newPeerConnectionId = generarNuevoId();
-      const newPeerConnection = new RTCPeerConnection(config);
-      peerConnections[newPeerConnectionId] = newPeerConnection;
-      socket.emit("broadcaster");
-  
-      setBotonIniciar(true)
-      setBotonTerminar(false)
-      setSelectDispositivos(true)
-    } else {
-      enqueueSnackbar("Escoja un dispositivo de Audio y Video hasta que se previsualice", {
-        variant: "error",
-      });
-    }
-
-  }
-
-  ///////////////////////////////Microfono y Camara
   const dispositivos = (devices: MediaDeviceInfo[]) => {
-    const updatedAudioDevices = [...dispositivoAudio]; // Crear una copia del array existente
+
+
+    const updatedAudioDevices = [...dispositivoAudio];
 
     devices.forEach((device) => {
       if (device.kind === "audioinput") {
@@ -218,131 +66,354 @@ export function TransmisionSubasta() {
 
     setdispositivoAudio(updatedAudioDevices);
     setdispositivoVideo(dispositivoVideo);
-
-    /*  setSelectedDispositivoAudio(
-      dispositivoAudio.length ? dispositivoAudio[0].deviceId : null
-    );
-    setSelectedDispositivoVideo(
-      dispositivoVideo.length ? dispositivoVideo[0].deviceId : null
-    ); */
-
-   
   };
+  const botonClick = () => {
 
-  const getStream = () => {
-    if (selectedAudioDevice != "" && selectedVideoDevice != "") {
-      const constraints = {
+    if (selectedAudioDevice && selectedVideoDevice) {
+     // @ts-ignore
+      const connection = new RTCMultiConnection(); 
+      connection.iceServers = [
+        {
+          urls: [
+            "stun:stun.l.google.com:19302",
+            "stun:stun1.l.google.com:19302",
+            "stun:stun2.l.google.com:19302",
+            "stun:stun.l.google.com:19302?transport=udp",
+          ],
+        },
+      ];
+      connection.enableScalableBroadcast = true;
+      connection.maxRelayLimitPerUser = 3;
+      connection.autoCloseEntireSession = true;
+      connection.socketURL = "http://localhost:9001/";
+      connection.socketMessageEvent = "transmisiones";
+      connection.connectSocket(function (socket: any) {
+
+        socket.on("logs", function (log: any) {
+          console.log(log);
+        });
+
+        socket.on("conectadosTransmision", function (
+          conectadoid: string,
+          nombre: string,
+          cedula:string
+        ) {
+          const nuevoConectado = { conectado: conectadoid, nombres: nombre, cedula:cedula };
+          setConectados((prevConectados) => [
+            ...prevConectados,
+            nuevoConectado,
+          ]);
+        });
+   
+        socket.on("join-broadcaster", function (hintsToJoinBroadcast: any) {
+          console.log("join-broadcaster", hintsToJoinBroadcast);
+
+          connection.session = hintsToJoinBroadcast.typeOfStreams;
+          connection.sdpConstraints.mandatory = {
+            OfferToReceiveVideo: !!connection.session.video,
+            OfferToReceiveAudio: !!connection.session.audio,
+          };
+          connection.broadcastId = hintsToJoinBroadcast.broadcastId;
+          connection.join(hintsToJoinBroadcast.userid);
+        });
+
+        socket.on("rejoin-broadcast", function (broadcastId: any) {
+          console.log("rejoin-broadcast", broadcastId);
+
+          connection.attachStreams = [];
+          socket.emit("check-broadcast-presence", broadcastId, function (
+            isBroadcastExists: any
+          ) {
+            if (!isBroadcastExists) {
+              connection.userid = broadcastId;
+            }
+
+            socket.emit("join-broadcast", {
+              broadcastId: broadcastId,
+              userid: connection.userid,
+              typeOfStreams: connection.session,
+            });
+          });
+        });
+
+        socket.on("start-broadcasting", function (typeOfStreams: any) {
+
+          console.log("start-broadcasting", typeOfStreams);
+
+          connection.sdpConstraints.mandatory = {
+            OfferToReceiveVideo: false,
+            OfferToReceiveAudio: false,
+          };
+          connection.session = typeOfStreams;
+
+          connection.open(connection.userid);
+          setBotonIniciar(true)
+          setBotonFinalizar(false)
+        });
+      });
+
+      connection.onstream = function (event: any) {
+        if (connection.isInitiator && event.type !== "local") {
+          return;
+        }
+
+        connection.isUpperUserLeft = false;
+
+        if (videoRef.current) {
+          videoRef.current.srcObject = event.stream;
+          videoRef.current.play();
+          videoRef.current.dataset.userid = event.userId;
+          if (event.type === "local") {
+            videoRef.current.muted = true;
+          }
+        }
+
+        if (connection.isInitiator === false && event.type === "remote") {
+          connection.dontCaptureUserMedia = true;
+          connection.attachStreams = [event.stream];
+          connection.sdpConstraints.mandatory = {
+            OfferToReceiveAudio: false,
+            OfferToReceiveVideo: false,
+          };
+
+          connection.getSocket(function (socket: any) {
+            socket.emit("can-relay-broadcast");
+
+            if (connection.DetectRTC.browser.name === "Chrome") {
+              connection.getAllParticipants().forEach(function (p: any) {
+                if (p + "" !== event.userid + "") {
+                  var peer = connection.peers[p].peer;
+                  peer.getLocalStreams().forEach(function (localStream: any) {
+                    peer.removeStream(localStream);
+                  });
+                  event.stream.getTracks().forEach(function (track: any) {
+                    peer.addTrack(track, event.stream);
+                  });
+                  connection.dontAttachStream = true;
+                  connection.renegotiate(p);
+                  connection.dontAttachStream = false;
+                }
+              });
+            }
+
+            if (connection.DetectRTC.browser.name === "Firefox") {
+              connection.getAllParticipants().forEach(function (p: any) {
+                if (p + "" !== event.userid + "") {
+                  connection.replaceTrack(event.stream, p);
+                }
+              });
+            }
+
+
+          });
+        }
+
+        localStorage.setItem(connection.socketMessageEvent, connection.sessionid);
+      };
+
+      connection.onstreamended = function () { };
+
+      connection.onleave = function (event: any) {
+        if (videoRef.current) {
+          const currentVideo = videoRef.current;
+          if (event.userid !== currentVideo.dataset.userid) return;
+
+          connection.getSocket(function (socket: any) {
+            socket.emit("can-not-relay-broadcast");
+
+            connection.isUpperUserLeft = true;
+
+            if (allRecordedBlobs.length) {
+              var lastBlob = allRecordedBlobs[allRecordedBlobs.length - 1];
+              currentVideo.src = URL.createObjectURL(lastBlob);
+              currentVideo.play();
+              allRecordedBlobs = [];
+            } else if (connection.currentRecorder) {
+              var recorder = connection.currentRecorder;
+              connection.currentRecorder = null;
+              recorder.stopRecording(function () {
+                if (!connection.isUpperUserLeft) return;
+
+                currentVideo.src = URL.createObjectURL(recorder.getBlob());
+                currentVideo.play();
+              });
+            }
+
+            if (connection.currentRecorder) {
+              connection.currentRecorder.stopRecording();
+              connection.currentRecorder = null;
+            }
+          });
+        }
+      };
+
+
+
+      if (localStorage.getItem(connection.socketMessageEvent)) {
+        broadcastId = localStorage.getItem(connection.socketMessageEvent);
+      } else {
+        broadcastId = connection.token();
+      }
+
+      localStorage.setItem(connection.socketMessageEvent, "hola");
+
+      connection.onNumberOfBroadcastViewersUpdated = function (event: any) {
+        if (!connection.isInitiator) return;
+
+        setContador(event.numberOfBroadcastViewers);
+
+
+      };
+
+      connection.onUserStatusChanged = function (event: any) {
+        if (event.status == "offline") {
+          setConectados((prevConectados) =>
+            prevConectados.filter((item) => item.conectado !== event.userid)
+          );
+        }
+      };
+
+      var broadcastId: any = "hola";
+      connection.extra.broadcastId = broadcastId;
+
+      connection.session = {
+        audio: true,
+        video: true,
+        oneway: true,
+      };
+
+      connection.mediaConstraints = {
         audio: {
-          deviceId: selectedAudioDevice
-            ? { exact: selectedAudioDevice }
-            : undefined,
+          mandatory: {},
+          optional: [
+            {
+              sourceId: selectedAudioDevice,
+            },
+          ],
         },
         video: {
-          deviceId: selectedVideoDevice
-            ? { exact: selectedVideoDevice }
-            : undefined,
+          mandatory: {},
+          optional: [
+            {
+              sourceId: selectedVideoDevice,
+            },
+          ],
         },
       };
-      navigator.mediaDevices
-        .getUserMedia(constraints)
-        .then(gotStream)
-        .catch(handleError);
+      connection.getSocket(function (socket: any) {
+        socket.emit("check-broadcast-presence", broadcastId, function (
+          isBroadcastExists: any
+        ) {
+          verificar = isBroadcastExists;
+          if (!isBroadcastExists) {
+
+            connection.userid = broadcastId;
+            verificar = true;
+            socket.emit("cliente");
+
+          }
+          if (verificar) {
+            socket.emit("join-broadcast", {
+              broadcastId: broadcastId,
+              userid: connection.userid,
+              typeOfStreams: connection.session,
+            });
+          }
+        });
+      });
     } else {
-      const videoElement = videoRef.current;
-      if (videoElement) {
-        videoElement.srcObject = null;
-      }
+      enqueueSnackbar("Escoja un dispositivo de Audio y Video para iniciar la Transmisión", {
+        variant: "error",
+      });
     }
+
+
   };
 
-  const gotStream = (stream: any) => {
-    const videoElement = videoRef.current;
-    setSelectedDispositivoAudio(selectedAudioDevice || null);
-    setSelectedDispositivoVideo(selectedVideoDevice || null);
-    setStream(stream);
-    if (videoElement) {
-      videoElement.srcObject = stream;
-    }
-  };
-
-  const handleError = (error: any) => {
-    console.error(error);
-  };
-
-  const cambiarAudio = (event: any) => {
-    setSelectedDispositivoAudio(event.target.value);
-  };
-
-  const cambiarVideo = (event: any) => {
-    setSelectedDispositivoVideo(event.target.value);
-  };
-
+  const cerrarTrans = () => {
+    window.location.reload()
+  }
   return (
-    <Box component="div" className={css.video} mx="auto">
-      <Stack>
-        <label>Dispositivos de Audio: </label>
-        { (
-          <select
-            id="audioSource"
-            value={selectedAudioDevice || ""}
-            onChange={cambiarAudio}
-            style={{ width: "100%", height: "40px" }}
-            disabled={selectDispositivos}
-          >
-            <option value="">Escoja un Audio</option>
-            {dispositivoAudio.map((device: any) => (
-              <option key={device.deviceId} value={device.deviceId}>
-                {device.label || ""}
-              </option>
-            ))}
-          </select>
-        ) }
-      </Stack>
+    <>
+      <Grid container spacing={1} padding="60px">
+        <Grid item xs={12} sm={5}>
+          <UsuariosConectados data={conectados} cantidad={contador} />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <Box component="div" mx="auto">
+            <Stack>
+              <label>Dispositivos de Audio: </label>
 
-      <Stack style={{ marginTop: "10px" }}>
-        <label>Dipositivos de Video: </label>
+              <select
+                id="audioSource"
+                onChange={cambiarAudio}
+                style={{ width: "100%", height: "40px" }}
+                disabled={botonIniciar}
+              >
+                <option value="">Escoja un Audio</option>
+                {dispositivoAudio.map((device) => (
+                  <option key={device.deviceId} value={device.deviceId}>
+                    {device.label || ""}
+                  </option>
+                ))}
+              </select>
+            </Stack>
 
-        <select
-          id="videoSource"
-          onChange={cambiarVideo}
-          style={{ width: "100%", height: "35px" }}
-          disabled={selectDispositivos}
-        >
-          <option value="">Escoja un Video</option>
-          {dispositivoVideo.map((device: any) => (
-            <option key={device.deviceId} value={device.deviceId}>
-              {device.label || ""}
-            </option>
-          ))}
-        </select>
-      </Stack>
+            <Stack style={{ marginTop: "10px" }}>
+              <label>Dipositivos de Video: </label>
 
-      <video
-        ref={videoRef}
-        playsInline
-        autoPlay
-        muted
-        width="100%"
-        height="350px"
-        style={{ marginTop: "35px" }}
-      ></video>
-      <Stack direction="row" mt="20px" spacing={2} mx="17%">
-        <Button
-          color="success"
-          variant="contained"
-          onClick={iniciarTransmision}
-          disabled={botonIniciar}
-        >
-          Iniciar Transmisión
-        </Button>
+              <select
+                id="videoSource"
+                onChange={cambiarVideo}
+                style={{ width: "100%", height: "35px" }}
+                disabled={botonIniciar}
+              >
+                <option value="">Escoja un Video</option>
+                {dispositivoVideo.map((device) => (
+                  <option key={device.deviceId} value={device.deviceId}>
+                    {device.label || ""}
+                  </option>
+                ))}
+              </select>
+            </Stack>
+            <video
+              ref={videoRef}
+              id="video-preview"
+              width="100%"
+              height="350px"
+              style={{ marginTop: "35px" }}
+              controls={false}
+              loop
+            ></video>
 
-        <Button color="error" variant="contained" onClick={terminarTransmision} disabled={botonTerminar} >
-          Terminar Transmisión
-        </Button>
-        <Button color="secondary" variant="contained" onClick={getStream} >
-          Mostrar
-        </Button>
-      </Stack>
-    </Box>
+            <Stack
+              direction="row"
+              mt="20px"
+              spacing={2}
+              justifyContent="center"
+            >
+              <Button
+                ref={botonRef}
+                id="open-or-join"
+                color="success"
+                variant="contained"
+                onClick={botonClick}
+                disabled={botonIniciar}
+              >
+                Iniciar Transmisión
+              </Button>
+              <Button
+                color="error"
+                variant="contained"
+                onClick={cerrarTrans}
+                disabled={botonFinalizar}
+              >
+                Cerrar Transmisión
+              </Button>
+            </Stack>
+          </Box>
+        </Grid>
+      </Grid>
+    </>
   );
 }
