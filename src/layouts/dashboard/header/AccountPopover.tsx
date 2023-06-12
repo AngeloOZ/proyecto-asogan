@@ -17,7 +17,7 @@ import MenuPopover from '../../../components/menu-popover';
 import { IconButtonAnimate } from '../../../components/animate';
 
 // ----------------------------------------------------------------------
-import { subastaAPI } from "../../../../custom/api";
+
 
 // ----------------------------------------------------------------------
 
@@ -40,8 +40,7 @@ export default function AccountPopover() {
 
   const handleLogout = async () => {
     try {
-      if  (user?.tipo === 2)
-        await subastaAPI.put(`/compradores/conectados?usuarioid=${user?.usuarioid}&conectado=0`);
+    
 
       logoutUser();
       push(PATH_AUTH.login);

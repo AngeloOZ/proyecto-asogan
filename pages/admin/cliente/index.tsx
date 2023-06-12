@@ -5,29 +5,14 @@ import DashboardLayout from 'src/layouts/dashboard/DashboardLayout'
 import { PATH_DASHBOARD } from 'src/routes/paths'
 import { EventoList } from "custom/components/Eventos";
 import { useObtenerEventosHoy } from 'custom/components/Eventos/Hooks';
-import { useEffect, useContext } from 'react'
-import { subastaAPI } from 'custom/api';
-import { AuthContext } from 'src/auth'
+
 
 PageAdminEventos.getLayout = (page: React.ReactElement) => <DashboardLayout roles={['comprador']}>{page}</DashboardLayout>
 
 
 export default function PageAdminEventos() {
     const { eventos, isLoading } = useObtenerEventosHoy();
-    const { user } = useContext(AuthContext)
-    useEffect(() => {
-
-        try {
-            const validarConectado = async () => {
-                await subastaAPI.put(`/compradores/conectados?usuarioid=${user?.usuarioid}&conectado=0`);
-            }
-            validarConectado()
-        } catch (error) {
-            console.log(error)
-        }
-
-    })
-
+ 
     return (
         <>
             <Head>

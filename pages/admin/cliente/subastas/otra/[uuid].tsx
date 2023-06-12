@@ -29,7 +29,7 @@ export default function PageSubastaCliente({ evento, banners }: Props) {
     const procesoEnCurso = true;
     useEffect(() => {
 
-        try {
+    /*     try {
             const validarConectado = async () => {
                 if (loteActual){
 
@@ -39,9 +39,9 @@ export default function PageSubastaCliente({ evento, banners }: Props) {
             validarConectado()
         } catch (error) {
             console.log(error)
-        }
+        } */
 
-        const handleBeforeUnload = async (event:any) => {
+   /*      const handleBeforeUnload = async (event:any) => {
             if (procesoEnCurso) {
                 event.preventDefault();
                 await fetch(
@@ -56,12 +56,12 @@ export default function PageSubastaCliente({ evento, banners }: Props) {
         };
 
         window.addEventListener("beforeunload", handleBeforeUnload);
-        window.addEventListener("unload", handleUnload);
+        window.addEventListener("unload", handleUnload); */
 
-        return () => {
+       /*  return () => {
             window.removeEventListener("beforeunload", handleBeforeUnload);
             window.removeEventListener("unload", handleUnload);
-        };
+        }; */
     }, [procesoEnCurso,user?.usuarioid,loteActual])
 
     return (

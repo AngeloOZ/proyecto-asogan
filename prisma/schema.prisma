@@ -16,7 +16,8 @@ model usuario {
   tipo           Int?         @default(1)
   celular        String       @db.VarChar(10)
   correo         String       @db.VarChar(100)
-  conectado      Int?         @default(0)
+  conectado      Int?
+  conexionid     String?      @db.VarChar(100)
   compradores    compradores?
   pujas          pujas[]
 }
@@ -116,7 +117,6 @@ model tipo_animales {
   codigoanimal      String  @db.VarChar(7)
   descripcionanimal String? @db.VarChar(50)
 }
-
 model notificaciones {
   id          Int       @id @default(autoincrement())
   fecha       DateTime? @db.DateTime(0)

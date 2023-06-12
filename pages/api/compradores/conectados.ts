@@ -23,53 +23,69 @@ async function obtenerConectados(req: NextApiRequest, res: NextApiResponse) {
 
       select: {
         usuarioid: true,
-        nombres:true,
-        identificacion:true
-        },
-    
-      
+        nombres: true,
+        identificacion: true
+      },
+
+
     });
     return res.status(200).json(compradores);
   } catch (error) {
-  
+
     return res.status(500).json({ message: handleErrorsPrisma(error) });
   } finally {
     prisma.$disconnect();
   }
 }
 
-async function actualizarConectados( req: NextApiRequest, res: NextApiResponse) {
-     
-    try {
-        const { usuarioid, conectado } = req.query;
-        let comprador
-      if(Number(usuarioid) === 0){
-        comprador = await prisma.usuario.updateMany({
+async function actualizarConectados(req: NextApiRequest, res: NextApiResponse) {
+
+  try {
+    const { usuarioid, conectado, conexionid } = req.query;
+    let comprador
+    let buscarComprador
+
+    if (Number(usuarioid) !== 0) {
+      if (conexionid) {
+        comprador = await prisma.usuario.update({
+          where: { usuarioid: Number(usuarioid) },
           data: {
-              conectado: Number(conectado)
+            conectado: Number(conectado),
+            conexionid: String(conexionid)
+
           }
-      });
-      }else{
-
-      comprador = await prisma.usuario.update({
-            where: { usuarioid: Number(usuarioid) },
-            data: {
-                conectado: Number(conectado)
-  
-            }
-  
         });
-      }
-
-
         return res.status(200).json(comprador);
+      }
+    }
 
-    } catch (error) {
-        return res.status(500).json({ message: handleErrorsPrisma(error) });
-      } finally {
-        prisma.$disconnect();
+    if (conexionid) {
+      buscarComprador = await prisma.usuario.findMany({
+        select: { usuarioid: true },
+        where: { conexionid: String(conexionid) }
+      })
+
+      if (buscarComprador[0].usuarioid) {
+        comprador = await prisma.usuario.update({
+          where: { usuarioid: Number(buscarComprador[0].usuarioid) },
+          data: {
+            conectado: Number(conectado),
+            conexionid: ""
+          }
+        });
+
       }
 
+    }
+    return res.status(200).json(comprador);
 
-    
+
+  } catch (error) {
+    return res.status(500).json({ message: handleErrorsPrisma(error) });
+  } finally {
+    prisma.$disconnect();
+  }
+
+
+
 }

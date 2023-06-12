@@ -11,7 +11,7 @@ import CustomBreadcrumbs from 'src/components/custom-breadcrumbs/CustomBreadcrum
 import { lotes as ILote } from '@prisma/client'
 import { useContext, useEffect } from 'react'
 import { AuthContext } from 'src/auth'
-import { subastaAPI } from 'custom/api';
+
 
 PageAdminProveedores.getLayout = (page: React.ReactElement) => <DashboardLayout>{page}</DashboardLayout>
 
@@ -23,14 +23,14 @@ export default function PageAdminProveedores() {
 
     useEffect(() => {
 
-        try {
+       /*  try {
             const validarConectado = async () => {
                 await subastaAPI.put(`/compradores/conectados?usuarioid=${user?.usuarioid}&conectado=0`);
             }
             validarConectado()
         } catch (error) {
             console.log(error)
-        }
+        } */
 
     })
     const handleClickShow = (item: ILote) => {

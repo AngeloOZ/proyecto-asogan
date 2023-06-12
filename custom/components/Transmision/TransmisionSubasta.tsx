@@ -3,12 +3,14 @@ import { useEffect, useState, useRef } from "react";
 import { Box, Stack, Button, Grid } from "@mui/material";
 import { useSnackbar } from "../../../src/components/snackbar";
 import { UsuariosConectados } from "./UsuariosConectados";
+import { subastaAPI } from 'custom/api'
 
 export function TransmisionSubasta() {
   const { enqueueSnackbar } = useSnackbar();
   const [contador, setContador] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
   const botonRef = useRef<HTMLButtonElement>(null);
+
   var allRecordedBlobs: any = [];
   var broadcastId = "";
   let verificar = false;
@@ -70,8 +72,8 @@ export function TransmisionSubasta() {
   const botonClick = () => {
 
     if (selectedAudioDevice && selectedVideoDevice) {
-     // @ts-ignore
-      const connection = new RTCMultiConnection(); 
+      // @ts-ignore
+      const connection = new RTCMultiConnection();
       connection.iceServers = [
         {
           urls: [
@@ -93,18 +95,22 @@ export function TransmisionSubasta() {
           console.log(log);
         });
 
-        socket.on("conectadosTransmision", function (
+        socket.on("conectadosTransmision", async function (
           conectadoid: string,
-          nombre: string,
-          cedula:string
+          usuarioid: string
         ) {
-          const nuevoConectado = { conectado: conectadoid, nombres: nombre, cedula:cedula };
-          setConectados((prevConectados) => [
-            ...prevConectados,
-            nuevoConectado,
-          ]);
+          if (conectadoid) {
+            await fetch(
+              `/api/compradores/conectados?usuarioid=${usuarioid}&conectado=1&conexionid=${conectadoid}`,
+              { method: "PUT" }
+            );
+          }
+
+          const respuesta = await subastaAPI.get(`/compradores/conectados`);
+          const usuariosCon = respuesta.data
+          setConectados(usuariosCon)
         });
-   
+
         socket.on("join-broadcaster", function (hintsToJoinBroadcast: any) {
           console.log("join-broadcaster", hintsToJoinBroadcast);
 
@@ -265,11 +271,17 @@ export function TransmisionSubasta() {
 
       };
 
-      connection.onUserStatusChanged = function (event: any) {
+      connection.onUserStatusChanged = async function (event: any) {
         if (event.status == "offline") {
-          setConectados((prevConectados) =>
-            prevConectados.filter((item) => item.conectado !== event.userid)
+   
+          await fetch(
+            `/api/compradores/conectados?usuarioid=0&conectado=0&conexionid=${event.userid}`,
+            { method: "PUT" }
           );
+          
+          const respuesta = await subastaAPI.get(`/compradores/conectados`);
+          const usuariosCon = respuesta.data
+          setConectados(usuariosCon)
         }
       };
 
@@ -330,7 +342,12 @@ export function TransmisionSubasta() {
 
   };
 
-  const cerrarTrans = () => {
+  const cerrarTrans = async () => {
+
+    await fetch(
+      `/api/compradores/conectados?usuarioid=0&conectado=0`,
+      { method: "PUT" }
+    );
     window.location.reload()
   }
   return (

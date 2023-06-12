@@ -40,7 +40,7 @@ export function TransmisionUsuarios(props: any) {
                     window.location.reload()
                 });
                 
-                socket.emit("conectados", connection.userid, user?.nombres, user?.usuarioid)
+                socket.emit("conectados", connection.userid, user?.usuarioid)
 
                 socket.on("logs", function (log: any) {
                     console.log(log);

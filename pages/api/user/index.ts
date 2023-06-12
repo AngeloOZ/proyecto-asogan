@@ -84,7 +84,7 @@ async function crearUsuario(req: NextApiRequest, res: NextApiResponse) {
 async function actualizarUsuario(req: NextApiRequest, res: NextApiResponse) {
     try {
       
-        const { usuarioid, identificacion, nombres, rol, clave,celular,correo }: usuario = req.body
+        const { usuarioid, identificacion, nombres, rol, clave,celular,correo, conexionid }: usuario = req.body
         if (clave === "") {
             const usuario = await prisma.usuario.update({
                 where: { usuarioid },
@@ -94,6 +94,8 @@ async function actualizarUsuario(req: NextApiRequest, res: NextApiResponse) {
                     celular,
                     correo,
                     rol: `["${rol}"]`,
+                    conexionid
+
                 }
             });
             return res.status(200).json(usuario);
@@ -110,6 +112,7 @@ async function actualizarUsuario(req: NextApiRequest, res: NextApiResponse) {
                 correo,
                 clave: claveEncriptada,
                 rol: `["${rol}"]`,
+                conexionid
             }
         });
       
