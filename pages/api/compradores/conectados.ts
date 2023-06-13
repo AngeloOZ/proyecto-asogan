@@ -55,8 +55,17 @@ async function actualizarConectados(req: NextApiRequest, res: NextApiResponse) {
 
           }
         });
-        return res.status(200).json(comprador);
+
+      } else {
+        comprador = await prisma.usuario.update({
+          where: { usuarioid: Number(usuarioid) },
+          data: {
+            conectado: Number(conectado),
+            conexionid: ""
+          }
+        });
       }
+      return res.status(200).json(comprador);
     }
 
     if (conexionid) {
@@ -75,8 +84,8 @@ async function actualizarConectados(req: NextApiRequest, res: NextApiResponse) {
         });
 
       }
-
     }
+    
     return res.status(200).json(comprador);
 
 

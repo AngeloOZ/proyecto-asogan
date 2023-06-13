@@ -4,7 +4,7 @@ import { ModalTransmision } from "./ModalTransmision";
 import { AuthContext } from 'src/auth';
 
 export function TransmisionUsuarios(props: any) {
-    const { ancho, alto, audio, rol } = props
+    const { ancho, alto, rol } = props
     const videoRef = useRef<HTMLVideoElement>(null);
     const [selectedAudioDevice] = useState("");
     const [selectedVideoDevice] = useState("");
@@ -13,6 +13,7 @@ export function TransmisionUsuarios(props: any) {
     const [showModal, setShowModal] = useState(false);
     const { user } = useContext(AuthContext);
     var allRecordedBlobs: any = [];
+
     let verificar = false;
     useEffect(() => {
         if (!showModal) {
@@ -244,7 +245,6 @@ export function TransmisionUsuarios(props: any) {
             }
         }
 
-
     }, [])
 
     return (
@@ -252,9 +252,9 @@ export function TransmisionUsuarios(props: any) {
 
             <ModalTransmision open={showModal} rol={rol} />
 
-            <img src='https://www.creativefabrica.com/wp-content/uploads/2020/07/06/Video-Camera-Icon-Graphics-4551757-1.jpg' width={ancho} height={alto} style={{ display: visualizarI }} ></img>
+            <img src='https://www.creativefabrica.com/wp-content/uploads/2020/07/06/Video-Camera-Icon-Graphics-4551757-1.jpg' width={ancho} height={alto} style={{ display: visualizarI }}></img>
 
-            <video ref={videoRef} id="video-preview" width={ancho} height={alto} style={{ display: visualizarV }} autoPlay loop ></video>
+            <video ref={videoRef} id="video-preview" width={ancho} height={alto} style={{ display: visualizarV }}  loop controls={rol == "comprador2"  ? true: false} ></video>
 
         </>
     );

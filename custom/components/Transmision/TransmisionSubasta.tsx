@@ -36,16 +36,15 @@ export function TransmisionSubasta() {
   };
 
   useEffect(() => {
-    console.log(selectedVideoDevice)
+
   }, [selectedAudioDevice, selectedVideoDevice, conectados]);
 
 
   useEffect(() => {
 
-    navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-
+    navigator.mediaDevices.getUserMedia({audio:true, video:true});
     navigator.mediaDevices.enumerateDevices().then(dispositivos);
-
+    
 
   }, []);
 
@@ -68,6 +67,8 @@ export function TransmisionSubasta() {
 
     setdispositivoAudio(updatedAudioDevices);
     setdispositivoVideo(dispositivoVideo);
+
+    console.log(dispositivoVideo)
   };
   const botonClick = () => {
 
@@ -99,7 +100,7 @@ export function TransmisionSubasta() {
           conectadoid: string,
           usuarioid: string
         ) {
-          if (conectadoid) {
+          if (conectadoid && Number(usuarioid) > 0 ) {
             await fetch(
               `/api/compradores/conectados?usuarioid=${usuarioid}&conectado=1&conexionid=${conectadoid}`,
               { method: "PUT" }
@@ -273,12 +274,12 @@ export function TransmisionSubasta() {
 
       connection.onUserStatusChanged = async function (event: any) {
         if (event.status == "offline") {
-   
+
           await fetch(
             `/api/compradores/conectados?usuarioid=0&conectado=0&conexionid=${event.userid}`,
             { method: "PUT" }
           );
-          
+
           const respuesta = await subastaAPI.get(`/compradores/conectados`);
           const usuariosCon = respuesta.data
           setConectados(usuariosCon)
@@ -296,20 +297,12 @@ export function TransmisionSubasta() {
 
       connection.mediaConstraints = {
         audio: {
-          mandatory: {},
-          optional: [
-            {
-              sourceId: selectedAudioDevice,
-            },
-          ],
+          deviceId: selectedAudioDevice,
+        
         },
         video: {
-          mandatory: {},
-          optional: [
-            {
-              sourceId: selectedVideoDevice,
-            },
-          ],
+          deviceId: selectedVideoDevice,
+         
         },
       };
       connection.getSocket(function (socket: any) {
