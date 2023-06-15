@@ -44,7 +44,7 @@ export function TransmisionUsuarios(props: any) {
                 socket.emit("conectados", connection.userid, user?.usuarioid)
 
                 socket.on("logs", function (log: any) {
-                    console.log(log);
+                    //console.log(log);
                 });
 
                 socket.on("join-broadcaster", function (hintsToJoinBroadcast: any) {
@@ -254,7 +254,7 @@ export function TransmisionUsuarios(props: any) {
 
             <img src='https://www.creativefabrica.com/wp-content/uploads/2020/07/06/Video-Camera-Icon-Graphics-4551757-1.jpg' width={ancho} height={alto} style={{ display: visualizarI }}></img>
 
-            <video ref={videoRef} id="video-preview" width={ancho} height={alto} style={{ display: visualizarV }}  loop controls={rol == "comprador2"  ? true: false} ></video>
+            <video ref={videoRef} id="video-preview" width={ancho} height={alto} style={{ display: visualizarV }}  loop controls={rol == "comprador2"   ? true: false} ></video>
 
         </>
     );
