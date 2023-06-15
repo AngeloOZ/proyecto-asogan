@@ -32,7 +32,7 @@ export function TransmisionUsuarios(props: any) {
             connection.enableScalableBroadcast = true;
             connection.maxRelayLimitPerUser = 3;
             connection.autoCloseEntireSession = true;
-            connection.socketURL = "http://localhost:9001/";
+            connection.socketURL = process.env.NEXT_PUBLIC_PORT_SOCKETS;
             connection.socketMessageEvent = "transmisiones";
 
             connection.connectSocket(function (socket: any) {
@@ -254,7 +254,7 @@ export function TransmisionUsuarios(props: any) {
 
             <img src='https://www.creativefabrica.com/wp-content/uploads/2020/07/06/Video-Camera-Icon-Graphics-4551757-1.jpg' width={ancho} height={alto} style={{ display: visualizarI }}></img>
 
-            <video ref={videoRef} id="video-preview" width={ancho} height={alto} style={{ display: visualizarV }}  loop controls={rol == "comprador2"   ? true: false} ></video>
+            <video ref={videoRef} id="video-preview" width={ancho} height={alto} style={{ display: visualizarV }}  loop controls={true} ></video>
 
         </>
     );

@@ -96,7 +96,8 @@ async function crearComprador(req: NextApiRequest, res: NextApiResponse) {
                 rol: `["comprador"]`,
                 tipo: 2,
                 correo: correo!,
-                celular: celular!
+                celular: celular!,
+                conexionid:""
             }
         });
 

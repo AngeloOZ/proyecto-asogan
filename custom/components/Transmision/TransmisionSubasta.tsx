@@ -88,7 +88,7 @@ export function TransmisionSubasta() {
       connection.enableScalableBroadcast = true;
       connection.maxRelayLimitPerUser = 3;
       connection.autoCloseEntireSession = true;
-      connection.socketURL = "http://localhost:9001/";
+      connection.socketURL = process.env.NEXT_PUBLIC_PORT_SOCKETS;
       connection.socketMessageEvent = "transmisiones";
       connection.connectSocket(function (socket: any) {
 
