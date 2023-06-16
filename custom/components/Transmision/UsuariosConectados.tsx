@@ -30,9 +30,9 @@ export const UsuariosConectados = (props: any) => {
 
           {cantidad > 0 && (data
             .filter((conectado: any) => conectado.conectado !== null)
-            .map((conectado: any) => (
+            .map((conectado: any, index: number) => (
               <ListItem
-                key={conectado.conectado}
+                key={`${index}${conectado.conectado}`}
                 sx={{
                   mt: "10px",
                   borderRadius: "5px",
