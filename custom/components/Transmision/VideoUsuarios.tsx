@@ -29,7 +29,7 @@ export function TransmisionUsuarios(props: any) {
                 },
             ];
             connection.enableScalableBroadcast = true;
-            connection.maxRelayLimitPerUser = 3;
+            connection.maxRelayLimitPerUser = 2;
             connection.autoCloseEntireSession = true;
             connection.socketURL = process.env.NEXT_PUBLIC_PORT_SOCKETS;
             connection.socketMessageEvent = "transmisiones";
