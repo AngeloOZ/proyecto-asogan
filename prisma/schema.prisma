@@ -16,7 +16,7 @@ model usuario {
   tipo           Int?         @default(1)
   celular        String       @db.VarChar(10)
   correo         String       @db.VarChar(100)
-  conectado      Int?
+  conectado      Int?         @default(0)
   conexionid     String?      @db.VarChar(100)
   compradores    compradores?
   pujas          pujas[]

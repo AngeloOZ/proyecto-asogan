@@ -75,7 +75,6 @@ async function crearComprador(req: NextApiRequest, res: NextApiResponse) {
     let idComprador = 0
     try {
 
-
         const { registro } = req.body;
         const { codigo_paleta, antecedentes_penales, procesos_judiciales, calificacion_bancaria, estado, correo, celular }: compradores = req.body;
         const { identificacion, nombres }: usuario = req.body
@@ -97,7 +96,8 @@ async function crearComprador(req: NextApiRequest, res: NextApiResponse) {
                 tipo: 2,
                 correo: correo!,
                 celular: celular!,
-                conexionid:""
+                conexionid:"",
+                conectado: 0
             }
         });
 
@@ -152,7 +152,7 @@ async function crearComprador(req: NextApiRequest, res: NextApiResponse) {
             });
 
         }
-
+        console.log(error);
         return res.status(500).json({ message: handleErrorsPrisma(error) });
     }
     finally {
