@@ -32,7 +32,6 @@ export function TransmisionSubasta() {
 
   const cambiarVideo = (event: any) => {
     setSelectedDispositivoVideo(event.target.value);
-
   };
 
   useEffect(() => {
@@ -67,8 +66,6 @@ export function TransmisionSubasta() {
 
     setdispositivoAudio(updatedAudioDevices);
     setdispositivoVideo(dispositivoVideo);
-
-    console.log(dispositivoVideo)
   };
   const botonClick = () => {
 
@@ -93,7 +90,7 @@ export function TransmisionSubasta() {
       connection.connectSocket(function (socket: any) {
 
         socket.on("logs", function (log: any) {
-          console.log(log);
+          // console.log(log);
         });
 
         socket.on("conectadosTransmision", async function (
@@ -113,8 +110,6 @@ export function TransmisionSubasta() {
         });
 
         socket.on("join-broadcaster", function (hintsToJoinBroadcast: any) {
-          console.log("join-broadcaster", hintsToJoinBroadcast);
-
           connection.session = hintsToJoinBroadcast.typeOfStreams;
           connection.sdpConstraints.mandatory = {
             OfferToReceiveVideo: !!connection.session.video,
@@ -125,8 +120,6 @@ export function TransmisionSubasta() {
         });
 
         socket.on("rejoin-broadcast", function (broadcastId: any) {
-          console.log("rejoin-broadcast", broadcastId);
-
           connection.attachStreams = [];
           socket.emit("check-broadcast-presence", broadcastId, function (
             isBroadcastExists: any
@@ -144,8 +137,6 @@ export function TransmisionSubasta() {
         });
 
         socket.on("start-broadcasting", function (typeOfStreams: any) {
-
-          console.log("start-broadcasting", typeOfStreams);
 
           connection.sdpConstraints.mandatory = {
             OfferToReceiveVideo: false,

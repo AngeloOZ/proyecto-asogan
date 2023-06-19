@@ -86,8 +86,6 @@ export function FormLotes({ esEditar = false, loteEditar, soloVer = false, event
             return;
         }
         if (lotesAnteriores.length > 0) {
-            console.log(lotesAnteriores);
-
             const aux = lotesAnteriores[0].codigo_lote!;
             setCodigoLote((parseInt(aux) + 1).toString());
         } else {
