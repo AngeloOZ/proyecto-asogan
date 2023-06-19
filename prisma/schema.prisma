@@ -117,6 +117,7 @@ model tipo_animales {
   codigoanimal      String  @db.VarChar(7)
   descripcionanimal String? @db.VarChar(50)
 }
+
 model notificaciones {
   id          Int       @id @default(autoincrement())
   fecha       DateTime? @db.DateTime(0)
