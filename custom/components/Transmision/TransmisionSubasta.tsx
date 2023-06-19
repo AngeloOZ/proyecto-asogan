@@ -41,9 +41,9 @@ export function TransmisionSubasta() {
 
   useEffect(() => {
 
-    navigator.mediaDevices.getUserMedia({audio:true, video:true});
+    navigator.mediaDevices.getUserMedia({ audio: true, video: true });
     navigator.mediaDevices.enumerateDevices().then(dispositivos);
-    
+
 
   }, []);
 
@@ -89,15 +89,12 @@ export function TransmisionSubasta() {
       connection.socketMessageEvent = "transmisiones";
       connection.connectSocket(function (socket: any) {
 
-        socket.on("logs", function (log: any) {
-          // console.log(log);
-        });
 
         socket.on("conectadosTransmision", async function (
           conectadoid: string,
           usuarioid: string
         ) {
-          if (conectadoid && Number(usuarioid) > 0 ) {
+          if (conectadoid && Number(usuarioid) > 0) {
             await fetch(
               `/api/compradores/conectados?usuarioid=${usuarioid}&conectado=1&conexionid=${conectadoid}`,
               { method: "PUT" }
@@ -265,7 +262,6 @@ export function TransmisionSubasta() {
 
       connection.onUserStatusChanged = async function (event: any) {
         if (event.status == "offline") {
-
           await fetch(
             `/api/compradores/conectados?usuarioid=0&conectado=0&conexionid=${event.userid}`,
             { method: "PUT" }
@@ -289,11 +285,11 @@ export function TransmisionSubasta() {
       connection.mediaConstraints = {
         audio: {
           deviceId: selectedAudioDevice,
-        
+
         },
         video: {
           deviceId: selectedVideoDevice,
-         
+
         },
       };
       connection.getSocket(function (socket: any) {
@@ -327,12 +323,17 @@ export function TransmisionSubasta() {
   };
 
   const cerrarTrans = async () => {
-
-    await fetch(
-      `/api/compradores/conectados?usuarioid=0&conectado=0`,
+    
+    const resultado = await fetch(
+      `/api/compradores/finalizar`,
       { method: "PUT" }
     );
-    window.location.reload()
+    if (resultado){
+      window.location.reload()
+    }
+   
+    
+ 
   }
   return (
     <>
@@ -378,6 +379,7 @@ export function TransmisionSubasta() {
               </select>
             </Stack>
             <video
+
               ref={videoRef}
               id="video-preview"
               width="100%"
