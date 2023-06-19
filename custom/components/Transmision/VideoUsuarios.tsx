@@ -13,7 +13,6 @@ export function TransmisionUsuarios(props: any) {
     const [showModal, setShowModal] = useState(false);
     const { user } = useContext(AuthContext);
     var allRecordedBlobs: any = [];
-
     let verificar = false;
     useEffect(() => {
         if (!showModal) {
@@ -40,15 +39,11 @@ export function TransmisionUsuarios(props: any) {
                 socket.on("clienteTransmision", function () {
                     window.location.reload()
                 });
-                
+
                 socket.emit("conectados", connection.userid, user?.usuarioid)
 
-                socket.on("logs", function (log: any) {
-                    //console.log(log);
-                });
 
                 socket.on("join-broadcaster", function (hintsToJoinBroadcast: any) {
-
 
                     connection.session = hintsToJoinBroadcast.typeOfStreams;
                     connection.sdpConstraints.mandatory = {
@@ -99,7 +94,17 @@ export function TransmisionUsuarios(props: any) {
                     if (event.type === "local") {
                         videoRef.current.muted = true;
                     }
+
+                    if (rol == "martillador" ) {
+                       const audioTracks = event.stream.getAudioTracks();
+                        audioTracks.forEach((track: any) => {
+                            track.enabled = false;
+                        });
+
+                    }
+
                     videoRef.current.play();
+
                 }
 
                 if (connection.isInitiator === false && event.type === "remote") {
@@ -161,8 +166,6 @@ export function TransmisionUsuarios(props: any) {
                             var lastBlob = allRecordedBlobs[allRecordedBlobs.length - 1];
                             currentVideo.src = URL.createObjectURL(lastBlob);
                             currentVideo.play();
-
-
                             allRecordedBlobs = [];
                         } else if (connection.currentRecorder) {
                             var recorder = connection.currentRecorder;
@@ -174,7 +177,13 @@ export function TransmisionUsuarios(props: any) {
                                 currentVideo.play();
                             });
                         }
+                        if (rol == "martillador") {
+                            const audioTracks = event.stream.getAudioTracks();
+                            audioTracks.forEach((track: any) => {
+                                track.enabled = false;
+                            });
 
+                        }
                         if (connection.currentRecorder) {
                             connection.currentRecorder.stopRecording();
                             connection.currentRecorder = null;
@@ -247,6 +256,7 @@ export function TransmisionUsuarios(props: any) {
 
     }, [])
 
+
     return (
         <>
 
@@ -254,8 +264,8 @@ export function TransmisionUsuarios(props: any) {
 
             <img src='https://www.creativefabrica.com/wp-content/uploads/2020/07/06/Video-Camera-Icon-Graphics-4551757-1.jpg' width={ancho} height={alto} style={{ display: visualizarI }}></img>
 
-            <video ref={videoRef} id="video-preview" width={ancho} height={alto} style={{ display: visualizarV }}  loop controls={true} ></video>
-
+            <video ref={videoRef} id="video-preview" width={ancho} height={alto} style={{ display: visualizarV }} controls={false}></video>
+         
         </>
     );
 }
