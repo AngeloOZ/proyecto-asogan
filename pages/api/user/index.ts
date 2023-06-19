@@ -74,6 +74,7 @@ async function crearUsuario(req: NextApiRequest, res: NextApiResponse) {
 
         return res.status(200).json(usuario);
     } catch (error) {
+        console.log(error);
         return res.status(500).json({ message: handleErrorsPrisma(error) });
     }
     finally {
