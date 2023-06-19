@@ -88,7 +88,7 @@ export const MainMartillador = ({ lote, ultimaPuja, evento }: Props) => {
             muted: true,
           }}
         /> */}
-        <TransmisionUsuarios ancho="100%" alto="100%" audio={false} rol={rolLogged} />
+        <TransmisionUsuarios ancho="100%" alto="100%" audio={false} rol="martillador" />
 
       </Box>
 
