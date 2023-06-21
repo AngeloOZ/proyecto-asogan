@@ -108,7 +108,7 @@ export function PujaMartillador({ lote, ultimaPuja, setLoader }: Props) {
 
     return (
         <>
-            <Box style={{ display: 'flex', justifyContent: 'center', height: "100%" }} p={1}>
+            <Box style={{ display: 'flex', height: "100%" }} p={1}>
                 <Button
                     onClick={() => terminarSubasta('rechazado')}
                     variant="contained"
@@ -133,7 +133,6 @@ export function PujaMartillador({ lote, ultimaPuja, setLoader }: Props) {
                     style={{ flex: 1, marginRight: 8, width: '100%', height: '100%', fontSize: "20px" }}>
                     Vendido
                 </Button>
-
             </Box>
 
             <Modal open={isOpen} onClose={() => setIsOpen(false)}>
