@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 
 import Head from 'next/head';
 
@@ -27,9 +27,10 @@ export default function Index() {
         <Head><title>Viewer Video</title></Head>
         <h1>Viewer Video:</h1>
         <div>
-            <video ref={videoRef} width={400} height={400} poster={`${process.env.NEXT_PUBLIC_URL_APP}/img/loader.gif`} controls></video>
+            {/* eslint-disable-next-line */}
+            <video ref={videoRef} width={400} height={400} poster={`${process.env.NEXT_PUBLIC_URL_APP}/img/loader.gif`} />
 
-            <button onClick={toggleAudio}>
+            <button type='button' onClick={toggleAudio}>
                 Audio
             </button>
         </div>
