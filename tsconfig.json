@@ -24,12 +24,16 @@
     "useUnknownInCatchVariables": false,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
+    "typeRoots": [
+      "./customTypes.d.ts"
+    ],
   },
   "exclude": [
     "node_modules"
   ],
   "include": [
     "next-env.d.ts",
+    "customTypes.d.ts",
     "**/*.ts",
     "**/*.tsx"
   ]
