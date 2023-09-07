@@ -5,24 +5,18 @@ import Head from 'next/head';
 import { useViewer } from 'custom/hooks/live/useViewer';
 
 import { getSocket } from 'utils/socketClient';
+import { ModalActivarAudio } from 'custom/components';
 
 export default function Index() {
     const socket = getSocket();
     const videoRef = useRef<HTMLVideoElement>(null);
 
-    useViewer({
+    const { showDialogAudio, toggleAudio, isMuted } = useViewer({
         videoRef,
         broadcastID: '123',
-        // broadcastID: '3c3fcf82-9b04-4660-b930-1fd631327587',
         username: 'Angello_Beta_MIDEV',
         socket,
     });
-
-    const toggleAudio = () => {
-        if (!videoRef.current) return;
-
-        videoRef.current.muted = !videoRef.current.muted;
-    }
 
     return <>
         <Head><title>Viewer Video</title></Head>
@@ -31,9 +25,14 @@ export default function Index() {
             {/* eslint-disable-next-line */}
             <video ref={videoRef} width={400} height={400} poster={`${process.env.NEXT_PUBLIC_URL_APP}/img/loader.gif`} />
 
-            <button type='button' onClick={toggleAudio}>
-                Audio
+            <button type='button' onClick={() => toggleAudio()}>
+                {isMuted ? 'Activar audio' : 'Desactivar audio'}
             </button>
         </div>
+        {
+            showDialogAudio && <ModalActivarAudio toggle={toggleAudio} />
+        }
     </>
 }
+
+

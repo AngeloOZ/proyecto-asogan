@@ -5,3 +5,4 @@ export * from './CambiarConectados'
 export * from './Timer'
 export * from './VideoUsuarios'
 export * from './ModalTransmision'
+export * from './ModalActivarAudio';

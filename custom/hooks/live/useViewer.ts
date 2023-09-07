@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { useSnackbar } from '../../../src/components/snackbar';
+import { set } from 'lodash';
+import { useEffect, useState } from 'react';
 import { Socket } from 'socket.io-client';
 
 
@@ -11,6 +11,8 @@ interface IUseViewerProps {
 }
 
 export const useViewer = ({ videoRef, broadcastID, username, socket }: IUseViewerProps) => {
+    const [showDialogAudio, setShowDialogAudio] = useState(false);
+    const [isMuted, setIsMuted] = useState(true);
     let peerConnection: RTCPeerConnection;
     let dataChannel: RTCDataChannel;
 
@@ -43,8 +45,7 @@ export const useViewer = ({ videoRef, broadcastID, username, socket }: IUseViewe
             peerConnection.ontrack = (event) => {
                 attachStream(event.streams[0]);
                 if (event.track.kind === 'audio') {
-                    // TODO: activar audio
-                    // popupEnableAudio();
+                    setShowDialogAudio(true);
                 }
             };
 
@@ -72,10 +73,10 @@ export const useViewer = ({ videoRef, broadcastID, username, socket }: IUseViewe
 
     socket.on('broadcasterDisconnect', () => {
         console.log('broadcasterDisconnect');
-        
+
         if (typeof window !== 'undefined' && window.location) {
             window.location.reload();
-        }else{
+        } else {
             console.log('broadcasterDisconnect but not reload');
         }
     });
@@ -144,6 +145,22 @@ export const useViewer = ({ videoRef, broadcastID, username, socket }: IUseViewe
             peerConnection.close();
         }
     };
+
+    const toggleAudio = (state?: boolean) => {
+        if (!videoRef.current) return;
+
+        if (showDialogAudio) setShowDialogAudio(false);
+
+        if (state === undefined) {
+            videoRef.current.muted = !videoRef.current.muted;
+            setIsMuted(videoRef.current.muted);
+            return;
+        }
+        videoRef.current.muted = state;
+        setIsMuted(state);
+    };
+
+    return { showDialogAudio, toggleAudio, isMuted }
 }
 
 

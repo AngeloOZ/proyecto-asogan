@@ -8,6 +8,7 @@ export * from './Subastas';
 export * from './Monitor';
 export * from './Eventos';
 export * from './SecondLoader';
+export * from './Transmision';
 // Angello
 
 
