@@ -1,8 +1,7 @@
-import { useState, useEffect, ChangeEvent } from 'react';
+import { useState, useEffect, ChangeEvent, useRef } from 'react';
 import io, { Socket } from 'socket.io-client';
 
 import { useSnackbar } from '../../../src/components/snackbar';
-import { log } from 'console';
 
 interface ISelectedDevice {
     audio: string | undefined;
@@ -31,8 +30,8 @@ const HEIGHT_CONSTRAINT = 480;
 const FPS_CONSTRAINT = 30;
 
 export const useBroadcast = ({ videoRef, broadcastID, peerConnections, dataChannels, socket }: IUseBroadcastProps) => {
+    const isInitTransmision = useRef(false);
     const { enqueueSnackbar } = useSnackbar();
-
     const [numberConnectedPeers, setNumberconnectedPeers] = useState(0)
     const [isBroadcasting, setIsBroadcasting] = useState(false);
     const [audioDevices, setAudioDevices] = useState<MediaDeviceInfo[]>([]);
@@ -60,6 +59,11 @@ export const useBroadcast = ({ videoRef, broadcastID, peerConnections, dataChann
         if (!isBroadcasting) {
             stopBroadcastStream();
             stopWindowStream();
+
+            if (isInitTransmision.current) {
+                window.location.reload();
+            }
+
             return;
         };
         getStream();
@@ -168,6 +172,9 @@ export const useBroadcast = ({ videoRef, broadcastID, peerConnections, dataChann
             }
         }
         function sendTo(id: any) {
+            if (dataChannels[id].readyState !== 'open')
+                return console.log('DataChannel not ready', id);
+
             dataChannels[id].send(
                 JSON.stringify({
                     method: method,
@@ -208,6 +215,10 @@ export const useBroadcast = ({ videoRef, broadcastID, peerConnections, dataChann
 
     const toggleBroadcast = () => {
         setIsBroadcasting(prev => !prev);
+
+        if (!isBroadcasting) {
+            isInitTransmision.current = false;
+        }
     };
 
     const getStream = async () => {
@@ -225,6 +236,7 @@ export const useBroadcast = ({ videoRef, broadcastID, peerConnections, dataChann
             const stream = await navigator.mediaDevices.getUserMedia(cameraConstraints);
             await gotStream(stream);
             await applyVideoConstraints();
+            isInitTransmision.current = true;
         } catch (error) {
             handleError(error);
             enqueueSnackbar('Error getting stream', { variant: 'error' });
