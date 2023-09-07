@@ -71,7 +71,9 @@ export const useViewer = ({ videoRef, broadcastID, username, socket }: IUseViewe
     });
 
     socket.on('broadcasterDisconnect', () => {
-        location.reload();
+        if (typeof window !== 'undefined' && window.location) {
+            window.location.reload();
+        }
     });
 
 

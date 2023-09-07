@@ -2,6 +2,7 @@ import { useState, useEffect, ChangeEvent } from 'react';
 import io, { Socket } from 'socket.io-client';
 
 import { useSnackbar } from '../../../src/components/snackbar';
+import { log } from 'console';
 
 interface ISelectedDevice {
     audio: string | undefined;
@@ -45,6 +46,14 @@ export const useBroadcast = ({ videoRef, broadcastID, peerConnections, dataChann
 
     useEffect(() => {
         getDevices();
+
+        window.addEventListener('unload', unloadHandler);
+        window.addEventListener('beforeunload', unloadHandler);
+
+        return () => {
+            window.removeEventListener('unload', unloadHandler);
+            window.removeEventListener('beforeunload', unloadHandler);
+        }
     }, []);
 
     useEffect(() => {
@@ -59,25 +68,33 @@ export const useBroadcast = ({ videoRef, broadcastID, peerConnections, dataChann
     // ========================================================================================
 
     socket.on('answer', (id, description) => {
-        if (!peerConnections[id]) return;
-        console.log(description);
-        peerConnections[id].setRemoteDescription(description);
+        peerConnections[id]
+            .setRemoteDescription(description)
+            .catch(handleError);
     });
 
     socket.on('viewer', (id, iceServers) => {
+        if (peerConnections[id]) return;
+
         const peerConnection = new RTCPeerConnection({ iceServers: iceServers });
-
         peerConnections[id] = peerConnection;
-
         handleDataChannels(id);
-
         setNumberconnectedPeers(Object.keys(peerConnections).length);
 
-        peerConnection.onconnectionstatechange = (event) => { };
+        peerConnection.onconnectionstatechange = (event) => {
+            console.log('RTCPeerConnection', {
+                socketId: id,
+                // @ts-ignore
+                connectionStatus: event.currentTarget.connectionState,
+                // @ts-ignore
+                signalingState: event.currentTarget.signalingState,
+            });
+        };
 
         const stream = videoRef.current?.srcObject as MediaStream;
 
-        stream.getTracks().forEach((track) => peerConnection.addTrack(track, stream));
+        stream.getTracks()
+            .forEach((track) => peerConnection.addTrack(track, stream));
 
         peerConnection.onicecandidate = (event) => {
             if (event.candidate) socket.emit('candidate', id, event.candidate);
@@ -87,18 +104,18 @@ export const useBroadcast = ({ videoRef, broadcastID, peerConnections, dataChann
             .createOffer()
             .then((sdp) => peerConnection.setLocalDescription(sdp))
             .then(() => socket.emit('offer', id, peerConnection.localDescription))
-            .catch((e) => console.error(e));
+            .catch(handleError);
     });
 
     socket.on('candidate', (id, candidate) => {
         if (!peerConnections[id]) return;
 
         peerConnections[id]
-            .addIceCandidate(new RTCIceCandidate(candidate)).catch((e: any) => console.error(e));
+            .addIceCandidate(new RTCIceCandidate(candidate)).catch(handleError);
     });
 
     socket.on('disconnectPeer', (id) => {
-        if (!peerConnections[id]) return;
+        if (peerConnections[id]) return;
         peerConnections[id].close();
         delete peerConnections[id];
         delete dataChannels[id];
@@ -113,11 +130,18 @@ export const useBroadcast = ({ videoRef, broadcastID, peerConnections, dataChann
         dataChannels[id] = peerConnections[id].createDataChannel('mt_bro_dc');
         dataChannels[id].binaryType = 'arraybuffer'; // blob
 
-        dataChannels[id].onopen = (event: any) => { };
+        dataChannels[id].onopen = (event: any) => {
+            console.log('DataChannels open', event);
+            sendToViewersDataChannel('video', { visibility: '' });
+        };
 
-        dataChannels[id].onclose = (event: any) => { };
+        dataChannels[id].onclose = (event: any) => {
+            console.log('DataChannels close', event);
+        };
 
-        dataChannels[id].onerror = (event: any) => { };
+        dataChannels[id].onerror = (event: any) => {
+            console.log('DataChannel error', event);
+        };
 
         peerConnections[id].ondatachannel = (event: any) => {
             event.channel.onmessage = (message: any) => {
@@ -125,15 +149,33 @@ export const useBroadcast = ({ videoRef, broadcastID, peerConnections, dataChann
                 let data = {};
                 try {
                     data = JSON.parse(message.data);
-                    // appendMessage(data.username, data.message);
                 } catch (err) {
-                    console.log('Datachannel error', err);
+                    handleError(err);
                 }
             };
         };
     }
 
+    function sendToViewersDataChannel(method: any, action = {}, peerId = '*') {
+        for (let id in dataChannels) {
+            if (id == socket.id) continue; // bypass myself
 
+            if (peerId != '*') {
+                sendTo(peerId); // send to specified viewer
+                break;
+            } else {
+                sendTo(id); // send to all connected viewers
+            }
+        }
+        function sendTo(id: any) {
+            dataChannels[id].send(
+                JSON.stringify({
+                    method: method,
+                    action: action,
+                }),
+            );
+        }
+    }
     // ========================================================================================
 
     const getDevices = async () => {
@@ -147,9 +189,10 @@ export const useBroadcast = ({ videoRef, broadcastID, peerConnections, dataChann
             setAudioDevices(audioDevices);
             setVideoDevices(videoDevices);
 
-            enqueueSnackbar('Devices loaded', { variant: 'success' });
+            enqueueSnackbar('Dispositivos cargados correctamente', { variant: 'success' });
         } catch (error) {
-            console.error('Error getting devices:', error);
+            handleError(error);
+            enqueueSnackbar('No se pudo obtener dispositivos, puede ser devido a permisos', { variant: 'error' });
         }
     };
 
@@ -183,7 +226,7 @@ export const useBroadcast = ({ videoRef, broadcastID, peerConnections, dataChann
             await gotStream(stream);
             await applyVideoConstraints();
         } catch (error) {
-            console.log(error);
+            handleError(error);
             enqueueSnackbar('Error getting stream', { variant: 'error' });
         }
     };
@@ -237,10 +280,31 @@ export const useBroadcast = ({ videoRef, broadcastID, peerConnections, dataChann
             .getVideoTracks()[0]
             .applyConstraints(videoConstraints)
             .catch((error) => {
-                console.error('setVideoQuality', error);
+                handleError(error);
                 enqueueSnackbar('Error setting video quality', { variant: 'error' });
             });
     }
+
+    function handleError(error: any) {
+        console.clear();
+        console.log('Error', error);
+        //popupMessage('warning', 'Ops', error);
+    }
+
+    function thereIsPeerConnections() {
+        return Object.keys(peerConnections).length === 0 ? false : true;
+    }
+
+    const unloadHandler = () => {
+        socket.close();
+        if (thereIsPeerConnections()) {
+            for (let id in peerConnections) {
+                peerConnections[id].close();
+            }
+            peerConnections = {};
+            dataChannels = {};
+        }
+    };
 
     return {
         // state

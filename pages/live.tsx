@@ -17,8 +17,12 @@ export default function Index() {
     const socket = getSocket();
     const videoRef = useRef<HTMLVideoElement>(null);
 
-    const peerConnections: PeerConnectionMap = {};
-    const dataChannels: DataChannelMap = {};
+    // const peerConnections: PeerConnectionMap = {};
+    // const dataChannels: DataChannelMap = {};
+
+    const peerConnectionsRef = useRef<PeerConnectionMap>({});
+    const dataChannelsRef = useRef<DataChannelMap>({});
+
 
     const {
         isBroadcasting,
@@ -28,7 +32,13 @@ export default function Index() {
         selectedAudioDevice,
         selectedVideoDevice,
         numberConnectedPeers
-    } = useBroadcast({ videoRef, broadcastID: '123', peerConnections, dataChannels, socket });
+    } = useBroadcast({
+        videoRef,
+        broadcastID: '123',
+        peerConnections: peerConnectionsRef.current,
+        dataChannels: dataChannelsRef.current,
+        socket
+    });
 
     return <>
         <Head><title>Live Video</title></Head>
