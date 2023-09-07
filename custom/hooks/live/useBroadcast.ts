@@ -60,8 +60,8 @@ export const useBroadcast = ({ videoRef, broadcastID, peerConnections, dataChann
 
     socket.on('answer', (id, description) => {
         if (!peerConnections[id]) return;
+        console.log(description);
         peerConnections[id].setRemoteDescription(description);
-
     });
 
     socket.on('viewer', (id, iceServers) => {
@@ -138,6 +138,7 @@ export const useBroadcast = ({ videoRef, broadcastID, peerConnections, dataChann
 
     const getDevices = async () => {
         try {
+            await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
             const devices = await navigator.mediaDevices.enumerateDevices();
 
             const audioDevices = devices.filter(device => device.kind === 'audioinput');

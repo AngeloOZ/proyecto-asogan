@@ -1,4 +1,4 @@
-import { useEffect} from 'react';
+import { useEffect } from 'react';
 import { useSnackbar } from '../../../src/components/snackbar';
 import { Socket } from 'socket.io-client';
 
@@ -11,8 +11,6 @@ interface IUseViewerProps {
 }
 
 export const useViewer = ({ videoRef, broadcastID, username, socket }: IUseViewerProps) => {
-
-    const { enqueueSnackbar } = useSnackbar();
     let peerConnection: RTCPeerConnection;
     let dataChannel: RTCDataChannel;
 
@@ -27,20 +25,21 @@ export const useViewer = ({ videoRef, broadcastID, username, socket }: IUseViewe
     }, []);
 
     socket.on('offer', (id, description, iceServers) => {
-        try{
+        try {
+
             peerConnection = new RTCPeerConnection({ iceServers: iceServers });
 
             handleDataChannel();
-    
+
             peerConnection.onconnectionstatechange = (event) => { };
-    
+
             peerConnection
                 .setRemoteDescription(description)
-                .then(() => peerConnection!.createAnswer())
-                .then((sdp) => peerConnection!.setLocalDescription(sdp))
-                .then(() => socket.emit('answer', id, peerConnection!.localDescription))
+                .then(() => peerConnection.createAnswer())
+                .then((sdp) => peerConnection.setLocalDescription(sdp))
+                .then(() => socket.emit('answer', id, peerConnection.localDescription))
                 .catch(handleError);
-    
+
             peerConnection.ontrack = (event) => {
                 attachStream(event.streams[0]);
                 if (event.track.kind === 'audio') {
@@ -48,13 +47,13 @@ export const useViewer = ({ videoRef, broadcastID, username, socket }: IUseViewe
                     // popupEnableAudio();
                 }
             };
-    
+
             peerConnection.onicecandidate = (event) => {
                 if (event.candidate) socket.emit('candidate', id, event.candidate);
             };
         }
-        catch(err){
-           
+        catch (err) {
+
         }
     });
 
@@ -77,7 +76,7 @@ export const useViewer = ({ videoRef, broadcastID, username, socket }: IUseViewe
 
 
     function handleError(error: any) {
-        console.error('Error', error);
+        console.log('Error', error);
         //popupMessage('warning', 'Ops', error);
     }
 
