@@ -159,7 +159,6 @@ export const VistaLoteCliente = ({ lote, ultimaPuja, banners, evento }: Props) =
             <Card className={css.video_puja} >
                 <Box height='100%' width='100%' style={{ height: '100%' }}>
                     <TabVideos
-                        urlTransmisionEnVivo={evento.url_video || ''}
                         urlVideoDemostracion={lote?.url_video || ''}
                         height='100%'
                     />

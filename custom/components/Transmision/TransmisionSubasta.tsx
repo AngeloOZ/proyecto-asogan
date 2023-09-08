@@ -95,6 +95,7 @@ export function TransmisionSubasta({ uuid }: Props) {
                 </Select>
               </FormControl>
             </Stack>
+            <span>{uuid}</span>
 
             {
               isBroadcasting &&

@@ -6,10 +6,9 @@ import prisma from "database/prismaClient";
 
 import { Box, Button, Typography, Stack } from '@mui/material';
 
-import { useSnackbar } from "../../../src/components/snackbar";
-import { LinearProgressBar } from '../../../custom/components';
-import { TransmisionSubasta } from "custom/components";
+import { TransmisionSubasta, LinearProgressBar } from "custom/components";
 import { PATH_DASHBOARD } from "src/routes/paths";
+import { useSnackbar } from "../../../src/components/snackbar";
 
 
 interface Props {

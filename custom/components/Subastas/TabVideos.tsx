@@ -1,9 +1,11 @@
-import { useState } from 'react';
-
-import { Tabs, Tab, Typography, Box, BoxProps, Card, Skeleton, } from '@mui/material';
+import { useContext, useState } from 'react';
+import { useRouter } from 'next/router';
+import { Tabs, Tab, Box, BoxProps, Skeleton, } from '@mui/material';
 
 import { VideoPlayer } from '.';
 import { TransmisionUsuarios } from '../Transmision';
+import { AuthContext } from 'src/auth';
+
 interface TabPanelProps {
     children?: React.ReactNode;
     index: number;
@@ -16,7 +18,7 @@ function TabPanel(props: TabPanelProps) {
     return (
         <div
             role="tabpanel"
-            hidden={value !== index} 
+            hidden={value !== index}
             id={`simple-tabpanel-${index}`}
             aria-labelledby={`simple-tab-${index}`}
             {...other}
@@ -26,11 +28,9 @@ function TabPanel(props: TabPanelProps) {
                 height: '100%',
             }}
         >
-            {/* {value === index && ( */}
-                <Box height='100%'>
-                    {children}
-                </Box>
-            {/* )} */}
+            <Box height='100%'>
+                {children}
+            </Box>
         </div>
     );
 }
@@ -47,7 +47,10 @@ interface TabVideosProps extends BoxProps {
     urlTransmisionEnVivo?: string;
 }
 
-export function TabVideos({ urlTransmisionEnVivo = '', urlVideoDemostracion = '' }: TabVideosProps) {
+export function TabVideos({ urlVideoDemostracion = '' }: TabVideosProps) {
+    const { user } = useContext(AuthContext);
+    const { query } = useRouter();
+    const uuid  = query.uuid as string;
     const [value, setValue] = useState(0);
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -64,18 +67,14 @@ export function TabVideos({ urlTransmisionEnVivo = '', urlVideoDemostracion = ''
             </Box>
             <TabPanel value={value} index={0}>
                 {
-                   /*  urlTransmisionEnVivo === '' ?
-                        <Skeleton variant="rectangular" width="100%" style={{ minHeight: 150, height: '100%' }} />
-                        :
-                        <VideoPlayer
-                            playerProps={{
-                                url: urlTransmisionEnVivo,
-                                muted: false,
-                                controls: true,
-                                playing: true,
-                            }}
-                        /> */
-                        <TransmisionUsuarios ancho="100%" alto="100%" audio={true} rol="comprador"/>
+                    uuid && user?.nombres && (
+                        <TransmisionUsuarios 
+                            ancho="100%"
+                            alto="100%"
+                            uuid={uuid}
+                            username={user.nombres}
+                        />
+                    )
                 }
             </TabPanel>
             <TabPanel value={value} index={1}>
@@ -91,7 +90,6 @@ export function TabVideos({ urlTransmisionEnVivo = '', urlVideoDemostracion = ''
                                 loop: true,
                             }}
                         />
-
                 }
             </TabPanel>
         </Box>

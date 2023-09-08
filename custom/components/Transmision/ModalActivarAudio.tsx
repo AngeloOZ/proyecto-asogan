@@ -18,7 +18,7 @@ export const ModalActivarAudio = ({ toggle }: PropsModalActivarAudio) => {
         overflow: 'hidden',
         display: 'grid',
         placeContent: 'center',
-        zIndex: 9999,
+        zIndex: 9999999999 * 100,
     };
 
     const modalStyles: CSSProperties = {

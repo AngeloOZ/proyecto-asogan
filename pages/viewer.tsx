@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 
 import Head from 'next/head';
 
@@ -13,21 +13,23 @@ export default function Index() {
 
     const { showDialogAudio, toggleAudio, isMuted } = useViewer({
         videoRef,
-        broadcastID: '123',
+        broadcastID: 'e1f36dc0-d632-4ab3-9e00-4f8fa13c047e',
         username: 'Angello_Beta_MIDEV',
         socket,
     });
-
-    useEffect(() => {
-        isMuted && toggleAudio();
-    }, []);
-
+    
     return <>
         <Head><title>Viewer Video</title></Head>
         <h1>Viewer Video:</h1>
         <div>
             {/* eslint-disable-next-line */}
-            <video ref={videoRef} width={400} height={400} poster={`${process.env.NEXT_PUBLIC_URL_APP}/img/loader.gif`} />
+
+            <video 
+                ref={videoRef}
+                poster={`${process.env.NEXT_PUBLIC_URL_APP}/img/loader.gif`}
+                style={{ height: 400, width: 400 }}
+                muted
+            />
 
             <button type='button' onClick={() => toggleAudio()}>
                 {isMuted ? 'Activar audio' : 'Desactivar audio'}
