@@ -65,6 +65,7 @@ export function TransmisionSubasta({ uuid }: Props) {
         <Grid item xs={12} sm={6}>
           <Box component="div">
             <Stack spacing={2}>
+              <p> <strong>ID Live: </strong> {uuid}</p>
               <FormControl fullWidth>
                 <InputLabel>Listado de dispositivos de video</InputLabel>
                 <Select
@@ -95,7 +96,6 @@ export function TransmisionSubasta({ uuid }: Props) {
                 </Select>
               </FormControl>
             </Stack>
-            <span>{uuid}</span>
 
             {
               isBroadcasting &&

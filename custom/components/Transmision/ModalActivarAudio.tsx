@@ -1,5 +1,5 @@
 import { CSSProperties, useEffect, useState } from "react";
-
+import { Button, Typography, Stack } from '@mui/material';
 
 interface PropsModalActivarAudio {
     toggle: (state?: boolean) => void;
@@ -22,15 +22,18 @@ export const ModalActivarAudio = ({ toggle }: PropsModalActivarAudio) => {
     };
 
     const modalStyles: CSSProperties = {
-        width: "400px",
-        height: "150px",
+        width: "320px",
+        height: "130px",
         backgroundColor: "white",
         borderRadius: "20px",
         transition: 'opacity 1s ease, transform 0.5s ease',
         opacity: isActive ? 1 : 0,
         transform: `translateY(${isActive ? '0' : '-100%'})`,
         textAlign: 'center',
-
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center'
     };
 
     useEffect(() => {
@@ -42,11 +45,25 @@ export const ModalActivarAudio = ({ toggle }: PropsModalActivarAudio) => {
     return (
         <div style={modalContainerStyles}>
             <div style={modalStyles}>
-                <h2>Desea activar el audio</h2>
-                <div style={{ display: 'flex', justifyContent: 'center', gap: 10 }}>
-                    <button type='button' onClick={() => toggle(false)}>Si</button>
-                    <button type='button' onClick={() => toggle(true)}>No</button>
-                </div>
+                <Typography component='p' variant="h4">Desea activar el audio</Typography>
+                <Stack spacing={2} direction='row' mt={1}>
+                    <Button
+                        onClick={() => toggle(false)}
+                        variant="contained"
+                        size="large"
+                        color="success"
+                    >
+                        Si
+                    </Button>
+                    <Button
+                        onClick={() => toggle(true)}
+                        variant="contained"
+                        color="error"
+                        size="large"
+                    >
+                        No
+                    </Button>
+                </Stack>
             </div>
         </div>
     );

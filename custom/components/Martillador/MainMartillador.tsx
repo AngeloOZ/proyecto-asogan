@@ -10,6 +10,7 @@ import { CardInfo } from "../Monitor";
 import css from "../../styles/martillador.module.css";
 import { Timer, TransmisionUsuarios } from "../Transmision";
 import { AuthContext } from 'src/auth';
+import { useRouter } from 'next/router';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -27,7 +28,9 @@ type Props = {
 
 
 export const MainMartillador = ({ lote, ultimaPuja, evento }: Props) => {
-  const { rol: [rolLogged] } = useContext(AuthContext)
+  const { rol: [rolLogged], user } = useContext(AuthContext)
+  const { query } = useRouter();
+  const uuid  = query.uuid as string;
 
   const { mejoresPujas } = useObtenerMejoresPujas(lote);
   const newLote = calcularSubasta(lote, ultimaPuja);
@@ -82,14 +85,10 @@ export const MainMartillador = ({ lote, ultimaPuja, evento }: Props) => {
 
       <Box component="div" className={css.video} sx={{ position: "relative" }}>
         <Timer lote={lote?.id_lote} evento={evento.abierto} />
-        {/*  <VideoPlayer
-          playerProps={{
-            url: evento?.url_video || "",
-            muted: true,
-          }}
-        /> */}
-        <TransmisionUsuarios ancho="100%" alto="100%" audio={false} rol="martillador" />
-
+        {
+          uuid && user?.nombres && 
+          <TransmisionUsuarios ancho="100%" alto="100%" username={user.nombres} uuid={uuid} />
+        }
       </Box>
 
       <CardInfo
