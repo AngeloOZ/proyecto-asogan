@@ -50,3 +50,7 @@ prisma/migrations
 
 # sockets
 /server-sockets
+
+.htaccess
+
+.well-known

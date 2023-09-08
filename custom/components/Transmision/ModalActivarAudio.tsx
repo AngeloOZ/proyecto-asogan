@@ -9,6 +9,7 @@ export const ModalActivarAudio = ({ toggle }: PropsModalActivarAudio) => {
     const [isActive, setIsActive] = useState(false);
 
     const modalContainerStyles: CSSProperties = {
+        position: 'fixed',
         top: 0,
         left: 0,
         width: '100%',
@@ -17,6 +18,7 @@ export const ModalActivarAudio = ({ toggle }: PropsModalActivarAudio) => {
         overflow: 'hidden',
         display: 'grid',
         placeContent: 'center',
+        zIndex: 9999,
     };
 
     const modalStyles: CSSProperties = {
@@ -38,12 +40,12 @@ export const ModalActivarAudio = ({ toggle }: PropsModalActivarAudio) => {
     }, []);
 
     return (
-        <div style={{ ...modalContainerStyles, position: 'fixed' }}>
+        <div style={modalContainerStyles}>
             <div style={modalStyles}>
                 <h2>Desea activar el audio</h2>
                 <div style={{ display: 'flex', justifyContent: 'center', gap: 10 }}>
-                    <button type='button' onClick={() => toggle(true)}>No</button>
                     <button type='button' onClick={() => toggle(false)}>Si</button>
+                    <button type='button' onClick={() => toggle(true)}>No</button>
                 </div>
             </div>
         </div>

@@ -29,8 +29,8 @@ export default function Index() {
         toggleBroadcast,
         audioDevices,
         videoDevices,
-        selectedAudioDevice,
-        selectedVideoDevice,
+        changeAudioDevice,
+        changeVideoDevice,
         numberConnectedPeers
     } = useBroadcast({
         videoRef,
@@ -50,7 +50,7 @@ export default function Index() {
         </div>
         {/* eslint-disable-next-line */}
         <label htmlFor="video">Dispositivos video</label>
-        <select name="video" defaultValue="" id="video" onChange={selectedVideoDevice}>
+        <select name="video" defaultValue="" id="video" onChange={changeVideoDevice}>
             <option value="" disabled>Seleccione un dispositivo</option>
             {
                 videoDevices.map((device, index) => <option key={device.deviceId} value={device.deviceId} >Video: {device.label}</option>)
@@ -60,7 +60,7 @@ export default function Index() {
         <br /><br />
         {/* eslint-disable-next-line */}
         <label htmlFor="">Dispositivos audio</label>
-        <select name="audio" id="audio" defaultValue="" onChange={selectedAudioDevice}>
+        <select name="audio" id="audio" defaultValue="" onChange={changeAudioDevice}>
             <option value="audio" disabled>Seleccione un dispositivo</option>
             {
                 audioDevices.map((device, index) => <option key={device.deviceId} value={device.deviceId} >Audio: {device.label}</option>)

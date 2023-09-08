@@ -1,29 +1,9 @@
 import { useState, useEffect, ChangeEvent, useRef } from 'react';
-import io, { Socket } from 'socket.io-client';
 
 import { useSnackbar } from '../../../src/components/snackbar';
+import { SelectChangeEvent } from '@mui/material';
+import { ISelectedDevice, IUseBroadcastProps } from '@types';
 
-interface ISelectedDevice {
-    audio: string | undefined;
-    video: string | undefined;
-}
-
-interface IUseBroadcastProps {
-    videoRef: React.RefObject<HTMLVideoElement>;
-    broadcastID: string;
-    username?: string;
-    peerConnections: PeerConnectionMap;
-    dataChannels: DataChannelMap;
-    socket: Socket
-}
-
-interface PeerConnectionMap {
-    [id: string]: RTCPeerConnection;
-}
-
-interface DataChannelMap {
-    [id: string]: RTCDataChannel;
-}
 
 const WIDTH_CONSTRAINT = 640;
 const HEIGHT_CONSTRAINT = 480;
@@ -36,7 +16,7 @@ export const useBroadcast = ({ videoRef, broadcastID, peerConnections, dataChann
     const [isBroadcasting, setIsBroadcasting] = useState(false);
     const [audioDevices, setAudioDevices] = useState<MediaDeviceInfo[]>([]);
     const [videoDevices, setVideoDevices] = useState<MediaDeviceInfo[]>([]);
-    const [selectedDevice, setSelectedDevice] = useState<ISelectedDevice>({
+    const [selectedDevices, setSelectedDevices] = useState<ISelectedDevice>({
         audio: undefined,
         video: undefined,
     });
@@ -203,14 +183,14 @@ export const useBroadcast = ({ videoRef, broadcastID, peerConnections, dataChann
         }
     };
 
-    const selectedAudioDevice = (e: ChangeEvent<HTMLSelectElement>) => {
+    const changeAudioDevice = (e: ChangeEvent<HTMLSelectElement> | SelectChangeEvent) => {
         const deviceId = e.target.value === "" ? undefined : e.target.value;
-        setSelectedDevice({ ...selectedDevice, audio: deviceId });
+        setSelectedDevices({ ...selectedDevices, audio: deviceId });
     }
 
-    const selectedVideoDevice = (e: ChangeEvent<HTMLSelectElement>) => {
+    const changeVideoDevice = (e: ChangeEvent<HTMLSelectElement> | SelectChangeEvent) => {
         const deviceId = e.target.value === "" ? undefined : e.target.value;
-        setSelectedDevice({ ...selectedDevice, video: deviceId });
+        setSelectedDevices({ ...selectedDevices, video: deviceId });
     }
 
     const toggleBroadcast = () => {
@@ -223,14 +203,14 @@ export const useBroadcast = ({ videoRef, broadcastID, peerConnections, dataChann
 
     const getStream = async () => {
         try {
-            if (!selectedDevice.audio && !selectedDevice.video) {
+            if (!selectedDevices.audio && !selectedDevices.video) {
                 toggleBroadcast();
                 return enqueueSnackbar('Seleccione un dispositivo de audio y video', { variant: 'error' });
             }
 
             const cameraConstraints = {
-                audio: { deviceId: selectedDevice.audio ? { exact: selectedDevice.audio } : undefined },
-                video: { deviceId: selectedDevice.video ? { exact: selectedDevice.video } : undefined },
+                audio: { deviceId: selectedDevices.audio ? { exact: selectedDevices.audio } : undefined },
+                video: { deviceId: selectedDevices.video ? { exact: selectedDevices.video } : undefined },
             }
 
             const stream = await navigator.mediaDevices.getUserMedia(cameraConstraints);
@@ -323,11 +303,12 @@ export const useBroadcast = ({ videoRef, broadcastID, peerConnections, dataChann
         audioDevices,
         videoDevices,
         isBroadcasting,
+        selectedDevices,
         numberConnectedPeers,
 
         // methods
         toggleBroadcast,
-        selectedAudioDevice,
-        selectedVideoDevice,
+        changeAudioDevice,
+        changeVideoDevice,
     };
 };

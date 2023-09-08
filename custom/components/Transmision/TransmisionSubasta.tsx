@@ -1,415 +1,137 @@
 /* eslint-disable no-undef */
-import { useEffect, useState, useRef } from "react";
-import { Box, Stack, Button, Grid } from "@mui/material";
-import { useSnackbar } from "../../../src/components/snackbar";
+import { useState, useRef, useEffect } from "react";
+import { Box, Stack, Button, Grid, MenuItem, FormControl, InputLabel, Select } from "@mui/material";
+
 import { UsuariosConectados } from "./UsuariosConectados";
 import { subastaAPI } from 'custom/api'
+import { useBroadcast } from "custom/hooks/live";
+import { getSocket } from "utils/socketClient";
+import { DataChannelMap, PeerConnectionMap } from "@types";
 
-export function TransmisionSubasta() {
-  const { enqueueSnackbar } = useSnackbar();
+interface Props {
+  uuid: string;
+  descripcion: string;
+}
+
+export function TransmisionSubasta({ uuid }: Props) {
   const [contador, setContador] = useState(0);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const botonRef = useRef<HTMLButtonElement>(null);
-
-  var allRecordedBlobs: any = [];
-  var broadcastId = "";
-  let verificar = false;
-  const [dispositivoAudio, setdispositivoAudio] = useState<MediaDeviceInfo[]>(
-    []
-  );
-  const [dispositivoVideo, setdispositivoVideo] = useState<MediaDeviceInfo[]>(
-    []
-  );
-  const [selectedAudioDevice, setSelectedDispositivoAudio] = useState("");
-  const [selectedVideoDevice, setSelectedDispositivoVideo] = useState("");
-  const [botonIniciar, setBotonIniciar] = useState(false);
-  const [botonFinalizar, setBotonFinalizar] = useState(true);
   const [conectados, setConectados] = useState<any[]>([]);
 
-  const cambiarAudio = (event: any) => {
-    setSelectedDispositivoAudio(event.target.value);
-  };
+  const socket = getSocket();
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const peerConnectionsRef = useRef<PeerConnectionMap>({});
+  const dataChannelsRef = useRef<DataChannelMap>({});
 
-  const cambiarVideo = (event: any) => {
-    setSelectedDispositivoVideo(event.target.value);
-  };
+  const {
+    isBroadcasting,
+    toggleBroadcast,
+    audioDevices,
+    videoDevices,
+    selectedDevices,
+    changeAudioDevice,
+    changeVideoDevice,
+    numberConnectedPeers
+  } = useBroadcast({
+    videoRef,
+    broadcastID: uuid,
+    peerConnections: peerConnectionsRef.current,
+    dataChannels: dataChannelsRef.current,
+    socket
+  });
 
   useEffect(() => {
+    if (!isBroadcasting) return;
+    // TODO: revisar
+    const handleBeforeunload = (event: BeforeUnloadEvent) => {
+      if (isBroadcasting) return;
+      event.preventDefault();
+      event.returnValue = '¿Estás seguro de que quieres salir?';
+    };
 
-  }, [selectedAudioDevice, selectedVideoDevice, conectados]);
+    window.addEventListener('beforeunload', handleBeforeunload);
 
-
-  useEffect(() => {
-
-    navigator.mediaDevices.getUserMedia({ audio: true, video: true });
-    navigator.mediaDevices.enumerateDevices().then(dispositivos);
-
-
-  }, []);
-
-  const dispositivos = (devices: MediaDeviceInfo[]) => {
-
-
-    const updatedAudioDevices = [...dispositivoAudio];
-
-    devices.forEach((device) => {
-      if (device.kind === "audioinput") {
-        if (!updatedAudioDevices.find((d) => d.deviceId === device.deviceId)) {
-          updatedAudioDevices.push(device);
-        }
-      } else if (device.kind === "videoinput") {
-        if (!dispositivoVideo.find((d) => d.deviceId === device.deviceId)) {
-          dispositivoVideo.push(device);
-        }
-      }
-    });
-
-    setdispositivoAudio(updatedAudioDevices);
-    setdispositivoVideo(dispositivoVideo);
-  };
-  const botonClick = () => {
-
-    if (selectedAudioDevice && selectedVideoDevice) {
-      // @ts-ignore
-      const connection = new RTCMultiConnection();
-      connection.iceServers = [
-        {
-          urls: [
-            "stun:stun.l.google.com:19302",
-            "stun:stun1.l.google.com:19302",
-            "stun:stun2.l.google.com:19302",
-            "stun:stun.l.google.com:19302?transport=udp",
-          ],
-        },
-      ];
-      connection.enableScalableBroadcast = true;
-      connection.maxRelayLimitPerUser = 2;
-      connection.autoCloseEntireSession = true;
-      connection.socketURL = process.env.NEXT_PUBLIC_PORT_SOCKETS;
-      connection.socketMessageEvent = "transmisiones";
-      connection.connectSocket(function (socket: any) {
-
-
-        socket.on("conectadosTransmision", async function (
-          conectadoid: string,
-          usuarioid: string
-        ) {
-          if (conectadoid && Number(usuarioid) > 0) {
-            await fetch(
-              `/api/compradores/conectados?usuarioid=${usuarioid}&conectado=1&conexionid=${conectadoid}`,
-              { method: "PUT" }
-            );
-          }
-
-          const respuesta = await subastaAPI.get(`/compradores/conectados`);
-          const usuariosCon = respuesta.data
-          setConectados(usuariosCon)
-        });
-
-        socket.on("join-broadcaster", function (hintsToJoinBroadcast: any) {
-          connection.session = hintsToJoinBroadcast.typeOfStreams;
-          connection.sdpConstraints.mandatory = {
-            OfferToReceiveVideo: !!connection.session.video,
-            OfferToReceiveAudio: !!connection.session.audio,
-          };
-          connection.broadcastId = hintsToJoinBroadcast.broadcastId;
-          connection.join(hintsToJoinBroadcast.userid);
-        });
-
-        socket.on("rejoin-broadcast", function (broadcastId: any) {
-          connection.attachStreams = [];
-          socket.emit("check-broadcast-presence", broadcastId, function (
-            isBroadcastExists: any
-          ) {
-            if (!isBroadcastExists) {
-              connection.userid = broadcastId;
-            }
-
-            socket.emit("join-broadcast", {
-              broadcastId: broadcastId,
-              userid: connection.userid,
-              typeOfStreams: connection.session,
-            });
-          });
-        });
-
-        socket.on("start-broadcasting", function (typeOfStreams: any) {
-
-          connection.sdpConstraints.mandatory = {
-            OfferToReceiveVideo: false,
-            OfferToReceiveAudio: false,
-          };
-          connection.session = typeOfStreams;
-
-          connection.open(connection.userid);
-          setBotonIniciar(true)
-          setBotonFinalizar(false)
-        });
-      });
-
-      connection.onstream = function (event: any) {
-        if (connection.isInitiator && event.type !== "local") {
-          return;
-        }
-
-        connection.isUpperUserLeft = false;
-
-        if (videoRef.current) {
-          videoRef.current.srcObject = event.stream;
-          videoRef.current.play();
-          videoRef.current.dataset.userid = event.userId;
-          if (event.type === "local") {
-            videoRef.current.muted = true;
-          }
-        }
-
-        if (connection.isInitiator === false && event.type === "remote") {
-          connection.dontCaptureUserMedia = true;
-          connection.attachStreams = [event.stream];
-          connection.sdpConstraints.mandatory = {
-            OfferToReceiveAudio: false,
-            OfferToReceiveVideo: false,
-          };
-
-          connection.getSocket(function (socket: any) {
-            socket.emit("can-relay-broadcast");
-
-            if (connection.DetectRTC.browser.name === "Chrome") {
-              connection.getAllParticipants().forEach(function (p: any) {
-                if (p + "" !== event.userid + "") {
-                  var peer = connection.peers[p].peer;
-                  peer.getLocalStreams().forEach(function (localStream: any) {
-                    peer.removeStream(localStream);
-                  });
-                  event.stream.getTracks().forEach(function (track: any) {
-                    peer.addTrack(track, event.stream);
-                  });
-                  connection.dontAttachStream = true;
-                  connection.renegotiate(p);
-                  connection.dontAttachStream = false;
-                }
-              });
-            }
-
-            if (connection.DetectRTC.browser.name === "Firefox") {
-              connection.getAllParticipants().forEach(function (p: any) {
-                if (p + "" !== event.userid + "") {
-                  connection.replaceTrack(event.stream, p);
-                }
-              });
-            }
-
-
-          });
-        }
-
-        localStorage.setItem(connection.socketMessageEvent, connection.sessionid);
-      };
-
-      connection.onstreamended = function () { };
-
-      connection.onleave = function (event: any) {
-        if (videoRef.current) {
-          const currentVideo = videoRef.current;
-          if (event.userid !== currentVideo.dataset.userid) return;
-
-          connection.getSocket(function (socket: any) {
-            socket.emit("can-not-relay-broadcast");
-
-            connection.isUpperUserLeft = true;
-
-            if (allRecordedBlobs.length) {
-              var lastBlob = allRecordedBlobs[allRecordedBlobs.length - 1];
-              currentVideo.src = URL.createObjectURL(lastBlob);
-              currentVideo.play();
-              allRecordedBlobs = [];
-            } else if (connection.currentRecorder) {
-              var recorder = connection.currentRecorder;
-              connection.currentRecorder = null;
-              recorder.stopRecording(function () {
-                if (!connection.isUpperUserLeft) return;
-
-                currentVideo.src = URL.createObjectURL(recorder.getBlob());
-                currentVideo.play();
-              });
-            }
-
-            if (connection.currentRecorder) {
-              connection.currentRecorder.stopRecording();
-              connection.currentRecorder = null;
-            }
-          });
-        }
-      };
-
-
-
-      if (localStorage.getItem(connection.socketMessageEvent)) {
-        broadcastId = localStorage.getItem(connection.socketMessageEvent);
-      } else {
-        broadcastId = connection.token();
-      }
-
-      localStorage.setItem(connection.socketMessageEvent, "hola");
-
-      connection.onNumberOfBroadcastViewersUpdated = function (event: any) {
-        if (!connection.isInitiator) return;
-
-        setContador(event.numberOfBroadcastViewers);
-
-
-      };
-
-      connection.onUserStatusChanged = async function (event: any) {
-        if (event.status == "offline") {
-          await fetch(
-            `/api/compradores/conectados?usuarioid=0&conectado=0&conexionid=${event.userid}`,
-            { method: "PUT" }
-          );
-
-          const respuesta = await subastaAPI.get(`/compradores/conectados`);
-          const usuariosCon = respuesta.data
-          setConectados(usuariosCon)
-        }
-      };
-
-      var broadcastId: any = "hola";
-      connection.extra.broadcastId = broadcastId;
-
-      connection.session = {
-        audio: true,
-        video: true,
-        oneway: true,
-      };
-
-      connection.mediaConstraints = {
-        audio: {
-          deviceId: selectedAudioDevice,
-
-        },
-        video: {
-          deviceId: selectedVideoDevice,
-
-        },
-      };
-      connection.getSocket(function (socket: any) {
-        socket.emit("check-broadcast-presence", broadcastId, function (
-          isBroadcastExists: any
-        ) {
-          verificar = isBroadcastExists;
-          if (!isBroadcastExists) {
-
-            connection.userid = broadcastId;
-            verificar = true;
-            socket.emit("cliente");
-
-          }
-          if (verificar) {
-            socket.emit("join-broadcast", {
-              broadcastId: broadcastId,
-              userid: connection.userid,
-              typeOfStreams: connection.session,
-            });
-          }
-        });
-      });
-    } else {
-      enqueueSnackbar("Escoja un dispositivo de Audio y Video para iniciar la Transmisión", {
-        variant: "error",
-      });
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeunload);
     }
 
+  }, [isBroadcasting]);
 
-  };
-
-  const cerrarTrans = async () => {
-    
-    const resultado = await fetch(
-      `/api/compradores/finalizar`,
-      { method: "PUT" }
-    );
-    if (resultado){
-      window.location.reload()
-    }
-   
-    
- 
-  }
   return (
     <>
-      <Grid container spacing={1} padding="60px">
-        <Grid item xs={12} sm={5}>
-          <UsuariosConectados data={conectados} cantidad={contador} />
+      <Grid container spacing={1}>
+        <Grid item xs={12} sm={6}>
+          <UsuariosConectados data={conectados} cantidad={numberConnectedPeers} />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <Box component="div" mx="auto">
-            <Stack>
-              <label>Dispositivos de Audio: </label>
+          <Box component="div">
+            <Stack spacing={2}>
+              <FormControl fullWidth>
+                <InputLabel>Listado de dispositivos de video</InputLabel>
+                <Select
+                  value={selectedDevices.video || ''}
+                  label="Listado de dispositivos de video"
+                  onChange={changeVideoDevice}
+                  disabled={isBroadcasting}
+                >
+                  <MenuItem value='' disabled>Seleccione un dispositivo</MenuItem>
+                  {
+                    videoDevices.map((device, index) => <MenuItem key={device.deviceId} value={device.deviceId} >Video: {device.label}</MenuItem>)
+                  }
+                </Select>
+              </FormControl>
 
-              <select
-                id="audioSource"
-                onChange={cambiarAudio}
-                style={{ width: "100%", height: "40px" }}
-                disabled={botonIniciar}
-              >
-                <option value="">Escoja un Audio</option>
-                {dispositivoAudio.map((device) => (
-                  <option key={device.deviceId} value={device.deviceId}>
-                    {device.label || ""}
-                  </option>
-                ))}
-              </select>
+              <FormControl fullWidth>
+                <InputLabel>Listado de dispositivos de audio</InputLabel>
+                <Select
+                  value={selectedDevices.audio || ''}
+                  label="Listado de dispositivos de audio"
+                  onChange={changeAudioDevice}
+                  disabled={isBroadcasting}
+                >
+                  <MenuItem value='' disabled>Seleccione un dispositivo</MenuItem>
+                  {
+                    audioDevices.map((device, index) => <MenuItem key={device.deviceId} value={device.deviceId} >Audio: {device.label}</MenuItem>)
+                  }
+                </Select>
+              </FormControl>
             </Stack>
 
-            <Stack style={{ marginTop: "10px" }}>
-              <label>Dipositivos de Video: </label>
-
-              <select
-                id="videoSource"
-                onChange={cambiarVideo}
-                style={{ width: "100%", height: "35px" }}
-                disabled={botonIniciar}
-              >
-                <option value="">Escoja un Video</option>
-                {dispositivoVideo.map((device) => (
-                  <option key={device.deviceId} value={device.deviceId}>
-                    {device.label || ""}
-                  </option>
-                ))}
-              </select>
-            </Stack>
-            <video
-
-              ref={videoRef}
-              id="video-preview"
-              width="100%"
-              height="350px"
-              style={{ marginTop: "35px" }}
-              controls={false}
-              loop
-            ></video>
+            {
+              isBroadcasting &&
+              <Stack
+                component='div'
+                justifyContent='center'
+                width='100%'
+                height='350px'
+                marginTop={2}
+                style={{ backgroundColor: '#222' }}>
+                <video
+                  poster={`${process.env.NEXT_PUBLIC_URL_APP}/img/loader.gif`}
+                  ref={videoRef}
+                  style={{ maxHeight: '100%', width: "100%" }}
+                />
+              </Stack>
+            }
 
             <Stack
-              direction="row"
-              mt="20px"
+              direction="row-reverse"
               spacing={2}
               justifyContent="center"
+              marginTop={2}
             >
               <Button
-                ref={botonRef}
-                id="open-or-join"
                 color="success"
                 variant="contained"
-                onClick={botonClick}
-                disabled={botonIniciar}
+                disabled={isBroadcasting}
+                onClick={toggleBroadcast}
               >
                 Iniciar Transmisión
               </Button>
               <Button
                 color="error"
                 variant="contained"
-                onClick={cerrarTrans}
-                disabled={botonFinalizar}
+                disabled={!isBroadcasting}
+                onClick={toggleBroadcast}
               >
                 Cerrar Transmisión
               </Button>

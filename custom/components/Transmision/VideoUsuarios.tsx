@@ -6,8 +6,8 @@ import { AuthContext } from 'src/auth';
 export function TransmisionUsuarios(props: any) {
     const { ancho, alto, rol } = props
     const videoRef = useRef<HTMLVideoElement>(null);
-    const [selectedAudioDevice] = useState("");
-    const [selectedVideoDevice] = useState("");
+    const [changeAudioDevice] = useState("");
+    const [changeVideoDevice] = useState("");
     const [visualizarI, setVisualizarI] = useState("block");
     const [visualizarV, setVisualizarV] = useState("none");
     const [showModal, setShowModal] = useState(false);
@@ -215,7 +215,7 @@ export function TransmisionUsuarios(props: any) {
                     mandatory: {},
                     optional: [
                         {
-                            sourceId: selectedAudioDevice,
+                            sourceId: changeAudioDevice,
                         },
                     ],
                 },
@@ -223,7 +223,7 @@ export function TransmisionUsuarios(props: any) {
                     mandatory: {},
                     optional: [
                         {
-                            sourceId: selectedVideoDevice,
+                            sourceId: changeVideoDevice,
                         },
                     ],
                 },

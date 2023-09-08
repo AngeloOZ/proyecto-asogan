@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 import Head from 'next/head';
 
@@ -17,6 +17,10 @@ export default function Index() {
         username: 'Angello_Beta_MIDEV',
         socket,
     });
+
+    useEffect(() => {
+        isMuted && toggleAudio();
+    }, []);
 
     return <>
         <Head><title>Viewer Video</title></Head>
