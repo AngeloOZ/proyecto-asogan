@@ -39,7 +39,7 @@ async function listarNotificaciones(req: NextApiRequest, res: NextApiResponse) {
         });
 
         const eventosFormateados = eventos.map(evento => {
-            const fechaFormateada = moment(evento.fecha).format('DD-MM-YYYY HH:mm');
+            const fechaFormateada = moment(evento.fecha).format('YYYY-MM-DD HH:mm');
             return {
                 ...evento,
                 fecha: fechaFormateada
