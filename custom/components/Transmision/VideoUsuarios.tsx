@@ -9,7 +9,7 @@ interface Props {
 }
 
 export function TransmisionUsuarios({ alto, ancho, username, uuid, audio = '' }: Props) {
-    const url = `${process.env.NEXT_PUBLIC_URL_APP}/video/${uuid}/${encodeURIComponent(username)}/${audio}`
+    const url = `${process.env.NEXT_PUBLIC_URL_APP}video/${uuid}/${encodeURIComponent(username)}/${audio}`
     return (
         <div style={{
             width: ancho,

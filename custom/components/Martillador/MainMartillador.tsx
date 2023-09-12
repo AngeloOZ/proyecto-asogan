@@ -87,7 +87,7 @@ export const MainMartillador = ({ lote, ultimaPuja, evento }: Props) => {
         <Timer lote={lote?.id_lote} evento={evento.abierto} />
         {
           uuid && user?.nombres && 
-          <TransmisionUsuarios ancho="100%" alto="100%" username={user.nombres} uuid={uuid} />
+          <TransmisionUsuarios ancho="100%" alto="100%" username={user.nombres} uuid={uuid} audio='noaudio' />
         }
       </Box>
 
